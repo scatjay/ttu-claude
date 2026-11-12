@@ -46,6 +46,19 @@ h2{font-size:16px;margin:0 0 10px;font-weight:700}
 .meter i{display:block;height:100%;background:var(--good)}
 .kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;font-size:13.5px;margin:0}
 .kv dt{color:var(--muted)}.kv dd{margin:0;font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+nav.tabs{display:flex;gap:6px;margin-top:10px}
+.tabbtn{font:inherit;font-weight:700;font-size:14px;padding:8px 16px;border-radius:8px;border:1px solid var(--hair);background:var(--surface);color:var(--muted);cursor:pointer}
+.tabbtn.on{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.tabbtn:focus-visible,#selfUnit:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+#selfUnit{font:inherit;font-size:14px;padding:7px 10px;border-radius:8px;border:1px solid var(--hair);background:var(--surface);color:var(--ink)}
+.qrow{padding:10px 0;border-top:1px solid var(--hair)}.qrow:first-of-type{border-top:0}
+.qrow .qt{font-size:13.5px;margin-bottom:6px;overflow-wrap:anywhere}
+.stack{display:flex;height:12px;border-radius:99px;overflow:hidden;background:var(--surface2)}
+.stack i{display:block;height:100%}.s2{background:var(--good)}.s1{background:#c9962b}.s0{background:var(--warn)}
+.legend{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:5px;font-variant-numeric:tabular-nums}
+.nrow{display:grid;grid-template-columns:88px 70px minmax(0,1fr);gap:10px;padding:8px 0;border-top:1px solid var(--hair);font-size:13.5px}
+.nrow:first-of-type{border-top:0}.nrow .cd{font-family:var(--mono);color:var(--accent);font-weight:600}.nrow .tx{overflow-wrap:anywhere}
+@media(max-width:480px){.nrow{grid-template-columns:70px 56px minmax(0,1fr)}}
 @media(max-width:480px){.row{grid-template-columns:70px minmax(0,1fr) auto}}
 </style>
 </head><body>
@@ -54,8 +67,13 @@ h2{font-size:16px;margin:0 0 10px;font-weight:700}
 <h1>大同學習單後台</h1>
 <p class="sub">給講師看：學員做到哪、卡在哪、助教用了多少。所有資料都是匿名事件，不含姓名，也不含學員的提問內容。</p>
 <p class="stamp" id="stamp">讀取中…</p>
+<nav class="tabs" id="tabs" hidden><button type="button" class="tabbtn on" data-v="prog">進度與助教</button><button type="button" class="tabbtn" data-v="self">自評</button></nav>
 </header>
 <div id="empty" class="empty" hidden>還沒有彙整快照。學員開始使用 v9 學員版後，請在對話裡叫 Claude「更新大同後台」，它會讀學員版資料庫、彙整後寫進這一頁。</div>
+<div id="selfview" hidden>
+<section class="panel"><h2>各單元自評三題</h2><p class="sub" style="margin:0 0 10px">代號由登入帳號換算而來（同一人固定同一代號），不含姓名與信箱。　<label for="selfUnit">單元：</label><select id="selfUnit"><option value="all">全部</option></select></p><div id="selfDist"></div></section>
+<section class="panel" style="margin-top:22px"><h2>學員留給講師的一句話</h2><div id="selfList"></div><p class="note">只顯示代號、單元與內容；內容是學員自己選填的，投影時請留意含個資的句子。</p></section>
+</div>
 <div id="app" hidden>
 <section class="tiles" aria-label="總覽" id="tiles"></section>
 <section class="panel" style="margin-top:22px"><h2>各單元：過關人數、卡關次數、助教提問</h2><div id="units"></div><p class="note">「過關」＝該單元過關檢核至少勾了一格的人數（粗指標）；長條是占開過頁面人數的比例。</p></section>
@@ -69,6 +87,7 @@ h2{font-size:16px;margin:0 0 10px;font-weight:700}
 <script>
 (function(){
   var STEPS={"u1-s1": "開場：Claude Code 是什麼", "u1-s2": "瀏覽器進 claude.com/download，按「Download for Windows」", "u1-s3": "系統問是否允許變更：先看發行者再按「是」", "u1-s4": "等它自己打開，歡迎頁按「開始使用」", "u1-s5": "自己登入（個人 Gmail）", "u1-s6": "在「對話」分頁說第一句話", "u1-s7": "到「程式碼」分頁→「新增」，看輸入框下方那一排", "u1-s8": "把模式切成「手動」", "u1-s9": "資料夾選「大同練習」，信任框先讀路徑再按", "u1-s10": "請 Claude 建立報告骨架與協作紀錄（先給你看，再存）", "u1-s11": "寫下你的題目與 3–5 個關鍵詞", "u2-s1": "先檢查「大同練習」沒有不能放的檔", "u2-s2": "放進 3–5 份可公開的文獻或你自己的筆記", "u2-s3": "「程式碼」→「新增」，資料夾「大同練習」，模式「手動」", "u2-s4": "請它列出資料夾裡的檔案", "u2-s5": "請它摘要其中一份，每一點附原文位置", "u2-s6": "自己對照原文，找出一處說錯或說太滿", "u2-s7": "看清楚這份檔案有沒有離開電腦", "u2-s8": "請 Claude 起草報告的「2 方法」兩小節，先不要存", "u2-s9": "你改過再存進報告.md，並補一列協作紀錄", "u3-s1": "新增工作階段（資料夾「大同練習」，模式「手動」）", "u3-s2": "請 Claude 起草 CLAUDE.md，先不要存", "u3-s3": "加一條只有你會想要的規則，請它存檔", "u3-s4": "按「新增」開新工作階段（同一資料夾），問它你的規則", "u3-s5": "把「文獻整理」寫成任務檔「任務-文獻.md」", "u3-s6": "對 Claude 說「讀 任務-文獻.md 照做」，只做到第一個停點", "u3-s7": "請它把今天的決定寫進「進度.md」，再開新工作階段接續", "u3-s8": "把三條規則、任務檔的驗收句、協作紀錄前三列整理進報告第 3 節", "u4-s1": "Deep Research 與 Claude Code 的分工", "u4-s2": "確認資料夾裡有 3–5 份文獻，新增工作階段（手動）", "u4-s3": "請它逐篇做讀取紀錄表，存成「讀取紀錄.md」", "u4-s4": "抽查兩篇", "u4-s5": "請它只依這些文獻，起草前言與文獻回顧第一版", "u4-s6": "你動手改寫，至少改一句成你自己的話，刪掉查不到依據的句子", "u4-s7": "把讀取紀錄的重點放進報告第 1 節末尾", "u5-s1": "取出讀取紀錄裡的 DOI 清單", "u5-s2": "練習：這三個 DOI 哪個查得到？", "u5-s3": "逐個貼在 doi.org 後面", "u5-s4": "至少一篇用合法管道取得全文", "u5-s5": "請 Claude 做文獻 dashboard 網頁", "u5-s6": "請它整理共識、矛盾、缺口，每項標依據檔案", "u5-s7": "寫進報告第 4 節與參考文獻", "u6-s1": "請它只依文獻擬三個研究問題", "u6-s2": "挑最弱的一題，逼它說「依據不足，缺什麼」", "u6-s3": "寫「5 討論與限制」", "u6-s4": "寫「摘要」（約 200–300 字）", "u6-s5": "寫「6 AI 使用聲明」", "u6-s6": "逐條終檢", "u6-s7": "分享：每人一分鐘", "u6-s8": "收尾：帶走什麼"};
+  var SELFQ={"u1q1": "我能說出 Claude Code 跟一般聊天差在哪（它能讀我資料夾裡的檔案）。", "u1q2": "我親眼看過發行者才按「是」，而且現在底列顯示「手動」。", "u1q3": "我的報告.md 有十個標題，題目與關鍵詞是我自己選的。", "u2q1": "我能說出授權五原則裡至少三條，而且沒有按「永遠」或「不再詢問」。", "u2q2": "我找到（或確認沒有）摘要裡一處說錯或說太滿的地方。", "u2q3": "報告.md 的第 2 節有檔名清單和四級讀取程度的定義。", "u3q1": "新開一次對話，Claude 仍照我的規則行事（我親眼看到它說出我加的那條）。", "u3q2": "我的任務檔每一步都有一句我自己看得懂、別人也能核對的驗收句。", "u3q3": "報告.md 第 3 節有規則、驗收句和至少三列協作紀錄。", "u4q1": "我的讀取紀錄裡，讀取程度不是全部「全文」，而且我知道為什麼。", "u4q2": "我抽查了兩篇原文，並把結果寫進協作紀錄。", "u4q3": "前言與文獻回顧每一句都有檔名，且我自己改過至少一句。", "u5q1": "我的參考文獻裡，沒有一條是沒查證卻被我當成已查證的。", "u5q2": "我至少拿到一篇全文，並且記下了管道；拿不到的有清單。", "u5q3": "報告.md 的缺口每一項都有依據的檔名。", "u6q1": "報告十節都有內容，而且每一節我都知道是哪一個單元寫的。", "u6q2": "我的 AI 使用聲明如實寫出 Claude 做了什麼、我怎麼驗證、責任由我負。", "u6q3": "我能說出這篇報告裡，哪一處最需要在投稿前再人工查證。"},SELFOPT={"2": "做到了", "1": "做到一半", "0": "還沒"};
   var UN={pre:'開始前',u1:'單元 1',u2:'單元 2',u3:'單元 3',u4:'單元 4',u5:'單元 5',u6:'單元 6',fin:'總檢核'};
   var $=function(i){return document.getElementById(i)};
   function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
@@ -129,11 +148,38 @@ h2{font-size:16px;margin:0 0 10px;font-weight:700}
     var cap=(cfg&&cfg.dayNtd!=null)?cfg.dayNtd:30,used=(ut.ntdMilli||0)/1000;
     return {at:Date.now(),students:Object.keys(sids).length,units:units,stuckTop:top,ta:T,vertex:{todayNtd:used,capNtd:cap,remainNtd:Math.max(0,cap-used),date:tw,hb:(hb&&hb.t)||0,refsDropped:dropped}};
   }
+  function codeOf(uid){var h=2166136261;for(var i=0;i<uid.length;i++){h^=uid.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return 'S'+('0000'+h.toString(16)).slice(-4).toUpperCase()}
+  var SELFDATA=null;
+  function renderSelf(){
+    var d=SELFDATA||{},sel=$('selfUnit').value,units=['u1','u2','u3','u4','u5','u6'],dist=$('selfDist');dist.textContent='';
+    var rows=[];Object.keys(d).forEach(function(uid){Object.keys(d[uid]||{}).forEach(function(u){rows.push({code:codeOf(uid),u:u,v:d[uid][u]})})});
+    var any=false;
+    units.forEach(function(u){if(sel!=='all'&&sel!==u)return;
+      for(var q=1;q<=3;q++){var k=u+'q'+q,c={0:0,1:0,2:0},n=0;
+        rows.forEach(function(r){if(r.u===u&&r.v&&r.v['q'+q]!=null){c[r.v['q'+q]]++;n++}});
+        var row=el('div','qrow');row.appendChild(el('div','qt',(UN[u]||u)+'　'+(SELFQ[k]||k)));
+        var st=el('div','stack');[2,1,0].forEach(function(v){var i=el('i','s'+v);i.style.width=(n?100*c[v]/n:0)+'%';st.appendChild(i)});row.appendChild(st);
+        row.appendChild(el('div','legend',[2,1,0].map(function(v){return (SELFOPT[v]||v)+' '+c[v]}).join('　')+'　（共 '+n+' 人作答）'));dist.appendChild(row);any=true}});
+    if(!any)dist.appendChild(el('p','note','還沒有自評資料。'));
+    var list=$('selfList');list.textContent='';
+    var notes=rows.filter(function(r){return r.v&&r.v.note&&(sel==='all'||sel===r.u)}).sort(function(a,b){return (b.v.t||0)-(a.v.t||0)});
+    if(!notes.length)list.appendChild(el('p','note','還沒有人留下一句話。'));
+    notes.forEach(function(r){var n=el('div','nrow');n.appendChild(el('div','cd',r.code));n.appendChild(el('div','',UN[r.u]||r.u));n.appendChild(el('div','tx',r.v.note));list.appendChild(n)});
+  }
+  var selfInit=false;
+  function initTabs(){
+    if(selfInit)return;selfInit=true;$('tabs').hidden=false;
+    var sel=$('selfUnit');['u1','u2','u3','u4','u5','u6'].forEach(function(u){var o=document.createElement('option');o.value=u;o.textContent=UN[u];sel.appendChild(o)});
+    sel.addEventListener('change',renderSelf);
+    [].slice.call(document.querySelectorAll('.tabbtn')).forEach(function(bn){bn.addEventListener('click',function(){
+      [].slice.call(document.querySelectorAll('.tabbtn')).forEach(function(x){x.classList.toggle('on',x===bn)});
+      var v=bn.getAttribute('data-v');$('app').hidden=(v!=='prog');$('selfview').hidden=(v!=='self')})});
+  }
   async function refresh(){
     try{
-      var r=await Promise.all([get('ev'),get('usage'),get('config'),get('hb')]);
+      var r=await Promise.all([get('ev'),get('usage'),get('config'),get('hb'),get('self')]);
       var evs=r[0]?Object.keys(r[0]).map(function(k){return r[0][k]}):[];
-      render(aggregate(evs,r[1],r[2],r[3]));
+      render(aggregate(evs,r[1],r[2],r[3]));SELFDATA=r[4];initTabs();renderSelf();
     }catch(e){
       if(e&&e.code==='denied'){$('stamp').textContent='這個帳號沒有讀取權限（只有講師白名單的 Google 帳號可以）。'}
       else $('stamp').textContent='讀取失敗：'+((e&&e.code)||e)+'，20 秒後重試。';
