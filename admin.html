@@ -92,7 +92,7 @@ table.rt td.full{color:var(--good);font-weight:700}
 <section class="tiles" aria-label="總覽" id="tiles"></section>
 <section class="panel" style="margin-top:22px"><h2>各單元：過關人數、卡關次數、助教提問</h2><div id="units"></div><p class="note">「過關」＝該單元過關檢核至少勾了一格的人數（粗指標）；長條是占開過頁面人數的比例。</p></section>
 <section class="panel" id="fbPanel" style="margin-top:22px" hidden><h2>即時意見（最新在最上面，每 30 秒更新）</h2><ol class="fblist" id="fbList"></ol><p class="note" id="fbEmpty" hidden>還沒有人送出意見。</p></section>
-<section class="panel" id="rosterPanel" style="margin-top:22px" hidden><h2>學員進度（依暱稱，只有講師看得到）</h2><div class="tbl"><table class="rt" id="rosterT"></table></div><p class="note">格子＝已勾步驟／全部步驟．已過檢查點／全部檢查點；綠色＝該單元步驟全勾。沒填暱稱的舊帳號顯示代號。自評分頁維持只顯示代號。</p></section>
+<section class="panel" id="rosterPanel" style="margin-top:22px" hidden><h2>學員進度（依暱稱，只有講師看得到）</h2><div class="tbl"><table class="rt" id="rosterT"></table></div><p class="note">格子＝已勾步驟／全部步驟．已過檢查點／全部檢查點；綠色＝該單元步驟全勾。沒填暱稱的舊帳號才顯示代號。自評分頁只用代號，不與暱稱並列。</p></section>
 <div class="cols" style="margin-top:22px">
 <section class="panel"><h2>卡關熱點（按「其他卡關」最多的步驟）</h2><div id="hot"></div></section>
 <section class="panel"><h2>助教用量</h2><dl class="kv" id="ta"></dl><p class="note" id="tanote"></p></section>
@@ -199,7 +199,7 @@ table.rt td.full{color:var(--good);font-weight:700}
     if(!list.length){var er=document.createElement('tr'),ec=document.createElement('td');ec.colSpan=U.length+3;ec.textContent='還沒有學員活動。';ec.style.color='var(--muted)';er.appendChild(ec);tb.appendChild(er)}
     list.forEach(function(r){var tr=document.createElement('tr');
       var nm=document.createElement('td');nm.className='nm';var p=PROFILES[r.sid];
-      nm.textContent=(p&&p.nick)?p.nick:'（未填暱稱）';var sm=document.createElement('small');sm.textContent=codeOf(r.sid);nm.appendChild(sm);tr.appendChild(nm);
+      nm.textContent=(p&&p.nick)?p.nick:'（未填暱稱）';if(!(p&&p.nick)){var sm=document.createElement('small');sm.textContent=codeOf(r.sid);nm.appendChild(sm)}tr.appendChild(nm);
       U.forEach(function(u){var td=document.createElement('td');var sn=(SECN[u]||{}).s||0,gn=(SECN[u]||{}).g||0,sd=r.steps[u]||0,gd=r.gates[u]||0;
         td.textContent=sn||gn?(sd+'/'+sn+'．'+gd+'/'+gn):'—';if(sn&&sd>=sn)td.className='full';tr.appendChild(td)});
       var ta=document.createElement('td');ta.textContent=asks[r.sid]||0;tr.appendChild(ta);
