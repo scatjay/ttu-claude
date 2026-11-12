@@ -2,7 +2,10 @@
 
 學員頁：https://scatjay.github.io/dt1116-claude-workshop/
 
-只放學員版學習單（含 AI 助教）。講師版、後台、學員名單、金鑰都不在這個倉庫。
+- 學員頁：`index.html`
+- 講師後台：https://scatjay.github.io/dt1116-claude-workshop/admin.html （進頁要求 Google 登入；只有講師白名單帳號讀得到資料，網頁本身不含任何學員資料）
+
+講師版、學員名單、金鑰都不在這個倉庫。
 
 ## 運作方式
 - 學員用 Google 登入（名單內的 Gmail 才能使用助教與記錄進度）。

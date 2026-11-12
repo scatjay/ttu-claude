@@ -1,0 +1,161 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>window.TA_CFG={"db": "https://gen-lang-client-0556836042-default-rtdb.asia-southeast1.firebasedatabase.app", "sess": "DT-20261116", "waitSec": 45, "auth": {"apiKey": "AIzaSyDD0t3h27gEkfNhdbiTqu4cqn2YAU3LaLg", "authDomain": "gen-lang-client-0556836042.firebaseapp.com", "projectId": "gen-lang-client-0556836042", "sdk": "10.12.2"}};</script>
+<title>v9 大同學習單後台1112</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 版面概念：講師一眼看三件事——誰卡在哪、助教花了多少、全機額度還剩多少。冷灰底，紫紅只用在重點數字與進度。 */
+:root{
+  --bg:#eef0f3;--surface:#ffffff;--surface2:#e4e7ec;--ink:#1d2129;--muted:#5d6675;--hair:#d3d8e0;
+  --accent:#7a2f6a;--accent-soft:#ecd6e6;--good:#1f7a55;--warn:#b4552c;--bar:#9a6a90;
+  --sans:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171c;--surface:#1c2027;--surface2:#272c35;--ink:#e6e9ee;--muted:#9aa3b2;--hair:#343a45;--accent:#d99ac8;--accent-soft:#40243a;--good:#59c79a;--warn:#e0824f;--bar:#b57aa8;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#14171c;--surface:#1c2027;--surface2:#272c35;--ink:#e6e9ee;--muted:#9aa3b2;--hair:#343a45;--accent:#d99ac8;--accent-soft:#40243a;--good:#59c79a;--warn:#e0824f;--bar:#b57aa8;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;padding-block:24px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+main{max-width:960px;margin:0 auto;display:grid;gap:22px}
+h1{font-size:clamp(22px,4vw,30px);margin:0;font-weight:800;text-wrap:balance}
+h2{font-size:16px;margin:0 0 10px;font-weight:700}
+.sub{color:var(--muted);font-size:13.5px;margin:4px 0 0}
+.stamp{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.stale{color:var(--warn);font-weight:700}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.tile{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:14px 16px;min-width:0}
+.tile .k{font-size:12.5px;color:var(--muted)}
+.tile .v{font-family:var(--mono);font-size:28px;font-weight:600;color:var(--accent);font-variant-numeric:tabular-nums;line-height:1.2;margin-top:2px}
+.tile .v small{font-size:13px;color:var(--muted);font-weight:400;margin-left:3px}
+.tile .n{font-size:12px;color:var(--muted);margin-top:2px}
+.panel{background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:16px 18px;min-width:0}
+.row{display:grid;grid-template-columns:92px minmax(0,1fr) auto;gap:10px;align-items:center;padding:7px 0;border-top:1px solid var(--hair)}
+.row:first-of-type{border-top:0}
+.row .nm{font-size:13.5px;font-weight:600}
+.bar{height:10px;background:var(--surface2);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--bar);border-radius:99px}
+.bar.w i{background:var(--warn)}
+.row .num{font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.row .num b{color:var(--ink)}
+.hot{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:8px 0;border-top:1px solid var(--hair)}
+.hot:first-of-type{border-top:0}
+.hot .t{font-size:13.5px;min-width:0;overflow-wrap:anywhere}
+.hot .t small{display:block;font-family:var(--mono);font-size:11.5px;color:var(--muted)}
+.hot .c{font-family:var(--mono);font-weight:700;color:var(--warn);font-size:15px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+.note{font-size:12.5px;color:var(--muted);margin:10px 0 0}
+.empty{border:1px dashed var(--hair);border-radius:10px;padding:22px;text-align:center;color:var(--muted)}
+.meter{height:14px;background:var(--surface2);border-radius:99px;overflow:hidden;margin:8px 0 4px}
+.meter i{display:block;height:100%;background:var(--good)}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 14px;font-size:13.5px;margin:0}
+.kv dt{color:var(--muted)}.kv dd{margin:0;font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+@media(max-width:480px){.row{grid-template-columns:70px minmax(0,1fr) auto}}
+</style>
+</head><body>
+<main>
+<header>
+<h1>大同學習單後台</h1>
+<p class="sub">給講師看：學員做到哪、卡在哪、助教用了多少。所有資料都是匿名事件，不含姓名，也不含學員的提問內容。</p>
+<p class="stamp" id="stamp">讀取中…</p>
+</header>
+<div id="empty" class="empty" hidden>還沒有彙整快照。學員開始使用 v9 學員版後，請在對話裡叫 Claude「更新大同後台」，它會讀學員版資料庫、彙整後寫進這一頁。</div>
+<div id="app" hidden>
+<section class="tiles" aria-label="總覽" id="tiles"></section>
+<section class="panel" style="margin-top:22px"><h2>各單元：過關人數、卡關次數、助教提問</h2><div id="units"></div><p class="note">「過關」＝該單元過關檢核至少勾了一格的人數（粗指標）；長條是占開過頁面人數的比例。</p></section>
+<div class="cols" style="margin-top:22px">
+<section class="panel"><h2>卡關熱點（按「其他卡關」最多的步驟）</h2><div id="hot"></div></section>
+<section class="panel"><h2>助教用量</h2><dl class="kv" id="ta"></dl><p class="note" id="tanote"></p></section>
+</div>
+<section class="panel" style="margin-top:22px"><h2>助教今日額度（整場）</h2><div id="vx"></div></section>
+</div>
+</main>
+<script>
+(function(){
+  var STEPS={"u1-s1": "開場：Claude Code 是什麼", "u1-s2": "瀏覽器進 claude.com/download，按「Download for Windows」", "u1-s3": "系統問是否允許變更：先看發行者再按「是」", "u1-s4": "等它自己打開，歡迎頁按「開始使用」", "u1-s5": "自己登入（個人 Gmail）", "u1-s6": "在「對話」分頁說第一句話", "u1-s7": "到「程式碼」分頁→「新增」，看輸入框下方那一排", "u1-s8": "把模式切成「手動」", "u1-s9": "資料夾選「大同練習」，信任框先讀路徑再按", "u1-s10": "請 Claude 建立報告骨架與協作紀錄（先給你看，再存）", "u1-s11": "寫下你的題目與 3–5 個關鍵詞", "u2-s1": "先檢查「大同練習」沒有不能放的檔", "u2-s2": "放進 3–5 份可公開的文獻或你自己的筆記", "u2-s3": "「程式碼」→「新增」，資料夾「大同練習」，模式「手動」", "u2-s4": "請它列出資料夾裡的檔案", "u2-s5": "請它摘要其中一份，每一點附原文位置", "u2-s6": "自己對照原文，找出一處說錯或說太滿", "u2-s7": "看清楚這份檔案有沒有離開電腦", "u2-s8": "請 Claude 起草報告的「2 方法」兩小節，先不要存", "u2-s9": "你改過再存進報告.md，並補一列協作紀錄", "u3-s1": "新增工作階段（資料夾「大同練習」，模式「手動」）", "u3-s2": "請 Claude 起草 CLAUDE.md，先不要存", "u3-s3": "加一條只有你會想要的規則，請它存檔", "u3-s4": "按「新增」開新工作階段（同一資料夾），問它你的規則", "u3-s5": "把「文獻整理」寫成任務檔「任務-文獻.md」", "u3-s6": "對 Claude 說「讀 任務-文獻.md 照做」，只做到第一個停點", "u3-s7": "請它把今天的決定寫進「進度.md」，再開新工作階段接續", "u3-s8": "把三條規則、任務檔的驗收句、協作紀錄前三列整理進報告第 3 節", "u4-s1": "Deep Research 與 Claude Code 的分工", "u4-s2": "確認資料夾裡有 3–5 份文獻，新增工作階段（手動）", "u4-s3": "請它逐篇做讀取紀錄表，存成「讀取紀錄.md」", "u4-s4": "抽查兩篇", "u4-s5": "請它只依這些文獻，起草前言與文獻回顧第一版", "u4-s6": "你動手改寫，至少改一句成你自己的話，刪掉查不到依據的句子", "u4-s7": "把讀取紀錄的重點放進報告第 1 節末尾", "u5-s1": "取出讀取紀錄裡的 DOI 清單", "u5-s2": "練習：這三個 DOI 哪個查得到？", "u5-s3": "逐個貼在 doi.org 後面", "u5-s4": "至少一篇用合法管道取得全文", "u5-s5": "請 Claude 做文獻 dashboard 網頁", "u5-s6": "請它整理共識、矛盾、缺口，每項標依據檔案", "u5-s7": "寫進報告第 4 節與參考文獻", "u6-s1": "請它只依文獻擬三個研究問題", "u6-s2": "挑最弱的一題，逼它說「依據不足，缺什麼」", "u6-s3": "寫「5 討論與限制」", "u6-s4": "寫「摘要」（約 200–300 字）", "u6-s5": "寫「6 AI 使用聲明」", "u6-s6": "逐條終檢", "u6-s7": "分享：每人一分鐘", "u6-s8": "收尾：帶走什麼"};
+  var UN={pre:'開始前',u1:'單元 1',u2:'單元 2',u3:'單元 3',u4:'單元 4',u5:'單元 5',u6:'單元 6',fin:'總檢核'};
+  var $=function(i){return document.getElementById(i)};
+  function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
+  function pct(a,b){return b?Math.min(100,Math.round(100*a/b)):0}
+  function f(n,d){return (n==null||isNaN(n))?'—':Number(n).toLocaleString('zh-TW',{maximumFractionDigits:d==null?0:d})}
+  function tile(k,v,u,n){var t=el('div','tile');t.appendChild(el('div','k',k));var vv=el('div','v',v);if(u)vv.appendChild(el('small','',u));t.appendChild(vv);if(n)t.appendChild(el('div','n',n));return t}
+  function render(s){
+    $('empty').hidden=true;$('app').hidden=false;
+    var age=(Date.now()-s.at)/60000,old=age>60;
+    var st=$('stamp');st.textContent='快照時間：'+new Date(s.at).toLocaleString('zh-TW',{hour12:false})+'（'+(age<1?'剛剛':age<60?Math.round(age)+' 分鐘前':Math.round(age/60)+' 小時前')+'）';
+    if(old){st.appendChild(el('span','stale','　資料可能已過時，請叫 Claude 更新'))}
+    var T=s.ta||{},V=s.vertex||{};
+    var tl=$('tiles');tl.textContent='';
+    tl.appendChild(tile('開過頁面的學員',f(s.students),'人'));
+    tl.appendChild(tile('助教提問',f(T.calls),'次',T.askers!=null?f(T.askers)+' 人問過，單人最多 '+f(T.maxPerStudent)+' 次':''));
+    tl.appendChild(tile('助教估計花費',f(T.ntd,3),'NT$','依 worker 記錄的 token 計價；帳以 vertex_cap 為準'));
+    tl.appendChild(tile('助教今日額度剩餘',f(V.remainNtd,0),'NT$',V.capNtd!=null?'上限 '+f(V.capNtd)+'，今日已用 '+f(V.todayNtd,2):''));
+    var u=$('units');u.textContent='';
+    (s.units||[]).forEach(function(x){
+      var row=el('div','row');row.appendChild(el('div','nm',UN[x.u]||x.u));
+      var b=el('div','bar');var i=el('i');i.style.width=pct(x.gateAny,s.students)+'%';b.appendChild(i);row.appendChild(b);
+      var n=el('div','num');n.innerHTML='過關 <b>'+f(x.gateAny)+'</b>　卡關 <b>'+f(x.stuck)+'</b>　問助教 <b>'+f(x.asks)+'</b>';row.appendChild(n);u.appendChild(row)});
+    var h=$('hot');h.textContent='';
+    if(!(s.stuckTop||[]).length)h.appendChild(el('p','note','還沒有人按「其他卡關」。'));
+    var mx=Math.max.apply(null,(s.stuckTop||[]).map(function(x){return x.n}).concat([1]));
+    (s.stuckTop||[]).forEach(function(x){
+      var d=el('div','hot');var t=el('div','t',STEPS[x.key]||x.key);t.appendChild(el('small','',(UN[x.unit]||x.unit)+'　'+x.key));d.appendChild(t);d.appendChild(el('div','c',f(x.n)+' 次'));
+      var b=el('div','bar w');b.style.gridColumn='1 / -1';var i=el('i');i.style.width=pct(x.n,mx)+'%';b.appendChild(i);d.appendChild(b);h.appendChild(d)});
+    var k=$('ta');k.textContent='';
+    [['成功回答',f(T.ok)],['失敗（含無後端）',f(T.fail)],['輸入 token（估）',f(T.tokIn)],['輸出 token（估）',f(T.tokOut)],['提問總字數',f(T.qchars)],['回答總字數',f(T.achars)],['估計花費 USD',f(T.usd,4)]].forEach(function(r){k.appendChild(el('dt','',r[0]));k.appendChild(el('dd','',r[1]))});
+    var src=T.bySrc||{};$('tanote').textContent='token 為 worker 記錄值（網頁版）或估算值（Artifact 版）；來源：'+Object.keys(src).map(function(z){return (z||'無')+' '+src[z]}).join('、')+'。真實金額以 vertex_cap 的帳為準。';
+    var vx=$('vx');vx.textContent='';
+    if(V.capNtd==null){vx.appendChild(el('p','note','沒有額度資料。'))}else{
+      var m=el('div','meter');var i=el('i');i.style.width=pct(V.capNtd-V.todayNtd,V.capNtd)+'%';m.appendChild(i);vx.appendChild(m);
+      vx.appendChild(el('p','note','NT$ '+f(V.remainNtd,2)+' 剩餘／上限 '+f(V.capNtd)+'（整場上限，日期 '+(V.date||'?')+'）'))}
+  }
+  /* ===== 資料來源：Firebase RTDB（講師用 Google 登入；規則只放行白名單 Email 讀取） ===== */
+  var C=window.TA_CFG||{},RT=(C.db||'').replace(/\/$/,'')+'/dt1116/'+C.sess,TOK='',AUTH=null;
+  function qs(){return TOK?('?auth='+encodeURIComponent(TOK)):''}
+  function loadJs(u){return new Promise(function(ok,no){var s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+  async function get(p){var r=await fetch(RT+'/'+p+'.json'+qs());if(r.status===401||r.status===403)throw {code:'denied'};if(!r.ok)throw {code:'http_'+r.status};return r.json()}
+  var FX=32;
+  function aggregate(evs,usage,cfg,hb){
+    var last={},sids={};evs.sort(function(a,b){return (a.t||0)-(b.t||0)});
+    evs.forEach(function(e){if(e.sid)sids[e.sid]=1;if(e.type==='step'||e.type==='gate'||e.type==='fin')last[e.sid+'|'+e.type+'|'+(e.key||'')]={on:+e.on||0,u:e.unit||'',k:e.key||'',s:e.sid,ty:e.type}});
+    var step={},stepU={},gate={},stuck={},byUnitAsk={};
+    Object.keys(last).forEach(function(k){var x=last[k];if(!x.on)return;if(x.ty==='step'){step[x.k]=(step[x.k]||0)+1;stepU[x.k]=x.u}else if(x.ty==='gate'){(gate[x.u]=gate[x.u]||{})[x.s]=1}});
+    evs.forEach(function(e){if(e.type==='stuck'){var k=(e.unit||'')+'|'+(e.key||'');stuck[k]=(stuck[k]||0)+1}if(e.type==='ask')byUnitAsk[e.unit||'']=(byUnitAsk[e.unit||'']||0)+1});
+    var UL=['pre','u1','u2','u3','u4','u5','u6','fin'];
+    var units=UL.map(function(u){var st={};Object.keys(step).forEach(function(k){if(stepU[k]===u)st[k]=step[k]});var sc=0;Object.keys(stuck).forEach(function(k){if(k.split('|')[0]===u)sc+=stuck[k]});
+      return {u:u,steps:st,gateAny:Object.keys(gate[u]||{}).length,stuck:sc,asks:byUnitAsk[u]||0}});
+    var top=Object.keys(stuck).map(function(k){var a=k.split('|');return {unit:a[0],key:a[1],n:stuck[k]}}).sort(function(a,b){return b.n-a.n}).slice(0,10);
+    var T={calls:0,ok:0,fail:0,qchars:0,achars:0,tokIn:0,tokOut:0,askers:0,maxPerStudent:0,bySrc:{},byUnit:byUnitAsk,ntd:0},users={},dropped=0;
+    Object.keys(usage||{}).forEach(function(d){var u=usage[d]||{};T.ok+=u.calls||0;T.fail+=u.fails||0;T.qchars+=u.qchars||0;T.achars+=u.achars||0;T.tokIn+=u.tokIn||0;T.tokOut+=u.tokOut||0;T.ntd+=(u.ntdMilli||0)/1000;dropped+=u.refsDropped||0;
+      Object.keys(u.users||{}).forEach(function(s){users[s]=(users[s]||0)+u.users[s]})});
+    T.calls=T.ok+T.fail;T.askers=Object.keys(users).length;T.maxPerStudent=Math.max.apply(null,Object.keys(users).map(function(s){return users[s]}).concat([0]));T.usd=T.ntd/FX;T.bySrc={gemini:T.ok};
+    var tw=new Date(Date.now()+8*3600*1000).toISOString().slice(0,10).replace(/-/g,''),ut=(usage||{})[tw]||{};
+    var cap=(cfg&&cfg.dayNtd!=null)?cfg.dayNtd:30,used=(ut.ntdMilli||0)/1000;
+    return {at:Date.now(),students:Object.keys(sids).length,units:units,stuckTop:top,ta:T,vertex:{todayNtd:used,capNtd:cap,remainNtd:Math.max(0,cap-used),date:tw,hb:(hb&&hb.t)||0,refsDropped:dropped}};
+  }
+  async function refresh(){
+    try{
+      var r=await Promise.all([get('ev'),get('usage'),get('config'),get('hb')]);
+      var evs=r[0]?Object.keys(r[0]).map(function(k){return r[0][k]}):[];
+      render(aggregate(evs,r[1],r[2],r[3]));
+    }catch(e){
+      if(e&&e.code==='denied'){$('stamp').textContent='這個帳號沒有讀取權限（只有講師白名單的 Google 帳號可以）。'}
+      else $('stamp').textContent='讀取失敗：'+((e&&e.code)||e)+'，20 秒後重試。';
+    }
+  }
+  function startPolling(){refresh();setInterval(refresh,20000)}
+  (async function(){
+    if(!C.db){$('empty').hidden=false;$('stamp').textContent='沒有資料庫設定';return}
+    if(!C.auth){startPolling();return}
+    $('stamp').textContent='請先登入';
+    var b=document.createElement('button');b.id='signin';b.type='button';b.textContent='用講師的 Google 帳號登入';b.style.cssText='font:inherit;font-weight:700;padding:8px 16px;margin-top:8px;border-radius:8px;border:0;background:var(--accent);color:var(--surface);cursor:pointer';
+    $('stamp').after(b);
+    try{
+      var v=C.auth.sdk||'10.12.2';await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-app-compat.js');await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-auth-compat.js');
+      firebase.initializeApp({apiKey:C.auth.apiKey,authDomain:C.auth.authDomain,projectId:C.auth.projectId});AUTH=firebase.auth();
+      AUTH.onAuthStateChanged(async function(u){if(u){TOK=await u.getIdToken();b.hidden=true;startPolling();setInterval(async function(){if(AUTH.currentUser)TOK=await AUTH.currentUser.getIdToken()},50*60*1000)}});
+      b.addEventListener('click',function(){AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider())});
+    }catch(e){$('stamp').textContent='登入功能載入失敗（網路？）'}
+  })();
+  window.__adminRender=render;
+})();
+
+</script>
+
+</body></html>
