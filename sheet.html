@@ -1029,6 +1029,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
 <header><b>AI助教</b><span class="ctx" id="ta-ctx"></span><button id="ta-x" type="button" aria-label="關閉AI助教">×</button></header>
 <div id="ta-login" hidden><button type="button" id="ta-signin">用 Google 登入</button><span id="ta-who"></span></div>
 <p id="ta-lockmsg" hidden style="margin:0;padding:8px 14px;font-size:13px;background:var(--accent-soft);color:var(--ink)">尚未登入：AI助教已鎖住。請按左下角或這個面板上方的「用 Google 登入」。</p>
+<p id="ta-pause" hidden role="status" style="margin:0;padding:8px 14px;font-size:13px;background:var(--warn-soft,#fdecc8);color:var(--ink)">助教暫停中，請先看影片或舉手。</p>
 <div id="ta-body"><p class="rule">只回答這份學習單和 Claude 桌面版的操作。不會幫你寫報告，也不會給 DOI。每個答案都要你自己對照畫面或原文驗證。</p></div>
 <form id="ta-form"><textarea id="ta-q" maxlength="300" placeholder="卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）"></textarea>
 <div class="row"><span class="cnt" id="ta-cnt">0 / 300　今天剩 <span id="ta-left">15</span> 次</span><button id="ta-send" type="submit">送出</button></div></form>
@@ -1109,7 +1110,17 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     b.addEventListener('click',function(){setCtx(b);open(true);emit({type:'open',unit:unitOf(b),key:b.closest('li.stp').id});$('ta-q').focus()});
     n.appendChild(b);
   });
-  function open(on){$('ta-panel').classList.toggle('open',on);$('ta-fab').setAttribute('aria-expanded',on?'true':'false');if(on)$('ta-left').textContent=left()}
+  /* ---- 助教心跳：worker 每輪寫 hb.t；超過 60 秒沒更新＝暫停（hb.t 在兩次查詢間有變也算活著，避開手機時鐘誤差）---- */
+  var HB={t:0,paused:false,tm:0};
+  async function checkHb(){
+    if(!RT)return false;
+    try{var r=await fetch(RT+'/hb.json'+qs());if(!r.ok)return HB.paused;var d=await r.json();var t=(d&&+d.t)||0;
+      var alive=t>0&&(Date.now()-t<60000||(HB.t>0&&t!==HB.t));HB.t=t;HB.paused=!alive;
+      var el=$('ta-pause');if(el)el.hidden=alive}catch(e){}
+    return HB.paused;
+  }
+  function hbLoop(on){clearInterval(HB.tm);if(on&&RT){checkHb();HB.tm=setInterval(checkHb,20000)}}
+  function open(on){$('ta-panel').classList.toggle('open',on);$('ta-fab').setAttribute('aria-expanded',on?'true':'false');if(on)$('ta-left').textContent=left();hbLoop(on)}
   $('ta-fab').addEventListener('click',function(){var on=!$('ta-panel').classList.contains('open');if(on){var cur=document.querySelector('.tabs a.on');var t=cur?document.getElementById(cur.getAttribute('href').slice(1)):null;if(t&&!ctx.step)setCtx(t.querySelector('li.stp')||t)}open(on)});
   $('ta-x').addEventListener('click',function(){open(false)});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')open(false)});
@@ -1147,7 +1158,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     if(CFG.auth&&!TOK){var le=new Error('login');le.shown='請先用 Google 登入（面板上方的按鈕），才能使用AI助教。';le.code='login';throw le}
     var body={t:Date.now(),q:q,ctx:{id:ctx.id||'',u:ctx.u||'',unit:ctx.unit,step:ctx.step}};
     var r=await fetch(RT+'/q/'+sid+'.json'+qs(),{method:'POST',body:JSON.stringify(body)});
-    if(r.status===401||r.status===403){var ne=new Error('notlisted');ne.shown='你的 Gmail 不在名單內，或登入已過期。請重新登入，仍不行就舉手問講師。';ne.code='notlisted';throw ne}
+    if(r.status===401||r.status===403){var ne=new Error('notlisted');ne.shown='你的 Gmail 不在名單內，或登入已過期。請重新登入，仍不行就舉手，並報出你登入的帳號。';ne.code='notlisted';throw ne}
     if(!r.ok)throw {code:'http_'+r.status};
     var key=(await r.json()).name;
     for(var i=0;i<(CFG.waitSec||45)/1.5;i++){
@@ -1170,6 +1181,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   $('ta-form').addEventListener('submit',async function(ev){
     ev.preventDefault();
     var q=$('ta-q').value.trim();if(!q)return;
+    if(await checkHb()){add('err','助教暫停中，請先看影片或舉手。');return}
     if(left()<=0){add('err','今天的提問次數用完了（每人每天 '+TA.dayLimit+' 次）。請舉手問講師。');return}
     $('ta-send').disabled=true;add('me',q);$('ta-q').value='';$('ta-cnt').firstChild.nodeValue='0 / '+TA.maxQ+'　今天剩 ';
     var wait=add('ai','AI助教想一下…');

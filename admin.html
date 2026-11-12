@@ -64,6 +64,7 @@ nav.tabs{display:flex;gap:6px;margin-top:10px}
 .fblist .tx{grid-column:1/-1;overflow-wrap:anywhere;font-size:14.5px}
 .fblist li.new{border-color:var(--accent)}
 #alText{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:15px;line-height:1.6;color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:10px 12px;resize:vertical}
+.alone{margin:0 0 14px}.alone label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}#alOne{flex:1;min-width:0;box-sizing:border-box;font:inherit;font-size:16px;color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:10px 12px}#alOne:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
 #alText:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
 .alrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
 .albtn{font:inherit;font-weight:700;font-size:14px;padding:8px 18px;border-radius:10px;border:1px solid var(--hair);background:var(--surface);color:var(--ink);cursor:pointer}
@@ -102,6 +103,7 @@ table.rt td.full{color:var(--good);font-weight:700}
 <div id="allowview" hidden>
   <section class="panel"><h2>白名單管理（哪些 Google 帳號可以用助教與學習單）</h2>
   <p class="note">貼上學員的 Gmail 清單（一行一個，或用逗號、空白隔開）→ 按「預覽」→ 確認無誤再按「加入」。預覽只是檢查，不會寫入。</p>
+  <div class="alone"><label for="alOne">現場加一個人（用手機也行）</label><div class="alrow"><input id="alOne" type="email" inputmode="email" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="輸入完整 email，按加入"><button type="button" id="alOneBtn" class="albtn pri">加入</button></div></div>
   <textarea id="alText" rows="6" placeholder="例：student1@gmail.com&#10;student2@gmail.com" aria-label="學員 email 清單"></textarea>
   <div class="alrow"><button type="button" id="alPreview" class="albtn">預覽</button><button type="button" id="alAdd" class="albtn pri" disabled>確認加入</button><span id="alMsg" role="status"></span></div>
   <div id="alPrev" hidden></div></section>
@@ -257,13 +259,14 @@ table.rt td.full{color:var(--good);font-weight:700}
   }
 
   /* ---- 白名單管理：貼上清單 → 預覽 → 確認加入；可移除 ---- */
-  var ADMIN_EMAIL='scatjay@gmail.com',ALLOW={};
+  var ADMIN_EMAIL='scatjay@gmail.com',ALLOW={},ALLOWG={};
+  function gk(e){return /@gmail\.com$/.test(e)?e.replace(/\./g,''):''}
   function ek(e){return e.toLowerCase().replace(/\./g,',')}
   function dk(k){return k.replace(/,/g,'.')}
   var EMRE=/^[a-z0-9_+.-]{1,64}@[a-z0-9-]+(\.[a-z0-9-]+)+$/;
   function parseEmails(text){
     var parts=text.split(/[\s,;，；、]+/).map(function(x){return x.trim().toLowerCase()}).filter(Boolean),seen={},ok=[],bad=[],dup=[],exist=[],odd=[];
-    parts.forEach(function(p){if(seen[p]){dup.push(p);return}seen[p]=1;if(!EMRE.test(p)||ek(p).length>100){bad.push(p);return}if(ALLOW[ek(p)]){exist.push(p);return}ok.push(p);if(!/@gmail\.com$/.test(p))odd.push(p)});
+    parts.forEach(function(p){if(seen[p]){dup.push(p);return}seen[p]=1;if(!EMRE.test(p)||ek(p).length>100){bad.push(p);return}var g=gk(p);if(ALLOW[ek(p)]||(g&&ALLOWG[g])){exist.push(p);return}if(g){if(seen['g:'+g]){dup.push(p);return}seen['g:'+g]=1}ok.push(p);if(!/@gmail\.com$/.test(p))odd.push(p)});
     return {ok:ok,bad:bad,dup:dup,exist:exist,odd:odd,total:parts.length};
   }
   function li(t,cls){var l=document.createElement('li');l.textContent=t;if(cls)l.className=cls;return l}
@@ -277,18 +280,21 @@ table.rt td.full{color:var(--good);font-weight:700}
   }
   async function alAdd(){
     if(!PREV||!PREV.ok.length)return;$('alAdd').disabled=true;$('alMsg').textContent='寫入中…';
-    var body={};PREV.ok.forEach(function(x){body[ek(x)]=true});
+    var body={},bg={};PREV.ok.forEach(function(x){body[ek(x)]=true;var g=gk(x);if(g)bg[g]=true});
     try{var r=await fetch(RT+'/allow.json'+qs(),{method:'PATCH',body:JSON.stringify(body)});if(!r.ok)throw 0;
+      if(Object.keys(bg).length){var r2=await fetch(RT+'/allowg.json'+qs(),{method:'PATCH',body:JSON.stringify(bg)});if(!r2.ok)throw 0}
       var sh={};PREV.ok.forEach(function(x){sh[ek(x)]={email:x,t:Date.now()}});await fetch(RT+'/libshare.json'+qs(),{method:'PATCH',body:JSON.stringify(sh)});
       $('alMsg').textContent='已加入 '+PREV.ok.length+' 個帳號。';$('alText').value='';$('alPrev').hidden=true;PREV=null;await alLoad()}
     catch(e){$('alMsg').textContent='寫入沒有成功（網路或權限），名單沒有變動，請再試一次。';$('alAdd').disabled=false}
   }
   async function alRemove(k){
     if(dk(k)===ADMIN_EMAIL)return;
-    try{var r=await fetch(RT+'/allow/'+encodeURIComponent(k)+'.json'+qs(),{method:'DELETE'});if(!r.ok)throw 0;await alLoad()}catch(e){$('alMsg').textContent='移除沒有成功，請再試一次。'}
+    try{var r=await fetch(RT+'/allow/'+encodeURIComponent(k)+'.json'+qs(),{method:'DELETE'});if(!r.ok)throw 0;
+      var g=gk(dk(k));if(g&&!Object.keys(ALLOW).some(function(o){return o!==k&&gk(dk(o))===g}))await fetch(RT+'/allowg/'+encodeURIComponent(g)+'.json'+qs(),{method:'DELETE'});await alLoad()}catch(e){$('alMsg').textContent='移除沒有成功，請再試一次。'}
   }
   async function alLoad(){
     try{ALLOW=(await get('allow'))||{}}catch(e){return}
+    try{ALLOWG=(await get('allowg'))||{}}catch(e){ALLOWG={}}
     try{var sp=(await get('libshare'))||{},sk=Object.keys(sp).sort(),H=$('alShare');if(H){H.textContent='';$('alShareBox').hidden=!sk.length;sk.forEach(function(k){var l=document.createElement('li');l.textContent=sp[k].email;H.appendChild(l)})}}catch(e){}
     var L=$('alList');L.textContent='';var ks=Object.keys(ALLOW).sort();$('alCount').textContent='（'+ks.length+' 個）';
     ks.forEach(function(k){var l=document.createElement('li'),sp=document.createElement('span');sp.className='em';sp.textContent=dk(k);l.appendChild(sp);
@@ -296,6 +302,18 @@ table.rt td.full{color:var(--good);font-weight:700}
       else{var bt=document.createElement('button');bt.type='button';bt.textContent='移除';bt.setAttribute('aria-label','移除 '+dk(k));bt.addEventListener('click',function(){alRemove(k)});l.appendChild(bt)}
       L.appendChild(l)});
   }
+  async function alOne(){
+    var v=($('alOne').value||'').trim().toLowerCase(),m=$('alMsg');
+    if(!EMRE.test(v)||ek(v).length>100){m.textContent='這不是正確的 email 格式，請檢查後再按「加入」。';return}
+    var g=gk(v);if(ALLOW[ek(v)]||(g&&ALLOWG[g])){m.textContent=v+' 已經在名單內。';$('alOne').value='';return}
+    $('alOneBtn').disabled=true;m.textContent='寫入中…';
+    try{var b1={};b1[ek(v)]=true;var r=await fetch(RT+'/allow.json'+qs(),{method:'PATCH',body:JSON.stringify(b1)});if(!r.ok)throw 0;
+      if(g){var b2={};b2[g]=true;var r2=await fetch(RT+'/allowg.json'+qs(),{method:'PATCH',body:JSON.stringify(b2)});if(!r2.ok)throw 0}
+      m.textContent='已加入 '+v+'。'+(g?'':'（不是 gmail.com，請確認他用這個帳號登入 Google。）');$('alOne').value='';await alLoad()}
+    catch(e){m.textContent='寫入沒有成功（網路或權限），名單沒有變動，請再試一次。'}
+    $('alOneBtn').disabled=false;
+  }
+  if($('alOneBtn')){$('alOneBtn').addEventListener('click',alOne);$('alOne').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();alOne()}})}
   if($('alPreview')){$('alPreview').addEventListener('click',alPreview);$('alAdd').addEventListener('click',alAdd);$('alText').addEventListener('input',function(){$('alAdd').disabled=true;PREV=null})}
   window.__alLoad=alLoad;
   async function refresh(){

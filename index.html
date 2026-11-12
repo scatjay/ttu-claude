@@ -31,6 +31,7 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
 #nickhint{font-size:13px;color:var(--warn);margin:5px 2px 0}
 #nickhint[hidden]{display:none}
 #signin{font:inherit;font-weight:800;font-size:17px;color:var(--onbrand);background:var(--accent);border:0;border-radius:10px;padding:14px 22px;min-height:48px;width:100%;cursor:pointer}
+#loginhelp{margin:12px 0 0;font-size:14px;color:var(--muted);text-align:center}
 #signin[disabled]{opacity:.6;cursor:default}
 #signin:focus-visible,#signout:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 #signout{font:inherit;font-size:14px;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer;padding:10px}
@@ -47,6 +48,7 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
 <div id="nickbox"><label for="nick">姓名或暱稱</label><input id="nick" type="text" maxlength="20" autocomplete="nickname" enterkeyhint="go" placeholder="例：王小明"><div id="nickhint">請先填姓名或暱稱，才能登入</div></div>
 <button type="button" id="signin" disabled>確認登入狀態…</button>
 <p id="msg" role="alert"></p>
+<p id="loginhelp">登不進？舉手報出你登入的帳號。</p>
 <button type="button" id="signout" hidden>登出</button>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
