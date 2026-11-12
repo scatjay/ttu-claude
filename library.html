@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>大同示範文獻庫</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;600;700&display=swap">
+<style>
+:root{
+  --bg:#f4f1ea;--surface:#fffdf8;--surface2:#efeadf;--ink:#211e1a;--muted:#6f685d;--hair:#e0d9cb;
+  --accent:#7a2f6a;--accent2:#b0679f;--accent-soft:#ecd6e6;--warn:#b4552c;--onbrand:#fffdf8;
+  --shadow:0 1px 2px rgba(30,25,15,.06),0 6px 18px rgba(30,25,15,.05);
+  --u1:#2f6fb0;--u2:#3f8f80;--u3:#8a6aa8;--u4:#c2703d;--u5:#a8522f;--u6:#7a2f6a;--uc:var(--u6);
+  --sans:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono","Cascadia Mono",Consolas,ui-monospace,monospace;
+  color-scheme:light}
+:root[data-theme="dark"]{
+  --bg:#18160f;--surface:#211e18;--surface2:#2a261e;--ink:#ece6d9;--muted:#a49b8b;--hair:#39342a;
+  --accent:#d99ac8;--accent2:#e8b6da;--accent-soft:#40243a;--warn:#e0824f;--onbrand:#16130f;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 20px rgba(0,0,0,.35);
+  --u1:#7fb0e6;--u2:#7fcabc;--u3:#c0a6dc;--u4:#e0a37f;--u5:#e8a083;--u6:#d99ac8;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.65;font-size:15px;-webkit-font-smoothing:antialiased;
+  padding-block:0 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:40}
+a{color:var(--accent)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* 頁首細列（學習單 .tabs） */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--bg);border-bottom:1px solid var(--hair);
+  padding:8px 0;margin:0 auto;max-width:1260px;display:flex;gap:4px;align-items:center;overflow-x:auto;white-space:nowrap}
+.tabs .brand{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.14em;color:var(--accent);margin-right:10px;padding-left:2px}
+.tabs a,.tabs .tab{font-size:13.5px;color:var(--muted);padding:6px 12px;border-radius:7px;text-decoration:none;flex:0 0 auto}
+.tabs a:hover{background:var(--surface2);color:var(--ink)}
+.tabs a.on{background:var(--accent);color:var(--onbrand);font-weight:700}
+.tabs .sp{flex:1 1 auto}
+main{max-width:880px;margin:0 auto;min-width:0;padding-block:clamp(24px,5vw,48px) 0}
+.toc-wrap>main{padding-block:clamp(16px,3vw,32px) 0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;font-weight:600;color:var(--uc);text-transform:uppercase;overflow-wrap:anywhere}
+h1{font-size:clamp(26px,5vw,44px);font-weight:900;line-height:1.15;text-wrap:balance;letter-spacing:-.01em;margin:8px 0 10px;overflow-wrap:anywhere}
+.lede{font-size:clamp(16px,2.2vw,19px);max-width:62ch;color:var(--muted);margin:0 0 14px;overflow-wrap:anywhere}
+section{margin-top:clamp(34px,6vw,60px);scroll-margin-top:60px}
+section:first-of-type{margin-top:clamp(24px,4vw,40px)}
+h2{font-size:clamp(19px,2.6vw,25px);font-weight:900;margin:0 0 14px;line-height:1.3;scroll-margin-top:60px}
+h2[data-n]::before{content:attr(data-n);font-family:var(--mono);font-size:.62em;font-weight:700;background:var(--uc);color:var(--onbrand);
+  border-radius:6px;padding:2px 9px;margin-right:10px;vertical-align:.14em}
+h3{font-size:15px;font-weight:700;color:var(--uc);margin:0 0 6px}
+.meta{font-family:var(--mono);font-size:12.5px;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px 16px}
+.card{background:var(--surface);border:1px solid var(--hair);border-radius:12px;padding:16px 18px;box-shadow:var(--shadow);min-width:0}
+.card.bar{border-left:4px solid var(--uc)}
+/* 徽章、膠囊、按鈕 */
+.tag{font-family:var(--mono);font-size:10.5px;font-weight:700;border-radius:5px;padding:1px 7px;background:var(--uc);color:var(--onbrand);white-space:nowrap;display:inline-block;line-height:1.7}
+.tag.soft{background:var(--surface2);color:var(--muted);border:1px dashed var(--hair)}
+.tag.lic{background:color-mix(in srgb,var(--uc) 14%,var(--surface));color:var(--uc);font-weight:600}
+.tag.thesis{background:var(--u5);color:var(--onbrand)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.btn{font-family:var(--mono);font-size:12px;font-weight:600;background:var(--surface);color:var(--muted);border:1px solid var(--hair);border-radius:8px;padding:6px 12px;text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--accent2);color:var(--ink)}
+.btn[aria-pressed=true],.btn.primary{background:var(--uc);color:var(--onbrand);border-color:var(--uc)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button{font-size:12.5px;border-radius:99px;border:1px solid var(--hair);background:var(--surface2);color:var(--muted);padding:3px 13px}
+.chips button:hover{border-color:var(--accent2)}
+.chips button[aria-pressed=true]{background:var(--uc);color:var(--onbrand);border-color:var(--uc);font-weight:700}
+input[type=search]{width:100%;border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:10px;padding:8px 12px;font:inherit;min-width:0}
+/* 提示框（學習單 .tipbox / .warn） */
+.warn{background:color-mix(in srgb,var(--warn) 9%,var(--surface));border-left:5px solid var(--warn);border-radius:10px;padding:12px 16px;margin:16px 0;font-size:14px}
+.warn .wt,.tipbox .plabel{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.04em;display:block;margin-bottom:4px}
+.warn .wt{color:var(--warn)}
+.tipbox{background:var(--surface);border:1px solid var(--hair);border-left:4px solid var(--accent);border-radius:10px;padding:12px 16px;margin:12px 0;font-size:14.5px;box-shadow:var(--shadow)}
+.tipbox .plabel{color:var(--accent);font-size:10.5px;text-transform:uppercase}
+.tipbox ol{margin:6px 0 0;padding-left:22px}.tipbox li{margin:6px 0}
+dl.facts{display:grid;grid-template-columns:minmax(0,max-content) minmax(0,1fr);gap:6px 16px;font-size:14px;margin:0}
+dl.facts dt{font-family:var(--mono);font-size:12px;color:var(--muted);padding-top:2px}
+dl.facts dd{margin:0;min-width:0;overflow-wrap:anywhere}
+/* 頁尾 */
+.foot{margin-top:clamp(34px,6vw,60px);border-top:1px solid var(--hair);padding-top:14px;font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.8;overflow-wrap:anywhere}
+.foot p{margin:0 0 6px}
+@media(max-width:640px){dl.facts{grid-template-columns:minmax(0,1fr)}dl.facts dt{padding-top:6px}}
+@media(max-width:480px){.card{padding:14px}.tabs a,.tabs .tab{padding:6px 9px}}
+@media print{.tabs,.btn{display:none}body{background:#fff}}
+
+html.lib-gated body{visibility:hidden}
+/* 目錄頁（沿用 ↳校⑫ 第二版設計） */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.lib{background:var(--surface);border:1px solid var(--hair);border-left:4px solid var(--uc);border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column;color:inherit;text-decoration:none;overflow:hidden;min-width:0;cursor:pointer}
+.lib:hover{border-color:var(--accent2);border-left-color:var(--uc)}
+.lib .th{aspect-ratio:16/9;background:var(--surface2);display:flex;align-items:center;justify-content:center;color:var(--muted);font-family:var(--mono);font-size:12px}
+.lib .bd{padding:12px 14px 14px;display:flex;flex-direction:column;gap:7px;min-width:0}
+.lib .t{font-weight:700;font-size:15.5px;line-height:1.4;overflow-wrap:anywhere}
+.lib .en,.lib .au{font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.lib .eb{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;font-weight:600;color:var(--uc);overflow-wrap:anywhere}
+.group{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--muted);margin:14px 0 6px}
+.chips button .n{font-family:var(--mono);font-size:11px;margin-left:5px;opacity:.85}
+.cnt{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.empty{font-size:13.5px;color:var(--muted)}
+/* 單篇頁 */
+.back{display:inline-block;margin:0 0 10px;font-family:var(--mono);font-size:12.5px;color:var(--accent);text-decoration:none}
+.media{display:grid;gap:14px}
+.mbox{border:1px dashed var(--hair);border-radius:10px;padding:14px;background:var(--surface2);color:var(--muted);font-size:14px}
+.mbox.denied{border-color:var(--warn);color:var(--warn)}
+audio{width:100%;display:block}
+.dv{width:100%;border:0;border-radius:8px;background:var(--surface2);display:block}
+.dv.a{height:240px}.dv.i{height:min(78vh,900px)}.dv.s{height:min(70vh,760px);aspect-ratio:auto}
+.hint{font-size:13px;color:var(--muted);margin:0 0 10px}
+.info img,.sl img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--hair)}
+.sl .nav{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:10px 0}
+/* 登入閘門 */
+#gate{max-width:420px;margin:12vh auto;text-align:center}
+#gate button{font:inherit;font-weight:800;font-size:17px;color:var(--onbrand);background:var(--accent);border:0;border-radius:10px;padding:13px 22px;width:100%;cursor:pointer}
+#gate p{color:var(--muted);font-size:14px}
+#gate .err{color:var(--warn);font-weight:600}
+.userbar{display:flex;align-items:center;gap:8px;margin-left:auto;font-size:13px;color:var(--muted)}
+.userbar button{font:inherit;font-size:13px;color:var(--muted);background:none;border:1px solid var(--hair);border-radius:99px;padding:2px 12px;cursor:pointer}
+</style></head>
+<body>
+<div id="gate" hidden></div>
+<div id="app" hidden>
+<div class="tabs" role="navigation" aria-label="頁首"><span class="brand">大同示範文獻庫</span><span class="userbar"><span id="who"></span><button type="button" id="out">登出</button></span></div>
+<main id="view"></main>
+</div>
+<script>
+(function(){
+  var CFG={"auth": {"apiKey": "AIzaSyDD0t3h27gEkfNhdbiTqu4cqn2YAU3LaLg", "authDomain": "gen-lang-client-0556836042.firebaseapp.com", "projectId": "gen-lang-client-0556836042", "sdk": "10.12.2"}, "db": "https://gen-lang-client-0556836042-default-rtdb.asia-southeast1.firebasedatabase.app", "sess": "DT-20261116"},ITEMS=[{"id": "chu2017_ejmste_s3d", "zh": "立體3D顯示用於產品設計教育比例估計之成效", "en": "The Effectiveness of Using Stereoscopic 3D for Proportion Estimation in Product Design Education", "au": "Chu, P.Y., & Chien, Y.H.", "yr": "2017", "venue": "EURASIA J. Math. Sci. Technol. Educ. 13(10), 6635-6648", "cat": "空間能力與立體顯示", "type": "期刊與會議論文", "tags": ["2017", "公開存取", "DOI 10.12973/ejmste/78183"], "n": 13, "dur": "14 分 04 秒", "use": ["要研究「用立體顯示輔助設計教學中的比例判斷」時，可把它當文獻回顧的起點，並作為本庫其他立體顯示論文的比較基準。", "借它的題目設定來規劃自己的比較：想比哪幾種呈現方式、要量學生哪一種判斷表現，先在紙上列出來再回原文對照。", "它是公開存取論文，可直接回原文核對研究設計與量測方式，再決定自己的研究要沿用、調整或不採用。"]}, {"id": "roca2017_eurasia_s3d", "zh": "以虛擬技術培養工程學生的視覺空間能力", "en": "Virtual Technologies to Develop Visual-Spatial Ability in Engineering Students", "au": "Roca-González, C., Martín-Gutiérrez, J., García-Domínguez, M., & Mato Carrodeguas, M.C.", "yr": "2017", "venue": "EURASIA J. Math. Sci. Technol. Educ. 13(2), 441-468", "cat": "空間能力與立體顯示", "type": "期刊與會議論文", "tags": ["2017", "公開存取", "DOI 10.12973/eurasia.2017.00625a"], "n": 15, "dur": "18 分 01 秒", "use": ["想知道「虛擬技術能否用來培養空間能力」時，可把它當這個議題的入口，先看它引用了哪些相關研究，再延伸閱讀。", "與本庫 Chu 2017 兩篇並讀，整理「立體或虛擬呈現」在設計教育與工程教育兩個場域的用法有何不同。", "要設計空間能力訓練活動時，回原文查它採用哪些訓練工具與測驗，再評估是否適合工業設計系的學生。"]}, {"id": "chu2017_m3d_s3d_hmd_hcii", "zh": "設計教育中不同空間能力學生使用 M3D、S3D 與頭戴顯示器之差異研究", "en": "A Study on the Differences Among M3D, S3D and HMD for Students with Different Degrees of Spatial Ability in Design Education", "au": "Chu, P.Y., Chen, L.C., Kung, H.W., & Su, S.J.", "yr": "2017", "venue": "HCII 2017, CCIS, pp.293-299", "cat": "空間能力與立體顯示", "type": "期刊與會議論文", "tags": ["2017", "訂閱制", "DOI 10.1007/978-3-319-58750-9_41"], "n": 13, "dur": "17 分 14 秒", "use": ["研究若要「依學生空間能力分組」來比較顯示媒介，可參考這篇的分組想法（題名已標示以不同空間能力學生為對象）。", "與 Chu 2017（EURASIA）並讀，把「顯示媒介的差異」和「學生個別差異」分成兩條問題線來整理。", "規劃立體顯示或頭戴顯示器進課堂時，用它檢視是否需要依能力高低安排不同活動；實際結果請回原文確認後再引用。"]}, {"id": "liao2015_spatial_abilities_ijtde", "zh": "空間關係理解、空間定向與空間視覺化能力如何影響3D產品設計表現", "en": "The abilities of understanding spatial relations, spatial orientation, and spatial visualization affect 3D product design performance", "au": "Liao, K.H.", "yr": "2015", "venue": "Int. J. Technol. Des. Educ. 27(1), 131-147", "cat": "空間能力與立體顯示", "type": "期刊與會議論文", "tags": ["2015", "訂閱制", "DOI 10.1007/s10798-015-9330-3"], "n": 10, "dur": "15 分 49 秒", "use": ["可作為「空間能力包含空間關係理解、空間定向、空間視覺化三個面向」的出處之一，用來界定自己研究要測哪幾項能力。", "與 Lin 2015（設計訓練與空間策略）並讀，分別整理「能力如何影響設計表現」與「訓練如何影響能力」兩個方向。", "設計 3D 產品設計課的前測時，可依這三個面向檢查自己的測驗有沒有缺漏。"]}, {"id": "lin2015_design_training_spatial_ijtde", "zh": "設計訓練與空間解題策略對空間能力表現的影響", "en": "Influence of design training and spatial solution strategies on spatial ability performance", "au": "Lin, H.", "yr": "2015", "venue": "Int. J. Technol. Des. Educ. 26(1), 123-131", "cat": "空間能力與立體顯示", "type": "期刊與會議論文", "tags": ["2015", "訂閱制", "DOI 10.1007/s10798-015-9302-7"], "n": 15, "dur": "16 分 25 秒", "use": ["想探討「設計背景是否與空間測驗表現有關」時，可把它當主要對照文獻之一。", "借題名中的「空間解題策略」概念，想想訪談或放聲思考時要問學生哪些解題策略的問題。", "與 Liao 2015 並讀，整理空間能力研究如何處理「受測者背景」這類變項，作為自己研究設計的參考。"]}, {"id": "chu2015_sketching_tools_ijtde", "zh": "各種草圖工具對構想發展中視覺思考的影響", "en": "Effects of various sketching tools on visual thinking in idea development", "au": "Chu, P.Y., Hung, H.Y., Wu, C.F., & Liu, Y.T.", "yr": "2015", "venue": "Int. J. Technol. Des. Educ. 27(2), 291-306", "cat": "設計教育、草圖與創造力", "type": "期刊與會議論文", "tags": ["2015", "訂閱制", "DOI 10.1007/s10798-015-9349-5"], "n": 15, "dur": "13 分 47 秒", "use": ["要比較手繪、數位或 AI 草圖工具時，可把它當「工具比較類研究」的先例，參考它如何安排比較。", "借「視覺思考」這個切入點，想想自己的研究要觀察學生在構想發展中的哪一類表現。", "與 Huang 2025（生成式 AI 虛擬導師）搭配，討論「工具改變構想發展方式」的問題意識。"]}, {"id": "chienchu2017_3dprint_steam_ijsme", "zh": "高中生與大學生在3D列印STEAM工程設計課程中的不同學習成果", "en": "The Different Learning Outcomes of High School and College Students on a 3D-Printing STEAM Engineering Design Curriculum", "au": "Chien, Y.H., & Chu, P.Y.", "yr": "2017", "venue": "Int. J. Sci. Math. Educ. 16(6), 1047-1064", "cat": "設計教育、草圖與創造力", "type": "期刊與會議論文", "tags": ["2017", "訂閱制", "DOI 10.1007/s10763-017-9832-4"], "n": 13, "dur": "14 分 56 秒", "use": ["設計跨年段（高中與大學）比較的課程研究時，可當作分組比較的參考案例。", "規劃 3D 列印或 STEAM 工程設計課程時，回原文查它的課程流程與學習成果指標，再轉成自己的課程大綱。", "可放進文獻回顧的「動手做與製造教育」小節，與本庫的空間能力、草圖論文形成對照。"]}, {"id": "chen2017_midair_gestures_uahci", "zh": "辨識空中手勢操作3D虛擬模型之可用性因素", "en": "Identifying the Usability Factors of Mid-Air Hand Gestures for 3D Virtual Model Manipulation", "au": "Chen, L.C., Cheng, Y.M., Chu, P.Y., & Sandnes, F.E.", "yr": "2017", "venue": "UAHCI/HCII 2017, LNCS, pp.393-402", "cat": "互動介面與手勢", "type": "期刊與會議論文", "tags": ["2017", "訂閱制", "DOI 10.1007/978-3-319-58703-5_29"], "n": 15, "dur": "22 分 32 秒", "use": ["做手勢或體感操作 3D 模型的互動設計時，可當「可用性因素」的起點文獻。", "與 Chu 2017（M3D、S3D、HMD）並讀，把「顯示媒介」與「操作方式」連成同一條互動設計的問題線。", "設計手勢操作的使用者測試前，回原文查它整理出哪些可用性因素，檢查自己的測試題項有沒有對應。"]}, {"id": "chenchu2012_emotion_index_eswa", "zh": "從情感觀點發展產品設計溝通與評價指標", "en": "Developing the index for product design communication and evaluation from emotional perspectives", "au": "Chen, L.C., & Chu, P.Y.", "yr": "2012", "venue": "Expert Syst. Appl. 39(2), 2011-2020", "cat": "情感與產品評價", "type": "期刊與會議論文", "tags": ["2012", "訂閱制", "DOI 10.1016/j.eswa.2011.08.039"], "n": 15, "dur": "20 分 29 秒", "use": ["需要發展「產品溝通與評價」的情感指標時，可當指標發展類研究的參考範本。", "借題名中「溝通」與「評價」兩個用途，想想設計師與使用者之間的評價語彙要怎麼對齊。", "做產品評價問卷前，用來檢查自己的情感詞彙是否有依據，並回原文核對指標的發展程序。"]}, {"id": "huang2025_genai_virtual_tutor_icce", "zh": "可操控的生成式AI設計學習虛擬導師", "en": "Steerable Generative AI-Based Virtual Tutor for Design Learning", "au": "Huang, C.Y., Chu, Y.W., Weng, K.C., Yang, T.H., Cho, L., & Chu, P.Y.", "yr": "2025", "venue": "IEEE ICCE-Taiwan 2025, pp.247-248（2 頁短文）", "cat": "生成式 AI 與設計學習", "type": "期刊與會議論文", "tags": ["2025", "訂閱制", "DOI 10.1109/icce-taiwan66881.2025.11207751"], "n": 13, "dur": "21 分 27 秒", "use": ["做生成式 AI 輔助設計學習（虛擬導師）的研究時，可當入口文獻；它只有 2 頁，細節有限，需另找完整論文補足。", "與 Chu 2015（草圖工具）搭配，討論 AI 導師與傳統草圖工具在構想發展上各扮演什麼角色。", "規劃「可操控（steerable）」導師的設計時，可作為概念先例，並用本庫的學位論文補國內的實作脈絡。"]}, {"id": "thesis_113_lai_zhizhai_aiassist", "zh": "AI 輔助設計在設計教育中的應用探索", "en": "大同大學工業設計學系(所) 碩士論文", "au": "賴芷斳", "yr": "2024", "venue": "民國 113 年", "cat": "生成式 AI 與設計學習", "type": "學位論文", "tags": ["民國 113 年（2024）", "學位論文", "國圖書目"], "n": 15, "dur": "18 分 36 秒", "use": ["撰寫文獻回顧時，可作為「AI 輔助設計進入設計教育」的國內碩士論文參考，補足期刊論文以外的脈絡。", "可從國圖書目連到論文頁，再依其參考文獻往回找值得進一步閱讀的原始研究。", "與 Huang 2025 並讀，區分碩士論文的探索層級與期刊或會議論文的證據層級，引用時寫清楚來源類型。"]}],PEND=[{"t": "學位論文（陸續加入）", "why": "已排隊 9 篇優先學位論文，等 NotebookLM 三套件（語音、簡報、資訊圖）齊全後以「目錄頁＋單篇頁」增量加入；本版先放 1 篇。學位論文書目取自國家圖書館臺灣博碩士論文網，僅供個人學術研究，本庫不放全文。"}],COL={"空間能力與立體顯示": "--u1", "設計教育、草圖與創造力": "--u2", "互動介面與手勢": "--u3", "情感與產品評價": "--u4", "生成式 AI 與設計學習": "--u5"},MEDIA={"folder": "1q_WFIDejp32xglv95AR5ml7raovJGsLt", "files": {"chu2017_ejmste_s3d": {"audio": "1sVii6NFChCsuXrYUJil8AivdE6zJQP5f", "infographic": "1I7JReiKmC7MJv9D9-8VZWpJWbjLH9HmS", "slides": "12xPImB7kKinWK-T4sPjbtVEF8Aec1uJ5"}, "roca2017_eurasia_s3d": {"audio": "15AYUo0m7ARM7SbXh9ewOfj4xVc6Gkxkx", "infographic": "1qjrVHVFi91KplWh2w6Q9xcJImwF3dL3t", "slides": "16R3lskoYCnX6lbjYzS5G1VdLZGLv_jMx"}, "chu2017_m3d_s3d_hmd_hcii": {"audio": "1QFVg7wkprOaQ1MQXTN-0amFdJzUfypVH", "infographic": "1qZsAFjLnhjqc86FR6wHIUclgyGK0_9n4", "slides": "1_oTGrQInCgzIxCAISijH-Xk50_yaRCas"}, "liao2015_spatial_abilities_ijtde": {"audio": "16E4hxYSxjO5rgB0IDzlei3vmjTXg-Xuu", "infographic": "1y3hdZBvN6mxSa3UOV9J-hI3VOE87ybsg", "slides": "1iGrCu9p3dFx16RLbxyy4vb0KHwjPqrr-"}, "lin2015_design_training_spatial_ijtde": {"audio": "1GCNL9vlptrKBF7i1KpYQ1ufX8aOXxHtm", "infographic": "1To08-txkBGNS6Hi7FiDx3bhlk04IKkEi", "slides": "1rDovwbcXMgzsy1V2yKQjXMS-EO9Tjhlb"}, "chu2015_sketching_tools_ijtde": {"audio": "1AHtXDxhxaMSCoVC_nGHU9MA-laeUO7yR", "infographic": "19Rs9_w1n6mJx-lgOj60p9Pk8CCmWdHk_", "slides": "1CTYFKC2IVevapDgUdPvNPKEagpwB0Mjh"}, "chienchu2017_3dprint_steam_ijsme": {"audio": "1TrUI5Hcj1XuVXnMsE-SphNgh2Q7tfONB", "infographic": "1eLrOLerXKYsoonlHZap540zAVvKNtf7X", "slides": "1GZ1TODZG44sWa-VJa-9IBEa4PEd7__Ns"}, "chen2017_midair_gestures_uahci": {"audio": "1DP3M40nXEnDLSLxmgAmhnAzoiKoUpbCM", "infographic": "1D4wfR6BXLv6aqmCXu7aSrO1U66pGBBPK", "slides": "1CrtWZoJYfd5P8ihiXPILf8cFE0Gil4v9"}, "chenchu2012_emotion_index_eswa": {"audio": "1iFe8eAJisMMTCvXmgku3BwoINxBx7VrF", "infographic": "1GpP41Zhv2dM1nMrFh87qJVKdZajq5sGY", "slides": "1fBz_a4q4zQcmdcuBq-Y3Evqq6W7Ic1vZ"}, "huang2025_genai_virtual_tutor_icce": {"audio": "1Xw5H12GAUPU950_vGTCs-AFZzcTJcAdi", "infographic": "1IcAAUOKfcBVySa9Ky9vqIDwZ1FT5Zshc", "slides": "1kOMvzWvsBtS7lRcZ4FKdJ5Q0u_1ieZki"}, "thesis_113_lai_zhizhai_aiassist": {"audio": "17VcXDe0c_euGIsVEZZPlzU5y6sq5XM8q", "infographic": "1TkQLewtE25LGitpqfO1Lv7ur7Nh-2Jqg", "slides": "14iJlvUFq0S1vDiB6A5GX6emQWYJNtEo4"}}};
+  var $=function(s){return document.querySelector(s)};
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  document.documentElement.classList.add('lib-gated');
+  function loadJs(u){return new Promise(function(ok,no){var s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
+
+  /* ===== 媒體介面：之後不論媒體放哪裡（雲端硬碟白名單／資料庫／Storage），只改這個函式 =====
+     getMedia(paperKey, type) → Promise<{status, ...}>
+       type：'audio' | 'infographic' | 'slides'
+       status：'ready'   帶 drive（Google 雲端硬碟檔案 id，用預覽嵌入）；或 url（audio/infographic）／pages:[url,…]（slides）
+               'pending' 還沒接上（目前全部是這個）
+               'denied'  帳號不在白名單（HTTP 401/403）
+     auth：目前登入者（有 getIdToken()），要憑證的方案用它。 */
+  function getMedia(paperKey,type,auth){var f=MEDIA.files&&MEDIA.files[paperKey]&&MEDIA.files[paperKey][type];return Promise.resolve(f?{status:'ready',drive:f}:{status:'pending'})}
+  window.__getMedia=getMedia;
+
+  /* ===== 登入閘門 ===== */
+  var AUTH=null,TOK='',ADMIN='scatjay@gmail.com';
+  function showGate(msg,err,btn){var g=$('#gate');g.hidden=false;$('#app').hidden=true;g.innerHTML='<h1 style="font-size:26px">大同示範文獻庫</h1><p>'+esc(msg)+'</p>'+(err?'<p class="err">'+esc(err)+'</p>':'')+(btn?'<button type="button" id="gin">用 Google 登入</button>':'<button type="button" id="gout" style="background:none;color:var(--muted);border:1px solid var(--hair)">登出</button>');
+    document.documentElement.classList.remove('lib-gated');
+    if(btn)$('#gin').addEventListener('click',function(){AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){var c=(e&&e.code)||'';if(/popup-blocked/i.test(c))return AUTH.signInWithRedirect(new firebase.auth.GoogleAuthProvider());if(!/popup-closed|cancelled/i.test(c))showGate('請用名單內的 Google 帳號登入。','登入沒有完成：'+(c||'不明原因'),true)})});
+    else $('#gout').addEventListener('click',function(){AUTH.signOut()})}
+  async function allowed(){ // 用「只有名單內帳號讀得到」的節點探測；講師帳號一律放行
+    try{var u=AUTH.currentUser;if(u&&u.email&&u.email.toLowerCase()===ADMIN)return true;var r=await fetch(CFG.db+'/dt1116/'+CFG.sess+'/stats/n.json?auth='+encodeURIComponent(TOK));return r.ok}catch(e){return false}}
+  async function boot(){
+    try{
+      var v=CFG.auth.sdk||'10.12.2';await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-app-compat.js');await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-auth-compat.js');
+      firebase.initializeApp({apiKey:CFG.auth.apiKey,authDomain:CFG.auth.authDomain,projectId:CFG.auth.projectId});AUTH=firebase.auth();
+      try{await AUTH.setPersistence(firebase.auth.Auth.Persistence.LOCAL)}catch(e){}
+      try{await AUTH.getRedirectResult()}catch(e){}
+      AUTH.onAuthStateChanged(async function(u){
+        if(!u){showGate('文獻庫只開放給名單內的同學，請先登入。',null,true);return}
+        TOK=await u.getIdToken();
+        if(await allowed()){$('#gate').hidden=true;$('#app').hidden=false;$('#who').textContent=u.email||'';document.documentElement.classList.remove('lib-gated');route()}
+        else showGate('這個帳號（'+(u.email||'')+'）不在文獻庫名單內。','如果你是這次工作坊的學員，請告訴講師你登入用的 Gmail。',false)});
+      $('#out').addEventListener('click',function(){AUTH.signOut()});
+    }catch(e){showGate('登入功能載入失敗，請檢查網路後重新整理。',null,false)}
+  }
+
+  /* ===== 目錄頁 ===== */
+  var cat='全部',typ='全部',q='';
+  function uniq(a){return Array.from(new Set(a))}
+  function hub(){
+    var cats=['全部'].concat(uniq(ITEMS.map(function(x){return x.cat}))),types=['全部'].concat(uniq(ITEMS.map(function(x){return x.type})));
+    function pills(list,get,cnt){return list.map(function(c){return '<button type="button" data-k="'+esc(c)+'" aria-pressed="'+(get()===c)+'"'+(COL[c]?' style="--uc:var('+COL[c]+')"':'')+'>'+esc(c)+'<span class="n">'+cnt(c)+'</span></button>'}).join('')}
+    $('#view').innerHTML='<div class="eyebrow">NBLM 三套件 · 語音／簡報／資訊圖</div><h1>朱老師團隊論文與指導學位論文</h1><p class="lede">NotebookLM 成品集中在這裡閱讀。點卡片進入單篇頁：資訊圖、簡報、語音摘要，每篇另附「這篇可以怎麼用在你的研究」三點建議。</p>'+
+      '<div class="warn" role="note"><span class="wt">NBLM 生成，請與原文核對</span>資訊圖、簡報與語音均為 NotebookLM 自動生成，內容未經逐句查證；引用請回到原文。</div>'+
+      '<section><h2 data-n="01">找文獻</h2><input id="q" type="search" placeholder="搜尋標題、作者、標籤" aria-label="搜尋" value="'+esc(q)+'"><div class="group">主題分類</div><div class="chips" id="cats">'+pills(cats,function(){return cat},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.cat===c}).length})+'</div><div class="group">類型</div><div class="chips" id="types">'+pills(types,function(){return typ},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.type===c}).length})+'</div></section>'+
+      '<section><h2 data-n="02">文獻 <span class="cnt" id="cnt"></span></h2><div class="grid" id="grid"></div></section>'+
+      (PEND.length?'<section><h2 data-n="03">陸續加入</h2><div class="tipbox">'+PEND.map(function(x){return '<span class="plabel">'+esc(x.t)+'</span>'+esc(x.why)}).join('<br>')+'</div></section>':'')+
+      '<section><h2 data-n="04">使用須知</h2><div class="card bar" style="font-size:14px"><p style="margin:0 0 8px">本頁成品為個人學術研究與課堂示範用之 AI 生成輔助材料，不取代閱讀原文。訂閱制論文僅供個人學術研究；學位論文書目連到國家圖書館臺灣博碩士論文網，僅供個人學術研究之檢索與閱讀，本庫不放全文。請勿公開分享。</p><p style="margin:0">分類依書目資料與題名判斷，中文題名為編譯者翻譯，非官方譯名。</p></div></section>';
+    function bind(id,set){$(id).addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;set(b.getAttribute('data-k'));[].slice.call($(id).querySelectorAll('button')).forEach(function(x){x.setAttribute('aria-pressed',x===b)});grid()})}
+    bind('#cats',function(v){cat=v});bind('#types',function(v){typ=v});$('#q').addEventListener('input',function(){q=this.value;grid()});grid();
+  }
+  function grid(){
+    var g=$('#grid');g.innerHTML='';var n=0,ql=q.trim().toLowerCase();
+    ITEMS.forEach(function(p){
+      if(cat!=='全部'&&p.cat!==cat)return;if(typ!=='全部'&&p.type!==typ)return;
+      if(ql&&(p.zh+p.en+p.au+p.tags.join(' ')+p.cat+p.type).toLowerCase().indexOf(ql)<0)return;n++;
+      var a=document.createElement('a');a.className='lib';a.href='#/p/'+p.id;a.style.setProperty('--uc','var('+(COL[p.cat]||'--u6')+')');
+      a.innerHTML='<div class="th">資訊圖縮圖（待接）</div><div class="bd"><div class="eb">'+esc(p.cat)+' · '+esc(p.yr)+'</div><div class="t">'+esc(p.zh)+'</div><div class="en">'+esc(p.en)+'</div><div class="au">'+esc(p.au)+'　'+esc(p.venue)+'</div><div class="tags">'+(p.type==='學位論文'?'<span class="tag thesis">學位論文</span>':'')+'<span class="tag soft">語音 '+esc(p.dur||'—')+'</span><span class="tag soft">簡報 '+(p.n||'—')+' 頁</span><span class="tag soft">資訊圖</span></div><div class="en">'+p.tags.map(esc).join('、')+'</div></div>';
+      g.appendChild(a)});
+    $('#cnt').textContent=n+' 篇';if(!n)g.innerHTML='<p class="empty">沒有符合的文獻。</p>';
+  }
+
+  /* ===== 單篇頁 ===== */
+  async function paper(id){
+    var p=ITEMS.filter(function(x){return x.id===id})[0];if(!p){location.hash='#/';return}
+    var uc='var('+(COL[p.cat]||'--u6')+')';
+    $('#view').innerHTML='<a class="back" href="#/">← 回目錄</a><div style="--uc:'+uc+'"><div class="eyebrow">'+esc(p.cat)+' · '+esc(p.yr)+'</div><h1>'+esc(p.zh)+'</h1><p class="lede">'+esc(p.en)+'</p><div class="tags">'+(p.type==='學位論文'?'<span class="tag thesis">學位論文</span>':'')+p.tags.map(function(t){return '<span class="tag lic">'+esc(t)+'</span>'}).join('')+'</div>'+
+      '<div class="warn" role="note"><span class="wt">NBLM 生成，請與原文核對</span>資訊圖、簡報、語音皆由 NotebookLM 依來源自動生成，未經人工逐句查證；引用請回到原文。</div>'+
+      '<section><h2 data-n="01">書目與來源</h2><div class="card bar"><dl class="facts"><dt>作者</dt><dd>'+esc(p.au)+'</dd><dt>出處</dt><dd>'+esc(p.venue)+'</dd><dt>年份</dt><dd>'+esc(p.yr)+'</dd><dt>分類</dt><dd>'+esc(p.cat)+'・'+esc(p.type)+'</dd></dl></div></section>'+
+      '<section><h2 id="audio" data-n="02">語音摘要 <span class="cnt">'+esc(p.dur||'')+'</span></h2><p class="hint">影音檔放在私人雲端硬碟，只有登記的帳號打得開：請用你登記的 Google 帳號登入瀏覽器。如果看到「需要存取權」，表示目前登入的帳號不在名單內。</p><div class="media" id="m-audio"></div></section>'+
+      '<section><h2 id="visual" data-n="03">資訊圖與簡報</h2><div class="media" id="m-info"></div><div class="media" id="m-slides" style="margin-top:14px"></div></section>'+
+      '<section><h2 id="use" data-n="04">這篇可以怎麼用在你的研究</h2><div class="tipbox"><ol>'+(p.use||[]).map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ol></div></section></div>';
+    window.scrollTo(0,0);
+    function dv(kind,id,label){return '<iframe class="dv '+kind+'" src="https://drive.google.com/file/d/'+esc(id)+'/preview" title="'+esc(label)+'" allow="autoplay" loading="lazy" referrerpolicy="no-referrer"></iframe>'}
+    function box(host,label,m,render){var el=$(host);if(m.status==='ready'&&m.drive){el.innerHTML=dv(host==='#m-audio'?'a':host==='#m-info'?'i':'s',m.drive,label);return}if(m.status==='ready')render(el,m);else el.innerHTML='<div class="mbox'+(m.status==='denied'?' denied':'')+'">'+esc(label)+(m.status==='denied'?'：這個帳號沒有權限。':'：媒體檔還沒接上，之後會在這裡直接播放／顯示。')+'</div>'}
+    var u=AUTH&&AUTH.currentUser;
+    var gm=window.__mediaOverride||getMedia;var r=await Promise.all([gm(id,'audio',u),gm(id,'infographic',u),gm(id,'slides',u)]);
+    box('#m-audio','語音摘要',r[0],function(el,m){el.innerHTML='<audio controls preload="metadata" src="'+esc(m.url)+'"></audio>'});
+    box('#m-info','資訊圖',r[1],function(el,m){el.innerHTML='<div class="info"><img src="'+esc(m.url)+'" alt="資訊圖"></div>'});
+    box('#m-slides','簡報',r[2],function(el,m){var i=0,pg=m.pages||[];el.innerHTML='<div class="sl"><img alt="簡報"><div class="nav"><button class="btn" type="button" id="sp">上一頁</button><span class="cap"></span><button class="btn" type="button" id="sn">下一頁</button></div></div>';
+      function show(){el.querySelector('img').src=pg[i];el.querySelector('.cap').textContent=(i+1)+' / '+pg.length;$('#sp').disabled=i===0;$('#sn').disabled=i===pg.length-1}
+      $('#sp').onclick=function(){i--;show()};$('#sn').onclick=function(){i++;show()};show()});
+  }
+  function route(){var m=/^#\/p\/([A-Za-z0-9_-]+)/.exec(location.hash);if(m)paper(m[1]);else hub()}
+  window.addEventListener('hashchange',function(){if(!$('#app').hidden)route()});
+  window.__lib={items:ITEMS,route:route};
+  boot();
+})();
+</script>
+</body></html>

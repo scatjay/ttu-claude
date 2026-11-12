@@ -986,9 +986,10 @@ details.dd>summary{font-size:15.5px;padding:var(--s3) var(--s4)}
 .tag.fast,.lanes>div.fast b::before{content:"⚡ "}
 .tag.fast{background:transparent;color:var(--muted);border:1.5px dashed var(--muted)}
 /* 做完的步驟：淡化、編號圓圈變打勾 */
-li.stp.done{opacity:.62}
+li.stp.done{opacity:1;background:color-mix(in srgb,var(--surface) 55%,var(--bg))}   /* 用底色淡化、不降文字不透明度：文字對比維持 AA（muted 在此底色上約 5:1）*/
+li.stp.done .tag{opacity:.75}
 li.stp.done::before{content:"✓"!important}
-li.stp.done .st{text-decoration:line-through;text-decoration-thickness:1px}
+li.stp.done .st,.done .st{text-decoration:none!important}
 /* 「卡住了？先看備案」改成較小的次要按鈕 */
 .nxt a.lost{background:none;border:1px dashed color-mix(in srgb,var(--warn) 45%,var(--hair));color:var(--warn);font-size:11.5px;font-weight:600;padding:0 var(--s2);border-radius:var(--r-sm);line-height:1.8}
 .nxt a.lost:hover{background:color-mix(in srgb,var(--warn) 10%,var(--surface));text-decoration:none}

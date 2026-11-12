@@ -63,6 +63,21 @@ nav.tabs{display:flex;gap:6px;margin-top:10px}
 .fblist .nk{font-weight:700;grid-column:1/-1}
 .fblist .tx{grid-column:1/-1;overflow-wrap:anywhere;font-size:14.5px}
 .fblist li.new{border-color:var(--accent)}
+#alText{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:15px;line-height:1.6;color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:10px 12px;resize:vertical}
+#alText:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
+.alrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px}
+.albtn{font:inherit;font-weight:700;font-size:14px;padding:8px 18px;border-radius:10px;border:1px solid var(--hair);background:var(--surface);color:var(--ink);cursor:pointer}
+.albtn.pri{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.albtn[disabled]{opacity:.45;cursor:default}
+#alMsg{font-size:13.5px;color:var(--muted)}
+#alPrev{margin-top:12px;border:1px solid var(--hair);border-radius:10px;padding:12px 14px;background:var(--surface2);font-size:14px}
+#alPrev b{font-variant-numeric:tabular-nums}
+#alPrev ul{margin:6px 0 0;padding-left:20px}
+.allist{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.allist li{display:flex;align-items:center;gap:10px;padding:7px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--surface);font-size:14px}
+.allist li span.em{flex:1;min-width:0;overflow-wrap:anywhere}
+.allist li .badge{font-family:var(--mono);font-size:11px;font-weight:700;background:var(--accent);color:var(--surface);border-radius:6px;padding:1px 8px}
+.allist li button{font:inherit;font-size:13px;color:var(--warn);background:none;border:1px solid color-mix(in srgb,var(--warn) 40%,var(--hair));border-radius:8px;padding:2px 10px;cursor:pointer}
 .tbl{overflow-x:auto}
 table.rt{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
 table.rt th{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted);font-weight:600;text-align:left;padding:0 8px 6px 0;border-bottom:1px solid var(--hair);white-space:nowrap}
@@ -81,9 +96,18 @@ table.rt td.full{color:var(--good);font-weight:700}
 <h1>大同學習單後台</h1>
 <p class="sub">給講師看：學員做到哪、卡在哪、助教用了多少。所有資料都是匿名事件，不含姓名，也不含學員的提問內容。</p>
 <p class="stamp" id="stamp">讀取中…</p>
-<nav class="tabs" id="tabs" hidden><button type="button" class="tabbtn on" data-v="prog">進度與助教</button><button type="button" class="tabbtn" data-v="self">自評</button></nav>
+<nav class="tabs" id="tabs" hidden><button type="button" class="tabbtn on" data-v="prog">進度與助教</button><button type="button" class="tabbtn" data-v="self">自評</button><button type="button" class="tabbtn" data-v="allow">白名單</button></nav>
 </header>
 <div id="empty" class="empty" hidden>還沒有彙整快照。學員開始使用 v9 學員版後，請在對話裡叫 Claude「更新大同後台」，它會讀學員版資料庫、彙整後寫進這一頁。</div>
+<div id="allowview" hidden>
+  <section class="panel"><h2>白名單管理（哪些 Google 帳號可以用助教與學習單）</h2>
+  <p class="note">貼上學員的 Gmail 清單（一行一個，或用逗號、空白隔開）→ 按「預覽」→ 確認無誤再按「加入」。預覽只是檢查，不會寫入。</p>
+  <textarea id="alText" rows="6" placeholder="例：student1@gmail.com&#10;student2@gmail.com" aria-label="學員 email 清單"></textarea>
+  <div class="alrow"><button type="button" id="alPreview" class="albtn">預覽</button><button type="button" id="alAdd" class="albtn pri" disabled>確認加入</button><span id="alMsg" role="status"></span></div>
+  <div id="alPrev" hidden></div></section>
+  <section class="panel" id="alShareBox" style="margin-top:18px" hidden><h2>等待共用到「文獻庫」雲端資料夾的帳號</h2><p class="note">這些帳號已加入白名單，但雲端硬碟的檢視權限不會自動給；確認名單無誤後，請告訴 Claude「同步文獻庫共用」，由 Claude 以「檢視者、不發通知信」逐一加入，完成後這份清單會清空。</p><ul class="allist" id="alShare"></ul></section>
+  <section class="panel" style="margin-top:18px"><h2>目前名單 <span class="note" id="alCount"></span></h2><ul class="allist" id="alList"></ul></section>
+</div>
 <div id="selfview" hidden>
 <section class="panel"><h2>各單元自評三題</h2><p class="sub" style="margin:0 0 10px">代號由登入帳號換算而來（同一人固定同一代號），不含姓名與信箱。　<label for="selfUnit">單元：</label><select id="selfUnit"><option value="all">全部</option></select></p><div id="selfDist"></div></section>
 <section class="panel" style="margin-top:22px"><h2>學員留給講師的一句話</h2><div id="selfList"></div><p class="note">只顯示代號、單元與內容；內容是學員自己選填的，投影時請留意含個資的句子。</p></section>
@@ -229,13 +253,56 @@ table.rt td.full{color:var(--good);font-weight:700}
     sel.addEventListener('change',renderSelf);
     [].slice.call(document.querySelectorAll('.tabbtn')).forEach(function(bn){bn.addEventListener('click',function(){
       [].slice.call(document.querySelectorAll('.tabbtn')).forEach(function(x){x.classList.toggle('on',x===bn)});
-      var v=bn.getAttribute('data-v');$('app').hidden=(v!=='prog');$('selfview').hidden=(v!=='self')})});
+      var v=bn.getAttribute('data-v');$('app').hidden=(v!=='prog');$('selfview').hidden=(v!=='self');$('allowview').hidden=(v!=='allow')})});
   }
+
+  /* ---- 白名單管理：貼上清單 → 預覽 → 確認加入；可移除 ---- */
+  var ADMIN_EMAIL='scatjay@gmail.com',ALLOW={};
+  function ek(e){return e.toLowerCase().replace(/\./g,',')}
+  function dk(k){return k.replace(/,/g,'.')}
+  var EMRE=/^[a-z0-9_+.-]{1,64}@[a-z0-9-]+(\.[a-z0-9-]+)+$/;
+  function parseEmails(text){
+    var parts=text.split(/[\s,;，；、]+/).map(function(x){return x.trim().toLowerCase()}).filter(Boolean),seen={},ok=[],bad=[],dup=[],exist=[],odd=[];
+    parts.forEach(function(p){if(seen[p]){dup.push(p);return}seen[p]=1;if(!EMRE.test(p)||ek(p).length>100){bad.push(p);return}if(ALLOW[ek(p)]){exist.push(p);return}ok.push(p);if(!/@gmail\.com$/.test(p))odd.push(p)});
+    return {ok:ok,bad:bad,dup:dup,exist:exist,odd:odd,total:parts.length};
+  }
+  function li(t,cls){var l=document.createElement('li');l.textContent=t;if(cls)l.className=cls;return l}
+  var PREV=null;
+  function alPreview(){
+    var r=parseEmails($('alText').value);PREV=r;var box=$('alPrev');box.textContent='';box.hidden=false;
+    var h=document.createElement('div');h.innerHTML='共讀到 <b></b> 個　→　<b></b> 個會新增、<b></b> 個已在名單、<b></b> 個重複、<b></b> 個格式不對';var bs=h.querySelectorAll('b');bs[0].textContent=r.total;bs[1].textContent=r.ok.length;bs[2].textContent=r.exist.length;bs[3].textContent=r.dup.length;bs[4].textContent=r.bad.length;box.appendChild(h);
+    if(r.ok.length){var u=document.createElement('ul');r.ok.forEach(function(x){u.appendChild(li(x+(r.odd.indexOf(x)>=0?'　（不是 gmail.com，請確認這是學員用來登入 Google 的帳號）':'')))});var t=document.createElement('div');t.textContent='將新增：';box.appendChild(t);box.appendChild(u)}
+    if(r.bad.length){var u2=document.createElement('ul');r.bad.forEach(function(x){u2.appendChild(li(x))});var t2=document.createElement('div');t2.style.marginTop='8px';t2.textContent='格式不對（不會加入）：';box.appendChild(t2);box.appendChild(u2)}
+    $('alAdd').disabled=!r.ok.length;$('alMsg').textContent=r.ok.length?'請核對上面的名單，沒問題再按「確認加入」。':'沒有可新增的 email。';
+  }
+  async function alAdd(){
+    if(!PREV||!PREV.ok.length)return;$('alAdd').disabled=true;$('alMsg').textContent='寫入中…';
+    var body={};PREV.ok.forEach(function(x){body[ek(x)]=true});
+    try{var r=await fetch(RT+'/allow.json'+qs(),{method:'PATCH',body:JSON.stringify(body)});if(!r.ok)throw 0;
+      var sh={};PREV.ok.forEach(function(x){sh[ek(x)]={email:x,t:Date.now()}});await fetch(RT+'/libshare.json'+qs(),{method:'PATCH',body:JSON.stringify(sh)});
+      $('alMsg').textContent='已加入 '+PREV.ok.length+' 個帳號。';$('alText').value='';$('alPrev').hidden=true;PREV=null;await alLoad()}
+    catch(e){$('alMsg').textContent='寫入沒有成功（網路或權限），名單沒有變動，請再試一次。';$('alAdd').disabled=false}
+  }
+  async function alRemove(k){
+    if(dk(k)===ADMIN_EMAIL)return;
+    try{var r=await fetch(RT+'/allow/'+encodeURIComponent(k)+'.json'+qs(),{method:'DELETE'});if(!r.ok)throw 0;await alLoad()}catch(e){$('alMsg').textContent='移除沒有成功，請再試一次。'}
+  }
+  async function alLoad(){
+    try{ALLOW=(await get('allow'))||{}}catch(e){return}
+    try{var sp=(await get('libshare'))||{},sk=Object.keys(sp).sort(),H=$('alShare');if(H){H.textContent='';$('alShareBox').hidden=!sk.length;sk.forEach(function(k){var l=document.createElement('li');l.textContent=sp[k].email;H.appendChild(l)})}}catch(e){}
+    var L=$('alList');L.textContent='';var ks=Object.keys(ALLOW).sort();$('alCount').textContent='（'+ks.length+' 個）';
+    ks.forEach(function(k){var l=document.createElement('li'),sp=document.createElement('span');sp.className='em';sp.textContent=dk(k);l.appendChild(sp);
+      if(dk(k)===ADMIN_EMAIL){var b=document.createElement('span');b.className='badge';b.textContent='講師';l.appendChild(b)}
+      else{var bt=document.createElement('button');bt.type='button';bt.textContent='移除';bt.setAttribute('aria-label','移除 '+dk(k));bt.addEventListener('click',function(){alRemove(k)});l.appendChild(bt)}
+      L.appendChild(l)});
+  }
+  if($('alPreview')){$('alPreview').addEventListener('click',alPreview);$('alAdd').addEventListener('click',alAdd);$('alText').addEventListener('input',function(){$('alAdd').disabled=true;PREV=null})}
+  window.__alLoad=alLoad;
   async function refresh(){
     try{
       var r=await Promise.all([get('ev'),get('usage'),get('config'),get('hb'),get('self'),get('profile')]);
       var evs=r[0]?Object.keys(r[0]).map(function(k){return r[0][k]}):[];
-      render(aggregate(evs,r[1],r[2],r[3]));SELFDATA=r[4];PROFILES=r[5]||{};LASTEVS=evs;initTabs();renderSelf();renderRoster();refreshFb();
+      render(aggregate(evs,r[1],r[2],r[3]));SELFDATA=r[4];PROFILES=r[5]||{};LASTEVS=evs;initTabs();renderSelf();renderRoster();refreshFb();alLoad();
     }catch(e){
       if(e&&e.code==='denied'){$('stamp').textContent='這個帳號沒有讀取權限（只有講師白名單的 Google 帳號可以）。'}
       else $('stamp').textContent='讀取失敗：'+((e&&e.code)||e)+'，20 秒後重試。';
