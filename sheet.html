@@ -940,6 +940,21 @@ body{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
   .meta span:nth-child(1)::before{content:'🕙'}.meta span:nth-child(2)::before{content:'⏱'}.meta span:nth-child(3)::before{content:'🧩'}
   .meta span:nth-child(4)::before{content:'🛠'}.meta span:nth-child(5)::before{content:'💻'}.meta span:nth-child(6)::before{content:'👤'}
 }
+
+/* ---- YouTube（不公開）：步驟內就地播放、章節鈕換秒數 ---- */
+.vid.wait{display:inline-block!important;opacity:.75;border-style:dashed!important;cursor:default}
+.ytbox{margin:10px 0 4px;border:1px solid var(--hair);border-radius:10px;overflow:hidden;background:var(--surface)}
+.ytbox[hidden]{display:none}
+.ytbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:7px 10px;border-bottom:1px solid var(--hair);font-size:13.5px}
+.ytbar b{font-weight:700;color:var(--uc,var(--accent))}
+.ytseek{display:flex;gap:6px;flex-wrap:wrap;flex:1;min-width:0}
+.ytseek button,.ytx{font:inherit;font-size:13px;font-weight:600;color:var(--uc,var(--accent));background:color-mix(in srgb,var(--uc,var(--accent)) 10%,transparent);border:1px solid color-mix(in srgb,var(--uc,var(--accent)) 35%,transparent);border-radius:99px;padding:3px 11px;cursor:pointer}
+@media(max-width:520px){.ytseek{flex:1 0 100%;order:3}.ytbar b{flex:1}}
+.ytseek button{border-radius:10px;text-align:left;line-height:1.35}
+.ytx{color:var(--muted);background:none;border-color:var(--hair)}
+.ytseek button.on{color:var(--onbrand,#fff);background:var(--uc,var(--accent));border-color:var(--uc,var(--accent))}
+.ythost{position:relative;aspect-ratio:16/9;background:#000;max-width:100%}
+.ythost iframe,.ythost .ytmount{position:absolute;inset:0;width:100%;height:100%;border:0}
 </style>
 <div id="ta-pill" hidden><span id="ta-pill-who"></span><button type="button" id="ta-pill-btn" class="loginbtn">用 Google 登入</button></div>
 <button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel">問AI助教</button>
@@ -1183,9 +1198,44 @@ body{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
   /* ---- 影片鈕：依所在步驟找秒數，在頁內播放器從該秒開始播；沒有網址就標「待上傳」 ---- */
   var VCFG=null;
   try{if(location.protocol!=='file:')fetch('videos.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(j){VCFG=j;markVids()}).catch(function(){})}catch(e){}
-  function markVids(){[].slice.call(document.querySelectorAll('a.vid[data-video]')).forEach(function(x){var c=VCFG&&VCFG[x.getAttribute('data-video')];if(c&&c.src){x.setAttribute('href','#v-'+x.getAttribute('data-video'));x.classList.remove('todo');x.removeAttribute('title')}})}
+  function markVids(){[].slice.call(document.querySelectorAll('a.vid[data-video]')).forEach(function(x){var v=x.getAttribute('data-video'),c=VCFG&&VCFG[v];if(c&&(c.yt||c.src)){x.setAttribute('href','#v-'+v);x.classList.remove('todo','wait');x.removeAttribute('title');if(x._lab)x.textContent=x._lab}else if(!x.classList.contains('todo')){if(!x._lab)x._lab=x.textContent;x.classList.add('wait');x.setAttribute('href','#v-'+v);x.textContent='▶ 影片待上傳'}})}
   function vidT(v,step){var c=(VCFG&&VCFG[v]&&VCFG[v].chapters)||[];for(var i=0;i<c.length;i++){if(c[i].step===step)return +c[i].t||0}return 0}
   function vidMsg(a,text){var m=a.parentNode.querySelector('.vidmsg');if(!m){m=document.createElement('span');m.className='vidmsg';m.setAttribute('role','status');a.parentNode.insertBefore(m,a.nextSibling)}m.textContent=text;clearTimeout(m._t);m._t=setTimeout(function(){m.textContent=''},5000)}
+  /* ---- YouTube（不公開）嵌入：在該步驟下方就地播放，章節鈕用 seekTo 換秒數 ---- */
+  var YTP={},YTLOAD=0;
+  function ytApi(cb){
+    if(window.YT&&YT.Player){cb();return}
+    (window.__ytq=window.__ytq||[]).push(cb);if(YTLOAD)return;YTLOAD=1;
+    var prev=window.onYouTubeIframeAPIReady;window.onYouTubeIframeAPIReady=function(){if(prev)try{prev()}catch(e){}(window.__ytq||[]).splice(0).forEach(function(f){try{f()}catch(e){}})};
+    var s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.async=true;document.head.appendChild(s);
+  }
+  function mmss(t){t=Math.round(+t||0);return Math.floor(t/60)+':'+('0'+(t%60)).slice(-2)}
+  function ytBox(li,v,id){
+    var box=li.querySelector('.ytbox[data-v="'+v+'"]');if(box)return box;
+    box=document.createElement('div');box.className='ytbox';box.setAttribute('data-v',v);box.setAttribute('data-yt',id);
+    box.innerHTML='<div class="ytbar"><b>影片 '+v+'</b><span class="ytseek"></span><button type="button" class="ytx">收起</button></div><div class="ythost"><div class="ytmount"></div></div>';
+    var nxt=li.querySelector('.nxt');(nxt&&nxt.parentNode===li?nxt:li.lastElementChild).insertAdjacentElement('afterend',box);
+    var cs=((VCFG&&VCFG[v]&&VCFG[v].chapters)||[]).filter(function(c){var e=document.getElementById(c.step);return e&&e.matches('li.stp')});
+    var host=box.querySelector('.ytseek');
+    if(cs.length>1)cs.forEach(function(c){var e=document.getElementById(c.step),st=e.querySelector('.st'),nm=(st?st.textContent:c.step).replace(/^(?:★|必做|標準|\s)+/,'').trim().slice(0,12);
+      var b=document.createElement('button');b.type='button';b.setAttribute('data-t',c.t);b.textContent='▶ '+nm+' '+mmss(c.t);b.addEventListener('click',function(){ytPlay(li,v,id,+c.t)});host.appendChild(b)});
+    box.querySelector('.ytx').addEventListener('click',function(){var p=YTP[li.id+'|'+v];try{p&&p.pauseVideo()}catch(e){}box.hidden=true});
+    return box;
+  }
+  function ytMark(box,t){[].slice.call(box.querySelectorAll('.ytseek button')).forEach(function(b){b.classList.toggle('on',Math.abs((+b.getAttribute('data-t'))-t)<1)})}
+  function ytPlay(li,v,id,t){
+    var box=ytBox(li,v,id),key=li.id+'|'+v;box.hidden=false;ytMark(box,t);
+    Object.keys(YTP).forEach(function(k){if(k!==key){try{YTP[k].pauseVideo()}catch(e){}}});
+    try{box.scrollIntoView({block:'nearest',behavior:'smooth'})}catch(e){}
+    if(YTP[key]){try{YTP[key].seekTo(t,true);YTP[key].playVideo()}catch(e){}return}
+    YTP[key]=null;
+    ytApi(function(){
+      YTP[key]=new YT.Player(box.querySelector('.ytmount'),{host:'https://www.youtube-nocookie.com',videoId:id,width:'100%',height:'100%',
+        playerVars:{start:Math.floor(t),rel:0,playsinline:1,modestbranding:1,origin:location.origin},
+        events:{onReady:function(e){try{e.target.seekTo(t,true);e.target.playVideo()}catch(x){}}}});
+    });
+  }
+  window.__yt={players:YTP,play:ytPlay};
   var VP=null;
   function vpEnsure(){
     if(VP)return VP;var d=document.createElement('div');d.id='ta-vp';d.hidden=true;
@@ -1207,6 +1257,7 @@ body{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
   document.addEventListener('click',function(ev){
     var a=ev.target.closest&&ev.target.closest('a.vid[data-video]');if(!a)return;ev.preventDefault();
     var v=a.getAttribute('data-video'),li=a.closest('li.stp'),step=li?li.id:'',cfg=VCFG&&VCFG[v],src=cfg&&cfg.src,t=vidT(v,step);
+    if(cfg&&cfg.yt&&li){ytPlay(li,v,cfg.yt,t);return}
     if(!src){vidMsg(a,'影片待上傳，上傳後這裡就能直接播放。');return}
     if(/^https?:[/][/](www[.])?(youtu|drive[.]google)/.test(src)){window.open(src+(src.indexOf('youtu')>=0?(src.indexOf('?')<0?'?':'&')+'t='+t:'#t='+t),'_blank','noopener');return}
     openVideo(src,t,'影片 '+v+(step?'（'+step+'）':''));
