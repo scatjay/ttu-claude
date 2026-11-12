@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>大同大學博士班設計學特論工作營</title>
-<script>window.ENTRY_CFG={"entryUrl": "https://scatjay.github.io/dt1116-claude-workshop/", "sheet": "sheet.html", "auth": {"apiKey": "AIzaSyDD0t3h27gEkfNhdbiTqu4cqn2YAU3LaLg", "authDomain": "gen-lang-client-0556836042.firebaseapp.com", "projectId": "gen-lang-client-0556836042", "sdk": "10.12.2"}};</script>
+<script>window.ENTRY_CFG={"entryUrl": "https://scatjay.github.io/dt1116-claude-workshop/", "sheet": "sheet.html", "auth": {"apiKey": "AIzaSyDD0t3h27gEkfNhdbiTqu4cqn2YAU3LaLg", "authDomain": "gen-lang-client-0556836042.firebaseapp.com", "projectId": "gen-lang-client-0556836042", "sdk": "10.12.2"}, "db": "https://gen-lang-client-0556836042-default-rtdb.asia-southeast1.firebasedatabase.app", "sess": "DT-20261116"};</script>
 <style>
 /* 入口頁：只放工作營名稱、日期、走讀 QR 動畫、Google 登入鈕。學習單內容在 sheet.html，登入後才進得去。 */
 :root{--bg:#f4f1ea;--surface:#fffdf8;--ink:#211e1a;--muted:#6f685d;--hair:#e0d9cb;--accent:#7a2f6a;--onbrand:#fffdf8;--warn:#b4552c;--surface2:#efeadf;
@@ -22,6 +22,12 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
 #sfx-btn{display:none!important}   /* 入口頁不放音樂開關：音效預設靜音，也不需要 */
 .btn2{border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0;cursor:pointer;font:inherit}
 .btn2:active{background:var(--surface2)}
+#nickbox{width:100%;text-align:left;margin:2px 0 4px}
+#nickbox label{display:block;font-size:14px;font-weight:700;margin:0 0 4px}
+#nick{font:inherit;font-size:17px;width:100%;padding:12px 14px;border:1.5px solid var(--hair);border-radius:12px;background:var(--surface);color:var(--ink);min-height:48px}
+#nick:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+#nickhint{font-size:13px;color:var(--warn);margin:5px 2px 0}
+#nickhint[hidden]{display:none}
 #signin{font:inherit;font-weight:800;font-size:17px;color:var(--onbrand);background:var(--accent);border:0;border-radius:12px;padding:14px 22px;min-height:48px;width:100%;cursor:pointer}
 #signin[disabled]{opacity:.6;cursor:default}
 #signin:focus-visible,#signout:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
@@ -36,6 +42,7 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
 <h1>大同大學博士班設計學特論工作營</h1>
 <p class="date">2026 年 11 月 16 日</p>
 <div id="morph-wrap"><canvas id="morph" aria-label="校園像素場景，會變成進入學習單的 QR Code"></canvas><div id="morph-hint">點一下運鏡成 QR，同學掃了就能進學習單</div></div>
+<div id="nickbox"><label for="nick">姓名或暱稱</label><input id="nick" type="text" maxlength="20" autocomplete="nickname" enterkeyhint="go"><div id="nickhint">請先填姓名或暱稱，才能登入</div></div>
 <button type="button" id="signin" disabled>確認登入狀態…</button>
 <p id="msg" role="alert"></p>
 <button type="button" id="signout" hidden>登出</button>
@@ -66,25 +73,34 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
   var C=window.ENTRY_CFG||{},$=function(i){return document.getElementById(i)},btn=$('signin'),out=$('signout'),msg=$('msg'),AUTH=null,mode='wait';
   var ua=navigator.userAgent,ios=/iPhone|iPad|iPod/i.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
   var mobile=!ios&&/Android|Mobile/i.test(ua),IAB=/Line\/|FBAN|FBAV|FB_IAB|Instagram|MicroMessenger|; wv\)|GSA\//i.test(ua);
-  var PEND='dt1116_login_pending',POP='dt1116_prefer_popup';
+  var PEND='dt1116_login_pending',POP='dt1116_prefer_popup',NICK_LAST='dt1116_nick_last',NICK_PEND='dt1116_nick_pending',nickEl=$('nick'),hintEl=$('nickhint');
   function ls(k,v){try{if(v===undefined)return localStorage.getItem(k);if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,v)}catch(e){return null}}
   function show(t){msg.textContent=t||''}
   function go(){location.href=C.sheet||'sheet.html'}
   function loadJs(u){return new Promise(function(ok,no){var s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
-  function setMode(m){mode=m;btn.disabled=false;if(m==='enter'){btn.textContent='進入學習單';out.hidden=false}else{btn.textContent='用 Google 登入進入學習單';out.hidden=true}}
+  function nick(){return (nickEl.value||'').trim()}
+  function paint(){if(mode==='login'){var ok=!!nick();btn.disabled=!ok;hintEl.hidden=ok}else if(mode==='enter'){btn.disabled=false;hintEl.hidden=true}else{hintEl.hidden=true}}
+  function setMode(m){mode=m;if(m==='enter'){btn.textContent='進入學習單';out.hidden=false}else{btn.textContent='用 Google 登入進入學習單';out.hidden=true}paint()}
+  function profUrl(u,tok){return C.db+'/dt1116/'+C.sess+'/profile/'+u.uid+'.json'+(tok?'?auth='+encodeURIComponent(tok):'')}
+  async function saveNick(n){try{var u=AUTH.currentUser;if(!u||!n)return;var tok=await u.getIdToken();await fetch(profUrl(u,tok),{method:'PUT',body:JSON.stringify({nick:n.slice(0,20),t:Date.now()})})}catch(e){}}
+  async function loadNick(){try{var u=AUTH.currentUser;if(!u)return;var tok=await u.getIdToken();var r=await fetch(profUrl(u,tok));if(!r.ok)return;var d=await r.json();if(d&&d.nick){nickEl.value=d.nick;ls(NICK_LAST,d.nick);paint()}}catch(e){}}
+  nickEl.addEventListener('input',paint);nickEl.addEventListener('keydown',function(e){if(e.key==='Enter'&&!btn.disabled)btn.click()});
+  try{var lastN=ls(NICK_LAST);if(lastN)nickEl.value=lastN}catch(e){}
   function signIn(){
     show('');
+    var nn=nick();if(!nn){paint();nickEl.focus();return}
+    ls(NICK_LAST,nn);ls(NICK_PEND,nn);
     if(IAB){show('這個 App 內建的瀏覽器不能用 Google 登入。請按右上角「⋯」→「用瀏覽器開啟」，改用 Chrome 或 Safari。');return}
     var p=new firebase.auth.GoogleAuthProvider();p.setCustomParameters({prompt:'select_account'});
     if(mobile&&ls(POP)!=='1'){ls(PEND,'1');btn.disabled=true;btn.textContent='前往 Google 登入…';return AUTH.signInWithRedirect(p).catch(function(e){ls(PEND,null);btn.disabled=false;setMode('login');show('登入失敗：'+((e&&(e.message||e.code))||'不明原因'))})}
     btn.disabled=true;btn.textContent='開啟 Google 登入視窗…（沒跳出來請允許彈出視窗）';
-    AUTH.signInWithPopup(p).then(function(){go()}).catch(function(e){
+    AUTH.signInWithPopup(p).then(function(){return saveNick(nn)}).then(function(){ls(NICK_PEND,null);go()}).catch(function(e){
       var c=(e&&e.code)||'';btn.disabled=false;setMode('login');
       if(/popup-blocked/i.test(c)){ls(PEND,'1');btn.disabled=true;btn.textContent='前往 Google 登入…';return AUTH.signInWithRedirect(p).catch(function(x){ls(PEND,null);setMode('login');show('登入失敗：'+((x&&(x.message||x.code))||'不明原因'))})}
       if(/popup-closed|cancelled/i.test(c))return;
       show('登入失敗：'+((e&&(e.message||e.code))||'不明原因'))});
   }
-  btn.addEventListener('click',function(){if(mode==='enter')go();else if(mode==='login'&&AUTH)signIn()});
+  btn.addEventListener('click',async function(){if(mode==='enter'){var n=nick();if(n&&n!==ls(NICK_LAST)){ls(NICK_LAST,n);btn.disabled=true;await saveNick(n)}go()}else if(mode==='login'&&AUTH)signIn()});
   out.addEventListener('click',function(){if(AUTH)AUTH.signOut()});
   (async function(){
     try{
@@ -92,9 +108,9 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
       await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-app-compat.js');await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-auth-compat.js');
       firebase.initializeApp({apiKey:C.auth.apiKey,authDomain:C.auth.authDomain,projectId:C.auth.projectId});AUTH=firebase.auth();
       var back=null;try{back=await AUTH.getRedirectResult()}catch(e){show('登入失敗：'+((e&&(e.message||e.code))||'不明原因'))}
-      if(back&&back.user){ls(PEND,null);return go()}
+      if(back&&back.user){ls(PEND,null);var pn=ls(NICK_PEND);if(pn)await saveNick(pn);ls(NICK_PEND,null);return go()}
       AUTH.onAuthStateChanged(function(u){
-        if(u){ls(PEND,null);setMode('enter')}
+        if(u){ls(PEND,null);setMode('enter');loadNick()}
         else{
           if(ls(PEND)==='1'){ls(PEND,null);ls(POP,'1');show('手機登入結果沒有帶回來（有些手機瀏覽器會這樣）。請再按一次，這次會改用彈出視窗登入。')}
           setMode('login')}

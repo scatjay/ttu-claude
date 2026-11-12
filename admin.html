@@ -56,6 +56,13 @@ nav.tabs{display:flex;gap:6px;margin-top:10px}
 .stack{display:flex;height:12px;border-radius:99px;overflow:hidden;background:var(--surface2)}
 .stack i{display:block;height:100%}.s2{background:var(--good)}.s1{background:#c9962b}.s0{background:var(--warn)}
 .legend{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:5px;font-variant-numeric:tabular-nums}
+.tbl{overflow-x:auto}
+table.rt{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
+table.rt th{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted);font-weight:600;text-align:left;padding:0 8px 6px 0;border-bottom:1px solid var(--hair);white-space:nowrap}
+table.rt td{padding:7px 8px 7px 0;border-bottom:1px solid color-mix(in srgb,var(--hair) 60%,transparent);font-variant-numeric:tabular-nums;white-space:nowrap}
+table.rt td.nm{font-weight:700;white-space:normal;overflow-wrap:anywhere;max-width:11em}
+table.rt td.nm small{display:block;font-family:var(--mono);font-weight:400;color:var(--muted);font-size:11px}
+table.rt td.full{color:var(--good);font-weight:700}
 .nrow{display:grid;grid-template-columns:88px 70px minmax(0,1fr);gap:10px;padding:8px 0;border-top:1px solid var(--hair);font-size:13.5px}
 .nrow:first-of-type{border-top:0}.nrow .cd{font-family:var(--mono);color:var(--accent);font-weight:600}.nrow .tx{overflow-wrap:anywhere}
 @media(max-width:480px){.nrow{grid-template-columns:70px 56px minmax(0,1fr)}}
@@ -77,6 +84,7 @@ nav.tabs{display:flex;gap:6px;margin-top:10px}
 <div id="app" hidden>
 <section class="tiles" aria-label="總覽" id="tiles"></section>
 <section class="panel" style="margin-top:22px"><h2>各單元：過關人數、卡關次數、助教提問</h2><div id="units"></div><p class="note">「過關」＝該單元過關檢核至少勾了一格的人數（粗指標）；長條是占開過頁面人數的比例。</p></section>
+<section class="panel" id="rosterPanel" style="margin-top:22px" hidden><h2>學員進度（依暱稱，只有講師看得到）</h2><div class="tbl"><table class="rt" id="rosterT"></table></div><p class="note">格子＝已勾步驟／全部步驟．已過檢查點／全部檢查點；綠色＝該單元步驟全勾。沒填暱稱的舊帳號顯示代號。自評分頁維持只顯示代號。</p></section>
 <div class="cols" style="margin-top:22px">
 <section class="panel"><h2>卡關熱點（按「其他卡關」最多的步驟）</h2><div id="hot"></div></section>
 <section class="panel"><h2>助教用量</h2><dl class="kv" id="ta"></dl><p class="note" id="tanote"></p></section>
@@ -87,7 +95,7 @@ nav.tabs{display:flex;gap:6px;margin-top:10px}
 <script>
 (function(){
   var STEPS={"u1-s1": "★必做打開瀏覽器，進 claude.com/download，按「Download for Windows」", "u1-s2": "標準等下載與安裝的空檔：用自己的電腦看 30 秒成品示範影片", "u1-s3": "★必做系統問是否允許變更：先看發行者再按「是」", "u1-s4": "★必做等它自己打開，歡迎頁按「開始使用」", "u1-s5": "★必做自己登入（個人 Gmail）", "u1-s6": "標準在「對話」分頁說第一句話", "u1-s7": "★必做到「程式碼」分頁→「新增」，看輸入框下方那一排", "u1-s8": "★必做把模式切成「手動」", "u1-s9": "★必做選「大同練習」資料夾；跳出信任框時，先讀路徑再按", "u1-s10": "★必做請 Claude 建立報告骨架與協作紀錄（先給你看，再存）", "u1-s11": "★必做寫下你的題目與 3–5 個關鍵詞", "u2-s1": "★必做先檢查「大同練習」沒有不能放的檔", "u2-s2": "★必做放進 3–5 份可公開的文獻或你自己的筆記", "u2-s3": "★必做「程式碼」→「新增」，資料夾「大同練習」，模式「手動」", "u2-s4": "★必做請它列出資料夾裡的檔案", "u2-s5": "★必做請它摘要其中一份，每一點附原文位置", "u2-s6": "★必做自己對照原文，找出一處說錯或說太滿", "u2-s7": "標準看清楚這份檔案有沒有離開電腦", "u2-s8": "★必做請 Claude 起草報告的「2 方法」兩小節，先不要存", "u2-s9": "★必做你改過再存進報告.md，並補一列協作紀錄", "u3-s1": "★必做按「新增」開一次新對話：資料夾選「大同練習」、模式選「手動」", "u3-s2": "★必做請 Claude 起草 CLAUDE.md，先不要存", "u3-s3": "★必做加一條只有你會想要的規則，請它存檔", "u3-s4": "★必做按「新增」開新工作階段（同一資料夾），問它你的規則", "u3-s5": "標準把「文獻整理」寫成任務檔「任務-文獻.md」", "u3-s6": "標準對 Claude 說「讀 任務-文獻.md 照做」，只做到第一個停點", "u3-s7": "標準請它把今天的決定寫進「進度.md」，再開新工作階段接續", "u3-s8": "★必做把三條規則、任務檔的驗收句、協作紀錄前三列整理進報告第 3 節", "u4-s1": "標準先在記事本寫兩行：我要請它「讀」什麼、我想「找」什麼", "u4-s2": "★必做確認資料夾裡有 3–5 份文獻，按「新增」開一次新對話（模式「手動」）", "u4-s3": "★必做請它逐篇做讀取紀錄表，存成「讀取紀錄.md」", "u4-s4": "★必做抽查兩篇", "u4-s5": "標準請它只依這些文獻，起草前言與文獻回顧第一版", "u4-s6": "標準你動手改寫：至少改寫一段、再自己寫一段前言，刪掉查不到依據的句子", "u4-s7": "標準把讀取紀錄的重點放進報告第 1 節末尾", "u5-s1": "★必做取出讀取紀錄裡的 DOI 清單", "u5-s2": "★必做練習：這三個 DOI 哪個查得到？", "u5-s3": "★必做逐個貼在 doi.org 後面", "u5-s4": "★必做至少一篇用合法管道取得全文", "u5-s5": "標準請 Claude 做文獻 dashboard 網頁（看影片即可）", "u5-s6": "標準請它整理共識、矛盾、缺口，每項標依據檔案", "u5-s7": "★必做寫進報告第 4 節與參考文獻", "u6-s1": "標準請它只依文獻擬三個研究問題", "u6-s2": "標準挑最弱的一題，追問它「依據不足，缺什麼」", "u6-s3": "標準寫「5 討論與限制」", "u6-s4": "標準寫「摘要」（約 200–300 字）", "u6-s5": "★必做寫「6 AI 使用聲明」", "u6-s6": "★必做逐條終檢", "u6-s7": "標準分享（加速線，選做）：舉手說一個成果或卡關點", "u6-s8": "★必做收尾：帶走什麼"};
-  var SELFQ={"u1q1": "我能說出 Claude Code 跟一般聊天差在哪（它能讀我資料夾裡的檔案）。", "u1q2": "我親眼看過發行者才按「是」，而且現在輸入框下方那一排顯示「手動」。", "u1q3": "我的報告.md 有十個標題，題目與關鍵詞是我自己選的。", "u2q1": "我能說出授權五原則裡至少三條，而且沒有按「永遠」或「不再詢問」。", "u2q2": "我找到（或確認沒有）摘要裡一處說錯或說太滿的地方。", "u2q3": "報告.md 的第 2 節有檔名清單和四級讀取程度的定義。", "u3q1": "新開一次對話，Claude 仍照我的規則行事（我親眼看到它說出我加的那條）。", "u3q2": "我的任務檔每一步都有一句我自己看得懂、別人也能核對的驗收句。", "u3q3": "報告.md 第 3 節有規則、驗收句和至少三列協作紀錄。", "u4q1": "我的讀取紀錄裡，讀取程度不是全部「全文」，而且我知道為什麼。", "u4q2": "我抽查了兩篇原文，並把結果寫進協作紀錄。", "u4q3": "前言與文獻回顧每一句都有檔名，且我自己寫了一段、改寫了一段。", "u5q1": "我的參考文獻裡，沒有一條是沒查證卻被我當成已查證的。", "u5q2": "我至少拿到一篇全文，並且記下了管道；拿不到的有清單。", "u5q3": "報告.md 的缺口每一項都有依據的檔名。", "u6q1": "報告十節都有內容，而且每一節我都知道是哪一個單元寫的。", "u6q2": "我的 AI 使用聲明如實寫出 Claude 做了什麼、我怎麼驗證、責任由我負。", "u6q3": "我能說出這篇報告裡，哪一處最需要在投稿前再人工查證。"},SELFOPT={"2": "做到了", "1": "做到一半", "0": "還沒"};
+  var SELFQ={"u1q1": "我能說出 Claude Code 跟一般聊天差在哪（它能讀我資料夾裡的檔案）。", "u1q2": "我親眼看過發行者才按「是」，而且現在輸入框下方那一排顯示「手動」。", "u1q3": "我的報告.md 有十個標題，題目與關鍵詞是我自己選的。", "u2q1": "我能說出授權五原則裡至少三條，而且沒有按「永遠」或「不再詢問」。", "u2q2": "我找到（或確認沒有）摘要裡一處說錯或說太滿的地方。", "u2q3": "報告.md 的第 2 節有檔名清單和四級讀取程度的定義。", "u3q1": "新開一次對話，Claude 仍照我的規則行事（我親眼看到它說出我加的那條）。", "u3q2": "我的任務檔每一步都有一句我自己看得懂、別人也能核對的驗收句。", "u3q3": "報告.md 第 3 節有規則、驗收句和至少三列協作紀錄。", "u4q1": "我的讀取紀錄裡，讀取程度不是全部「全文」，而且我知道為什麼。", "u4q2": "我抽查了兩篇原文，並把結果寫進協作紀錄。", "u4q3": "前言與文獻回顧每一句都有檔名，且我自己寫了一段、改寫了一段。", "u5q1": "我的參考文獻裡，沒有一條是沒查證卻被我當成已查證的。", "u5q2": "我至少拿到一篇全文，並且記下了管道；拿不到的有清單。", "u5q3": "報告.md 的缺口每一項都有依據的檔名。", "u6q1": "報告十節都有內容，而且每一節我都知道是哪一個單元寫的。", "u6q2": "我的 AI 使用聲明如實寫出 Claude 做了什麼、我怎麼驗證、責任由我負。", "u6q3": "我能說出這篇報告裡，哪一處最需要在投稿前再人工查證。"},SELFOPT={"2": "做到了", "1": "做到一半", "0": "還沒"},SECN={"pre": {"s": 6, "g": 0}, "u1": {"s": 11, "g": 4}, "u2": {"s": 9, "g": 4}, "u3": {"s": 8, "g": 3}, "u4": {"s": 7, "g": 4}, "u5": {"s": 7, "g": 4}, "u6": {"s": 8, "g": 4}};
   var UN={pre:'開始前',u1:'單元 1',u2:'單元 2',u3:'單元 3',u4:'單元 4',u5:'單元 5',u6:'單元 6',fin:'總檢核'};
   var $=function(i){return document.getElementById(i)};
   function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
@@ -149,7 +157,35 @@ nav.tabs{display:flex;gap:6px;margin-top:10px}
     return {at:Date.now(),students:Object.keys(sids).length,units:units,stuckTop:top,ta:T,vertex:{todayNtd:used,capNtd:cap,remainNtd:Math.max(0,cap-used),date:tw,hb:(hb&&hb.t)||0,refsDropped:dropped}};
   }
   function codeOf(uid){var h=2166136261;for(var i=0;i<uid.length;i++){h^=uid.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return 'S'+('0000'+h.toString(16)).slice(-4).toUpperCase()}
-  var SELFDATA=null;
+  var SELFDATA=null,PROFILES={},LASTEVS=[];
+  function ago(t){if(!t)return '—';var m=(Date.now()-t)/60000;return m<1?'剛剛':m<60?Math.round(m)+' 分鐘前':m<1440?Math.round(m/60)+' 小時前':Math.round(m/1440)+' 天前'}
+  function renderRoster(){
+    var panel=$('rosterPanel'),T=$('rosterT');if(!panel||!T)return;
+    var st={},gt={},asks={},last={};
+    var evs=LASTEVS.slice().sort(function(a,b){return (a.t||0)-(b.t||0)});
+    evs.forEach(function(e){if(!e.sid)return;last[e.sid]=Math.max(last[e.sid]||0,e.t||0);
+      if(e.type==='ask')asks[e.sid]=(asks[e.sid]||0)+1;
+      if(e.type==='step'||e.type==='gate'){var k=e.sid+'|'+e.type+'|'+(e.key||'');(e.type==='step'?st:gt)[k]={s:e.sid,u:e.unit||'',on:+e.on||0}}});
+    var rows={};
+    function row(s){return rows[s]||(rows[s]={sid:s,steps:{},gates:{}})}
+    Object.keys(st).forEach(function(k){var x=st[k];if(x.on){var r=row(x.s);r.steps[x.u]=(r.steps[x.u]||0)+1}});
+    Object.keys(gt).forEach(function(k){var x=gt[k];if(x.on){var r=row(x.s);r.gates[x.u]=(r.gates[x.u]||0)+1}});
+    Object.keys(last).forEach(row);
+    var list=Object.keys(rows).map(function(s){return rows[s]}).sort(function(a,b){return (last[b.sid]||0)-(last[a.sid]||0)});
+    var U=['pre','u1','u2','u3','u4','u5','u6'];
+    T.textContent='';panel.hidden=false;
+    var hr=document.createElement('tr');['暱稱'].concat(U.map(function(u){return UN[u]||u}),['助教','最後活動']).forEach(function(h){var th=document.createElement('th');th.textContent=h;hr.appendChild(th)});var thd=document.createElement('thead');thd.appendChild(hr);T.appendChild(thd);
+    var tb=document.createElement('tbody');
+    if(!list.length){var er=document.createElement('tr'),ec=document.createElement('td');ec.colSpan=U.length+3;ec.textContent='還沒有學員活動。';ec.style.color='var(--muted)';er.appendChild(ec);tb.appendChild(er)}
+    list.forEach(function(r){var tr=document.createElement('tr');
+      var nm=document.createElement('td');nm.className='nm';var p=PROFILES[r.sid];
+      nm.textContent=(p&&p.nick)?p.nick:'（未填暱稱）';var sm=document.createElement('small');sm.textContent=codeOf(r.sid);nm.appendChild(sm);tr.appendChild(nm);
+      U.forEach(function(u){var td=document.createElement('td');var sn=(SECN[u]||{}).s||0,gn=(SECN[u]||{}).g||0,sd=r.steps[u]||0,gd=r.gates[u]||0;
+        td.textContent=sn||gn?(sd+'/'+sn+'．'+gd+'/'+gn):'—';if(sn&&sd>=sn)td.className='full';tr.appendChild(td)});
+      var ta=document.createElement('td');ta.textContent=asks[r.sid]||0;tr.appendChild(ta);
+      var tl=document.createElement('td');tl.textContent=ago(last[r.sid]);tr.appendChild(tl);tb.appendChild(tr)});
+    T.appendChild(tb);
+  }
   function renderSelf(){
     var d=SELFDATA||{},sel=$('selfUnit').value,units=['u1','u2','u3','u4','u5','u6'],dist=$('selfDist');dist.textContent='';
     var rows=[];Object.keys(d).forEach(function(uid){Object.keys(d[uid]||{}).forEach(function(u){rows.push({code:codeOf(uid),u:u,v:d[uid][u]})})});
@@ -177,9 +213,9 @@ nav.tabs{display:flex;gap:6px;margin-top:10px}
   }
   async function refresh(){
     try{
-      var r=await Promise.all([get('ev'),get('usage'),get('config'),get('hb'),get('self')]);
+      var r=await Promise.all([get('ev'),get('usage'),get('config'),get('hb'),get('self'),get('profile')]);
       var evs=r[0]?Object.keys(r[0]).map(function(k){return r[0][k]}):[];
-      render(aggregate(evs,r[1],r[2],r[3]));SELFDATA=r[4];initTabs();renderSelf();
+      render(aggregate(evs,r[1],r[2],r[3]));SELFDATA=r[4];PROFILES=r[5]||{};LASTEVS=evs;initTabs();renderSelf();renderRoster();
     }catch(e){
       if(e&&e.code==='denied'){$('stamp').textContent='這個帳號沒有讀取權限（只有講師白名單的 Google 帳號可以）。'}
       else $('stamp').textContent='讀取失敗：'+((e&&e.code)||e)+'，20 秒後重試。';
