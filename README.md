@@ -1,9 +1,9 @@
 # 大同大學博士班設計學特論工作營（2026-11-16）學員學習單
 
-學員頁：https://scatjay.github.io/dt1116-claude-workshop/
+學員頁：https://scatjay.github.io/ttu-claude/
 
 - 入口頁（QR、登入）：`index.html`　學習單：`sheet.html`（登入後才進得去，未登入會導回入口）
-- 講師後台：https://scatjay.github.io/dt1116-claude-workshop/admin.html （進頁要求 Google 登入；只有講師白名單帳號讀得到資料，網頁本身不含任何學員資料）
+- 講師後台：https://scatjay.github.io/ttu-claude/admin.html （進頁要求 Google 登入；只有講師白名單帳號讀得到資料，網頁本身不含任何學員資料）
 
 講師版、學員名單、金鑰都不在這個倉庫。
 

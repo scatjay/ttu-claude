@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>大同大學博士班設計學特論工作營</title>
-<script>window.ENTRY_CFG={"entryUrl": "https://scatjay.github.io/dt1116-claude-workshop/", "sheet": "sheet.html", "auth": {"apiKey": "AIzaSyDD0t3h27gEkfNhdbiTqu4cqn2YAU3LaLg", "authDomain": "gen-lang-client-0556836042.firebaseapp.com", "projectId": "gen-lang-client-0556836042", "sdk": "10.12.2"}, "db": "https://gen-lang-client-0556836042-default-rtdb.asia-southeast1.firebasedatabase.app", "sess": "DT-20261116"};</script>
+<script>window.ENTRY_CFG={"entryUrl": "https://scatjay.github.io/ttu-claude/", "sheet": "sheet.html", "auth": {"apiKey": "AIzaSyDD0t3h27gEkfNhdbiTqu4cqn2YAU3LaLg", "authDomain": "gen-lang-client-0556836042.firebaseapp.com", "projectId": "gen-lang-client-0556836042", "sdk": "10.12.2"}, "db": "https://gen-lang-client-0556836042-default-rtdb.asia-southeast1.firebasedatabase.app", "sess": "DT-20261116"};</script>
 <style>
 /* 入口頁：只放工作營名稱、日期、走讀 QR 動畫、Google 登入鈕。學習單內容在 sheet.html，登入後才進得去。 */
 :root{--bg:#f4f1ea;--surface:#fffdf8;--ink:#211e1a;--muted:#6f685d;--hair:#e0d9cb;--accent:#7a2f6a;--onbrand:#fffdf8;--warn:#b4552c;--surface2:#efeadf;
@@ -24,11 +24,13 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
 .btn2:active{background:var(--surface2)}
 #nickbox{width:100%;text-align:left;margin:2px 0 4px}
 #nickbox label{display:block;font-size:14px;font-weight:700;margin:0 0 4px}
-#nick{font:inherit;font-size:17px;width:100%;padding:12px 14px;border:1.5px solid var(--hair);border-radius:12px;background:var(--surface);color:var(--ink);min-height:48px}
+#nick{font:inherit;font-size:16px;line-height:1.5;width:100%;box-sizing:border-box;padding:12px 14px;border:1px solid var(--hair);border-radius:10px;background:var(--surface);color:var(--ink);min-height:48px;transition:border-color .15s,box-shadow .15s}
+#nick::placeholder{color:var(--muted);opacity:.65}
+#nick:focus,#nick:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 20%,transparent)}
 #nick:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 #nickhint{font-size:13px;color:var(--warn);margin:5px 2px 0}
 #nickhint[hidden]{display:none}
-#signin{font:inherit;font-weight:800;font-size:17px;color:var(--onbrand);background:var(--accent);border:0;border-radius:12px;padding:14px 22px;min-height:48px;width:100%;cursor:pointer}
+#signin{font:inherit;font-weight:800;font-size:17px;color:var(--onbrand);background:var(--accent);border:0;border-radius:10px;padding:14px 22px;min-height:48px;width:100%;cursor:pointer}
 #signin[disabled]{opacity:.6;cursor:default}
 #signin:focus-visible,#signout:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 #signout{font:inherit;font-size:14px;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer;padding:10px}
@@ -42,7 +44,7 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
 <h1>大同大學博士班設計學特論工作營</h1>
 <p class="date">2026 年 11 月 16 日</p>
 <div id="morph-wrap"><canvas id="morph" aria-label="校園像素場景，會變成進入學習單的 QR Code"></canvas><div id="morph-hint">點一下運鏡成 QR，同學掃了就能進學習單</div></div>
-<div id="nickbox"><label for="nick">姓名或暱稱</label><input id="nick" type="text" maxlength="20" autocomplete="nickname" enterkeyhint="go"><div id="nickhint">請先填姓名或暱稱，才能登入</div></div>
+<div id="nickbox"><label for="nick">姓名或暱稱</label><input id="nick" type="text" maxlength="20" autocomplete="nickname" enterkeyhint="go" placeholder="例：王小明"><div id="nickhint">請先填姓名或暱稱，才能登入</div></div>
 <button type="button" id="signin" disabled>確認登入狀態…</button>
 <p id="msg" role="alert"></p>
 <button type="button" id="signout" hidden>登出</button>

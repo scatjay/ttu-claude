@@ -56,6 +56,13 @@ nav.tabs{display:flex;gap:6px;margin-top:10px}
 .stack{display:flex;height:12px;border-radius:99px;overflow:hidden;background:var(--surface2)}
 .stack i{display:block;height:100%}.s2{background:var(--good)}.s1{background:#c9962b}.s0{background:var(--warn)}
 .legend{font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:5px;font-variant-numeric:tabular-nums}
+.fblist{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.fblist li{display:grid;grid-template-columns:auto auto 1fr;gap:4px 10px;align-items:baseline;padding:9px 12px;border:1px solid var(--hair);border-radius:10px;background:var(--surface)}
+.fblist .tm{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.fblist .un{font-size:12px;font-weight:700;color:var(--muted);white-space:nowrap}
+.fblist .nk{font-weight:700;grid-column:1/-1}
+.fblist .tx{grid-column:1/-1;overflow-wrap:anywhere;font-size:14.5px}
+.fblist li.new{border-color:var(--accent)}
 .tbl{overflow-x:auto}
 table.rt{border-collapse:collapse;width:100%;min-width:640px;font-size:13px}
 table.rt th{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--muted);font-weight:600;text-align:left;padding:0 8px 6px 0;border-bottom:1px solid var(--hair);white-space:nowrap}
@@ -84,6 +91,7 @@ table.rt td.full{color:var(--good);font-weight:700}
 <div id="app" hidden>
 <section class="tiles" aria-label="總覽" id="tiles"></section>
 <section class="panel" style="margin-top:22px"><h2>各單元：過關人數、卡關次數、助教提問</h2><div id="units"></div><p class="note">「過關」＝該單元過關檢核至少勾了一格的人數（粗指標）；長條是占開過頁面人數的比例。</p></section>
+<section class="panel" id="fbPanel" style="margin-top:22px" hidden><h2>即時意見（最新在最上面，每 30 秒更新）</h2><ol class="fblist" id="fbList"></ol><p class="note" id="fbEmpty" hidden>還沒有人送出意見。</p></section>
 <section class="panel" id="rosterPanel" style="margin-top:22px" hidden><h2>學員進度（依暱稱，只有講師看得到）</h2><div class="tbl"><table class="rt" id="rosterT"></table></div><p class="note">格子＝已勾步驟／全部步驟．已過檢查點／全部檢查點；綠色＝該單元步驟全勾。沒填暱稱的舊帳號顯示代號。自評分頁維持只顯示代號。</p></section>
 <div class="cols" style="margin-top:22px">
 <section class="panel"><h2>卡關熱點（按「其他卡關」最多的步驟）</h2><div id="hot"></div></section>
@@ -157,7 +165,19 @@ table.rt td.full{color:var(--good);font-weight:700}
     return {at:Date.now(),students:Object.keys(sids).length,units:units,stuckTop:top,ta:T,vertex:{todayNtd:used,capNtd:cap,remainNtd:Math.max(0,cap-used),date:tw,hb:(hb&&hb.t)||0,refsDropped:dropped}};
   }
   function codeOf(uid){var h=2166136261;for(var i=0;i<uid.length;i++){h^=uid.charCodeAt(i);h=Math.imul(h,16777619)>>>0}return 'S'+('0000'+h.toString(16)).slice(-4).toUpperCase()}
-  var SELFDATA=null,PROFILES={},LASTEVS=[];
+  var SELFDATA=null,PROFILES={},LASTEVS=[],FB=null,FBSEEN=0;
+  function hhmm(t){var d=new Date(t);return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
+  function renderFb(){
+    var panel=$('fbPanel'),L=$('fbList');if(!panel||!L)return;panel.hidden=false;L.textContent='';
+    var rows=[];Object.keys(FB||{}).forEach(function(uid){Object.keys(FB[uid]||{}).forEach(function(k){var x=FB[uid][k];rows.push({uid:uid,u:x.u,text:x.text,t:x.t||0})})});
+    rows.sort(function(a,b){return b.t-a.t});$('fbEmpty').hidden=rows.length>0;
+    rows.slice(0,200).forEach(function(r){var li=document.createElement('li');if(r.t>FBSEEN&&FBSEEN)li.className='new';
+      var tm=document.createElement('span');tm.className='tm';tm.textContent=hhmm(r.t);var un=document.createElement('span');un.className='un';un.textContent=UN[r.u]||r.u;
+      var nk=document.createElement('span');nk.className='nk';var p=PROFILES[r.uid];nk.textContent=(p&&p.nick)?p.nick:('（未填暱稱）'+codeOf(r.uid));
+      var tx=document.createElement('span');tx.className='tx';tx.textContent=r.text;li.appendChild(tm);li.appendChild(un);li.appendChild(nk);li.appendChild(tx);L.appendChild(li)});
+    if(rows.length)FBSEEN=Math.max(FBSEEN,rows[0].t);
+  }
+  async function refreshFb(){try{var r=await Promise.all([get('fb'),get('profile')]);FB=r[0]||{};PROFILES=r[1]||PROFILES;renderFb();renderRoster()}catch(e){}}
   function ago(t){if(!t)return '—';var m=(Date.now()-t)/60000;return m<1?'剛剛':m<60?Math.round(m)+' 分鐘前':m<1440?Math.round(m/60)+' 小時前':Math.round(m/1440)+' 天前'}
   function renderRoster(){
     var panel=$('rosterPanel'),T=$('rosterT');if(!panel||!T)return;
@@ -215,13 +235,13 @@ table.rt td.full{color:var(--good);font-weight:700}
     try{
       var r=await Promise.all([get('ev'),get('usage'),get('config'),get('hb'),get('self'),get('profile')]);
       var evs=r[0]?Object.keys(r[0]).map(function(k){return r[0][k]}):[];
-      render(aggregate(evs,r[1],r[2],r[3]));SELFDATA=r[4];PROFILES=r[5]||{};LASTEVS=evs;initTabs();renderSelf();renderRoster();
+      render(aggregate(evs,r[1],r[2],r[3]));SELFDATA=r[4];PROFILES=r[5]||{};LASTEVS=evs;initTabs();renderSelf();renderRoster();refreshFb();
     }catch(e){
       if(e&&e.code==='denied'){$('stamp').textContent='這個帳號沒有讀取權限（只有講師白名單的 Google 帳號可以）。'}
       else $('stamp').textContent='讀取失敗：'+((e&&e.code)||e)+'，20 秒後重試。';
     }
   }
-  function startPolling(){refresh();setInterval(refresh,20000)}
+  function startPolling(){refresh();setInterval(refresh,20000);setInterval(refreshFb,30000)}
   (async function(){
     if(!C.db){$('empty').hidden=false;$('stamp').textContent='沒有資料庫設定';return}
     if(!C.auth){startPolling();return}
