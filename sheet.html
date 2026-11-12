@@ -306,7 +306,7 @@ section.tx6 li.stp::after{background-image:repeating-linear-gradient(45deg,rgba(
 <style>.vid:not([href]){display:none!important}.mgcard:not([data-src]){display:none!important}</style>
 <style>.tabs,.pfoot .tabs{flex-wrap:wrap;overflow:visible;gap:4px 4px}.tabs a{white-space:nowrap}.tabs .pg{margin-left:auto}@media(max-width:899px){.tabs{position:static}}</style>
 </head><body><div id="ta-wait" style="display:none;padding:48px 16px;text-align:center;font:16px system-ui,sans-serif;color:#6f685d">確認登入狀態…</div><div class="wrap">
-<header id="top" data-page="top"><p class="sub" id="ta-toplogin" hidden style="margin:0 0 12px"><button type="button" class="loginbtn out" id="ta-top-signin">登出</button> <span id="ta-top-who"></span> <span id="ta-nickwrap" hidden>暱稱：<b id="ta-nick"></b> <button type="button" id="ta-nick-edit" class="loginbtn out">修改</button></span> <span id="ta-nickedit" hidden><input id="ta-nick-in" type="text" maxlength="20" aria-label="姓名或暱稱" placeholder="姓名或暱稱"> <button type="button" id="ta-nick-save" class="loginbtn">儲存</button> <span id="ta-nick-msg"></span></span></p><p class="eyebrow">設計學特論 · 2026-11-16 · 學習單</p><h1>從零開始的 Claude Code：六小時完成一篇 AI 協作報告</h1><p class="lede">從安裝開始。今天結束前，你要交出<b>一篇投稿格式的 AI 協作報告</b>：Claude 負責起草，<b>你負責驗收、改寫與署名</b>：每一句都要你對照原文確認過，才算你的報告。報告分六個單元，一節一節長出來。</p><div class="meta"><span>10:00 – 16:30</span><span>淨授課 <b>300 分</b></span><span>六單元 × 50 分</span><span>工具：Claude 桌面版（裝在你電腦上的 App）</span><span>今天用左上的「程式碼」分頁（另一個是「對話」分頁）</span><span>授課：楊智傑 老師</span></div><div class="tools"><button class="btn" id="theme" type="button">切換亮／暗</button><button class="btn" id="reset" type="button">清除勾選</button></div><details class="card pcard" id="pcard" open style="margin-top:16px"><summary><div class="psum-h"><div class="pnum">已勾選 <b id="pn">0</b> / <span id="pt">0</span> 個步驟與開始前項目</div><span class="chev"></span></div><div class="pbar"><i id="pf"></i></div></summary><div class="pbody"><div class="uphead"><span>分段</span><span></span><span>本段</span><span>累計</span></div><div class="uprog" id="uprog"></div><p class="note" style="margin-top:10px">勾選只存在你自己的瀏覽器，講師看不到，僅供自檢。</p></div></details><div class="warnbar" id="nostore">這個瀏覽器不讓本頁儲存勾選（可能是無痕或封鎖），頁面仍可使用，但重新整理後勾選會清空。</div>
+<div id="ta-toplogin" hidden><span id="ta-top-who"></span><span id="ta-nickedit" hidden><input id="ta-nick-in" type="text" maxlength="20" aria-label="姓名或暱稱" placeholder="姓名或暱稱"> <button type="button" id="ta-nick-save">儲存</button> <span id="ta-nick-msg"></span></span><div id="ta-nickwrap" class="ta-menuwrap" hidden><button type="button" id="ta-user" class="userpill" aria-haspopup="menu" aria-expanded="false" aria-controls="ta-menu"><span aria-hidden="true">👤</span><b id="ta-nick"></b><span aria-hidden="true">▾</span></button><div id="ta-menu" role="menu" hidden><button type="button" role="menuitem" id="ta-nick-edit">修改暱稱</button><button type="button" role="menuitem" id="theme">切換亮／暗</button><button type="button" role="menuitem" id="reset">清除勾選</button><button type="button" role="menuitem" id="ta-top-signin">登出</button></div></div></div><header id="top" data-page="top"><p class="eyebrow">設計學特論 · 2026-11-16 · 學習單</p><h1>從零開始的 Claude Code：六小時完成一篇 AI 協作報告</h1><p class="lede">從安裝開始。今天結束前，你要交出<b>一篇投稿格式的 AI 協作報告</b>：Claude 負責起草，<b>你負責驗收、改寫與署名</b>：每一句都要你對照原文確認過，才算你的報告。報告分六個單元，一節一節長出來。</p><div class="meta"><span>10:00 – 16:30</span><span>淨授課 <b>300 分</b></span><span>六單元 × 50 分</span><span>工具：Claude 桌面版（裝在你電腦上的 App）</span><span>今天用左上的「程式碼」分頁（另一個是「對話」分頁）</span><span>授課：楊智傑 老師</span></div><details class="card pcard" id="pcard" open style="margin-top:16px"><summary><div class="psum-h"><div class="pnum">已勾選 <b id="pn">0</b> / <span id="pt">0</span> 個步驟與開始前項目</div><span class="chev"></span></div><div class="pbar"><i id="pf"></i></div></summary><div class="pbody"><div class="uphead"><span>分段</span><span></span><span>本段</span><span>累計</span></div><div class="uprog" id="uprog"></div><p class="note" style="margin-top:10px">勾選只存在你自己的瀏覽器，講師看不到，僅供自檢。</p></div></details><div class="warnbar" id="nostore">這個瀏覽器不讓本頁儲存勾選（可能是無痕或封鎖），頁面仍可使用，但重新整理後勾選會清空。</div>
 <h3 style="margin-top:20px">各單元進度（點一下切到該單元）</h3><div class="upchips"><a class="upchip" data-u="1" href="#u1" style="--cu:var(--u1)"><b>單元 1</b>安裝與第一次對話<br><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="2" href="#u2" style="--cu:var(--u2)"><b>單元 2</b>讓 Claude 讀你的資料夾<br><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="3" href="#u3" style="--cu:var(--u3)"><b>單元 3</b>規則檔、任務檔、進度檔<br><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="4" href="#u4" style="--cu:var(--u4)"><b>單元 4</b>讀文獻：讀取程度與出處<br><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="5" href="#u5" style="--cu:var(--u5)"><b>單元 5</b>DOI 查證、取全文、文獻 dashboard<br><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="6" href="#u6" style="--cu:var(--u6)"><b>單元 6</b>研究問題、討論、聲明與定稿<br><small>步驟 0/0・檢查點 0/0</small></a></div><h3 style="margin-top:20px">你的報告，怎麼一單元長一節</h3><p class="sub" style="margin:0">每單元最後勾「本單元寫進報告」，下面對應的節就亮起來。目前完成 <b id="secn">0</b> / 10 節。</p><div class="map">
 <div class="cell" data-u="1" style="--cu:var(--u1)">題目<small>單元 1 <b>★最低版</b></small></div>
 <div class="cell" data-u="6" style="--cu:var(--u6)">摘要<small>單元 6</small></div>
@@ -902,6 +902,42 @@ nav.tabs a.tx1{--uc:var(--u1)}nav.tabs a.tx2{--uc:var(--u2)}nav.tabs a.tx3{--uc:
 #ta-vp .bar button{font:inherit;font-size:14px;font-weight:700;color:var(--onbrand,#fff);background:var(--accent);border:0;border-radius:8px;padding:6px 14px;cursor:pointer}
 #ta-vp video{display:block;width:100%;max-height:70vh;background:#000}
 .vidmsg{margin-left:8px;font-size:13px;font-weight:600;color:var(--warn)}
+
+/* ---- 版面整理：細頁首列＋帳號膠囊選單、單一浮動鈕、手機進度卡兩行 ---- */
+#ta-pill{display:none!important}
+#ta-toplogin:not([hidden]){display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;margin:0 0 18px!important;min-height:34px}
+#ta-top-who{flex:1 1 auto;min-width:0;font-size:13.5px;color:var(--warn)}
+#ta-top-who:empty{display:none}
+.ta-menuwrap{position:relative;margin-left:auto}
+.userpill{font:inherit;font-size:14px;display:inline-flex;align-items:center;gap:6px;max-width:62vw;padding:4px 12px;border:1px solid var(--hair);border-radius:99px;background:var(--surface);color:var(--ink);cursor:pointer;line-height:1.5}
+.userpill b{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.userpill:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.userpill[aria-expanded="true"]{border-color:var(--accent)}
+#ta-menu{position:absolute;right:0;top:calc(100% + 6px);z-index:70;min-width:176px;background:var(--surface);border:1px solid var(--hair);border-radius:10px;box-shadow:var(--shadow);padding:6px;display:grid;gap:2px}
+#ta-menu[hidden]{display:none}
+#ta-menu button{font:inherit!important;font-size:14px!important;font-weight:500!important;text-align:left;border:0!important;background:none!important;color:var(--ink)!important;padding:10px 12px!important;border-radius:8px;cursor:pointer;width:100%;box-shadow:none}
+#ta-menu button:hover,#ta-menu button:focus-visible{background:var(--surface2)!important;outline:none}
+#ta-menu #ta-top-signin{border-top:1px solid var(--hair)!important;border-radius:0 0 8px 8px;margin-top:2px;color:var(--warn)!important}
+#ta-nickedit:not([hidden]){display:flex;flex:1 0 100%;align-items:center;gap:8px;flex-wrap:wrap}
+#ta-nick-msg{font-size:13px;color:var(--muted)}
+body{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+@media(max-width:600px){
+  #ta-fab{right:12px;width:60px;height:60px;padding:0;border-radius:50%;font-size:12px;line-height:1.1;white-space:nowrap;display:flex;align-items:center;justify-content:center}
+  #ta-panel{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+}
+@media(max-width:520px){
+  .uphead{display:none}
+  .uprog{gap:12px!important}
+  .urow{grid-template-columns:1fr auto auto!important;grid-template-areas:"un ur uc" "ub ub ub";gap:5px 10px!important;align-items:baseline}
+  .urow .un{grid-area:un}.urow .ub{grid-area:ub}.urow .ur{grid-area:ur;text-align:right}.urow .uc{grid-area:uc;text-align:right}
+  .urow .ur,.urow .uc{font-variant-numeric:tabular-nums;white-space:nowrap;font-size:12.5px;color:var(--muted)}
+  .urow .ur::before{content:'本段 '}
+  .meta{font-family:inherit!important;font-size:13.5px!important;display:grid!important;gap:5px!important;margin-top:14px!important}
+  .meta span{display:flex;gap:8px}
+  .meta span::before{flex:none;width:1.3em;text-align:center}
+  .meta span:nth-child(1)::before{content:'🕙'}.meta span:nth-child(2)::before{content:'⏱'}.meta span:nth-child(3)::before{content:'🧩'}
+  .meta span:nth-child(4)::before{content:'🛠'}.meta span:nth-child(5)::before{content:'💻'}.meta span:nth-child(6)::before{content:'👤'}
+}
 </style>
 <div id="ta-pill" hidden><span id="ta-pill-who"></span><button type="button" id="ta-pill-btn" class="loginbtn">用 Google 登入</button></div>
 <button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel">問AI助教</button>
@@ -1173,11 +1209,20 @@ nav.tabs a.tx1{--uc:var(--u1)}nav.tabs a.tx2{--uc:var(--u2)}nav.tabs a.tx3{--uc:
     if(/^https?:[/][/](www[.])?(youtu|drive[.]google)/.test(src)){window.open(src+(src.indexOf('youtu')>=0?(src.indexOf('?')<0?'?':'&')+'t='+t:'#t='+t),'_blank','noopener');return}
     openVideo(src,t,'影片 '+v+(step?'（'+step+'）':''));
   },true);
+  /* ---- 帳號膠囊選單 ---- */
+  function closeMenu(){var m=$('ta-menu'),u=$('ta-user');if(m)m.hidden=true;if(u)u.setAttribute('aria-expanded','false')}
+  if($('ta-user')){
+    $('ta-user').addEventListener('click',function(ev){ev.stopPropagation();var m=$('ta-menu'),on=m.hidden;m.hidden=!on;$('ta-user').setAttribute('aria-expanded',on?'true':'false');if(on){var f=m.querySelector('button');if(f)f.focus()}});
+    document.addEventListener('click',function(ev){var w=$('ta-nickwrap');if(w&&!w.contains(ev.target))closeMenu()});
+    document.addEventListener('keydown',function(ev){if(ev.key==='Escape'){var m=$('ta-menu');if(m&&!m.hidden){closeMenu();$('ta-user').focus()}}});
+    $('ta-menu').addEventListener('click',function(){closeMenu()});
+  }
   /* ---- 暱稱：登入後從資料庫帶出；沒有就請他補填；可修改。只有本人與講師看得到 ---- */
   var NICK='';
   function nickUI(){
     var w=$('ta-nickwrap'),e=$('ta-nickedit');if(!w||!e)return;
-    if(NICK){$('ta-nick').textContent=NICK;w.hidden=false;e.hidden=true}else{w.hidden=true;e.hidden=false;$('ta-nick-msg').textContent='請補填姓名或暱稱（講師後台用）'}
+    w.hidden=false;$('ta-nick').textContent=NICK||'設定暱稱';
+    if(NICK){e.hidden=true;$('ta-nick-msg').textContent=''}else{e.hidden=false;$('ta-nick-msg').textContent='請補填姓名或暱稱（講師後台用）'}
   }
   async function loadProfile(){
     if(!RT||!TOK)return;
@@ -1188,7 +1233,7 @@ nav.tabs a.tx1{--uc:var(--u1)}nav.tabs a.tx2{--uc:var(--u2)}nav.tabs a.tx3{--uc:
     n=(n||'').trim().slice(0,20);if(!n||!RT||!TOK)return false;
     try{var r=await fetch(RT+'/profile/'+sid+'.json'+qs(),{method:'PUT',body:JSON.stringify({nick:n,t:Date.now()})});if(!r.ok)return false;NICK=n;try{store.set('dt1116_nick_last',n)}catch(e){}return true}catch(e){return false}
   }
-  if($('ta-nick-edit'))$('ta-nick-edit').addEventListener('click',function(){$('ta-nickwrap').hidden=true;$('ta-nickedit').hidden=false;$('ta-nick-in').value=NICK;$('ta-nick-msg').textContent='';$('ta-nick-in').focus()});
+  if($('ta-nick-edit'))$('ta-nick-edit').addEventListener('click',function(){$('ta-nickedit').hidden=false;$('ta-nick-in').value=NICK;$('ta-nick-msg').textContent='';$('ta-nick-in').focus()});
   if($('ta-nick-save'))$('ta-nick-save').addEventListener('click',async function(){
     var v=($('ta-nick-in').value||'').trim();if(!v){$('ta-nick-msg').textContent='請填姓名或暱稱';return}
     $('ta-nick-save').disabled=true;var ok=await saveProfile(v);$('ta-nick-save').disabled=false;
