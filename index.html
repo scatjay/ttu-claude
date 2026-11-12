@@ -651,7 +651,7 @@ AI 起草的內容，均由我逐句對照原文；與原文不符者已改寫�
   function left(){return Math.max(0,TA.dayLimit-used())}
   /* ---- 匿名事件：只記「哪個單元、哪一步、次數、字數」，不記姓名與提問全文 ---- */
   var db=null,sample=null,queue=[],dbTried=false;
-  var AUTH=null,TOK='',CFG=window.TA_CFG||null,RT=(CFG&&CFG.db)?CFG.db.replace(/\/$/,'')+'/ta/'+CFG.sess:null;
+  var AUTH=null,TOK='',CFG=window.TA_CFG||null,RT=(CFG&&CFG.db)?CFG.db.replace(/\/$/,'')+'/dt1116/'+CFG.sess:null;
   function unitOf(el){var s=el&&el.closest?el.closest('section[id]'):null;return s?s.id:'top'}
   function emit(ev){ev.t=Date.now();ev.sid=sid;queue.push(ev);flush()}
   function qs(){return TOK?('?auth='+encodeURIComponent(TOK)):''}
