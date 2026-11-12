@@ -1,4 +1,7 @@
 <!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<script>window.TA_CFG={"db": "https://gen-lang-client-0556836042-default-rtdb.asia-southeast1.firebasedatabase.app", "sess": "DT-20261116", "waitSec": 45, "auth": {"apiKey": "AIzaSyDD0t3h27gEkfNhdbiTqu4cqn2YAU3LaLg", "authDomain": "gen-lang-client-0556836042.firebaseapp.com", "projectId": "gen-lang-client-0556836042", "sdk": "10.12.2"}};</script>
+<script>if(window.TA_CFG&&TA_CFG.auth)document.documentElement.classList.add("ta-gated")</script>
+<style id="ta-gate-style">html.ta-gated .tabs,html.ta-gated .pfoot,html.ta-gated section[data-page],html.ta-gated #ta-fab,html.ta-gated #ta-panel,html.ta-gated #ta-pill{display:none!important}html.ta-gated header#top[data-page]{display:block!important}html.ta-gated header#top>*:not(.eyebrow):not(h1):not(.lede):not(#ta-toplogin):not(#morph-wrap){display:none!important}</style>
 <title>v9 大同學習單學員版1112</title><meta name="color-scheme" content="light">
 <style>
 :root{
@@ -767,8 +770,7 @@ var b=document.querySelector('.upchip[data-u="'+n+'"]');if(b){b.querySelector('s
 var pg=document.getElementById('pgn');if(pg){var dd=document.getElementById('pn'),tt=document.getElementById('pt');pg.textContent=(dd&&tt)?('進度 '+dd.textContent+'/'+tt.textContent):''}}
 document.addEventListener('change',function(){setTimeout(chips,0)});chips();
 })();</script>
-<style id="qr-style">#morph-wrap{text-align:center;margin:6px 0}#morph{display:block;margin:0 auto;border:0;border-radius:0;background:transparent;cursor:pointer;max-width:100%;height:auto}.btn2{border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0;cursor:pointer;font:inherit}.btn2:active{background:var(--surface2)}</style><script>window.TA_CFG={"db": "https://gen-lang-client-0556836042-default-rtdb.asia-southeast1.firebasedatabase.app", "sess": "DT-20261116", "waitSec": 45, "auth": {"apiKey": "AIzaSyDD0t3h27gEkfNhdbiTqu4cqn2YAU3LaLg", "authDomain": "gen-lang-client-0556836042.firebaseapp.com", "projectId": "gen-lang-client-0556836042", "sdk": "10.12.2"}};</script>
-<style id="ta-style">
+<style id="qr-style">#morph-wrap{text-align:center;margin:6px 0}#morph{display:block;margin:0 auto;border:0;border-radius:0;background:transparent;cursor:pointer;max-width:100%;height:auto}.btn2{border:1px solid var(--hair);background:var(--surface);color:var(--ink);border-radius:8px;padding:8px 12px;margin:4px 6px 4px 0;cursor:pointer;font:inherit}.btn2:active{background:var(--surface2)}</style><style id="ta-style">
 .askbtn{font:inherit;font-size:12.5px;font-weight:600;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent2);border-radius:99px;padding:3px 11px;cursor:pointer}
 .askbtn:hover{filter:brightness(.96)}
 .loginbtn{font:inherit;font-size:13.5px;font-weight:700;color:var(--onbrand);background:var(--accent);border:0;border-radius:8px;padding:7px 14px;cursor:pointer}
@@ -842,6 +844,8 @@ document.addEventListener('change',function(){setTimeout(chips,0)});chips();
     flush();
     emit({type:'open',unit:'top'});
   })();
+  var IAB=/Line\/|FBAN|FBAV|FB_IAB|Instagram|MicroMessenger|; wv\)|GSA\//i.test(navigator.userAgent);
+  function setGate(on){if(!(CFG&&CFG.auth))return;document.documentElement.classList.toggle('ta-gated',!!on)}
   function setLocked(on){
     var q=$('ta-q'),sd=$('ta-send');if(!q||!sd)return;
     q.disabled=on;sd.disabled=on;q.placeholder=on?'請先用 Google 登入，才能問AI助教。':'卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）';
@@ -852,18 +856,18 @@ document.addEventListener('change',function(){setTimeout(chips,0)});chips();
   function loadJs(u){return new Promise(function(ok,no){var s=document.createElement('script');s.src=u;s.onload=ok;s.onerror=no;document.head.appendChild(s)})}
   async function initAuth(){
     if(!(CFG&&CFG.auth))return;
-    $('ta-login').hidden=false;$('ta-who').textContent='尚未登入';var tl=$('ta-toplogin');if(tl)tl.hidden=false;setLocked(true);selfHint(true);var pl=$('ta-pill');if(pl)pl.hidden=false;
+    $('ta-login').hidden=false;$('ta-who').textContent='尚未登入';var tl=$('ta-toplogin');if(tl)tl.hidden=false;var tb0=$('ta-top-signin');if(tb0){tb0.disabled=true;tb0.textContent='確認登入狀態…'}setLocked(true);selfHint(true);var pl=$('ta-pill');if(pl)pl.hidden=false;
     try{
       var v=CFG.auth.sdk||'10.12.2';
       await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-app-compat.js');await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-auth-compat.js');
       firebase.initializeApp({apiKey:CFG.auth.apiKey,authDomain:CFG.auth.authDomain,projectId:CFG.auth.projectId});AUTH=firebase.auth();
       AUTH.onAuthStateChanged(async function(u){
-        if(u){TOK=await u.getIdToken();sid=u.uid;$('ta-who').textContent=u.email||'已登入';$('ta-signin').textContent='登出';wasIn=true;flushSelf();selfHint(false);setLocked(false);var pw=$('ta-pill-who');if(pw){pw.textContent=(u.email||'已登入');$('ta-pill-btn').textContent='登出';$('ta-pill-btn').classList.add('out')}var tw=$('ta-top-who');if(tw){tw.textContent='目前登入帳號：'+(u.email||'（此帳號沒有信箱資料）')+'　進度與AI助教已啟用。';$('ta-top-signin').textContent='登出';$('ta-top-signin').classList.add('out')}flush();emit({type:'open',unit:'top'})}
-        else{TOK='';$('ta-who').textContent='尚未登入';$('ta-signin').textContent='用 Google 登入';selfHint(true);setLocked(true);clearChat();var pw2=$('ta-pill-who');if(pw2){pw2.textContent='';$('ta-pill-btn').textContent='用 Google 登入';$('ta-pill-btn').classList.remove('out')}var tw2=$('ta-top-who');if(tw2){tw2.textContent=(wasIn?'已登出。':'尚未登入。')+'登入後才能問AI助教，進度也才會記錄給講師看（只記勾了哪一步，不記姓名）。';$('ta-top-signin').textContent='用 Google 登入';$('ta-top-signin').classList.remove('out')}}
+        if(u){TOK=await u.getIdToken();sid=u.uid;$('ta-who').textContent=u.email||'已登入';$('ta-signin').textContent='登出';wasIn=true;setGate(false);var tb1=$('ta-top-signin');if(tb1)tb1.disabled=false;flushSelf();selfHint(false);setLocked(false);var pw=$('ta-pill-who');if(pw){pw.textContent=(u.email||'已登入');$('ta-pill-btn').textContent='登出';$('ta-pill-btn').classList.add('out')}var tw=$('ta-top-who');if(tw){tw.textContent='目前登入帳號：'+(u.email||'（此帳號沒有信箱資料）')+'　進度與AI助教已啟用。';$('ta-top-signin').textContent='登出';$('ta-top-signin').classList.add('out')}flush();emit({type:'open',unit:'top'})}
+        else{TOK='';$('ta-who').textContent='尚未登入';$('ta-signin').textContent='用 Google 登入';setGate(true);var tb2=$('ta-top-signin');if(tb2)tb2.disabled=false;try{if(location.hash)history.replaceState(null,'',location.pathname+location.search)}catch(e){}window.scrollTo(0,0);selfHint(true);setLocked(true);clearChat();open(false);var pw2=$('ta-pill-who');if(pw2){pw2.textContent='';$('ta-pill-btn').textContent='用 Google 登入';$('ta-pill-btn').classList.remove('out')}var tw2=$('ta-top-who');if(tw2){tw2.textContent=(wasIn?'已登出。':'尚未登入。')+'登入後才能問AI助教，進度也才會記錄給講師看（只記勾了哪一步，不記姓名）。';$('ta-top-signin').textContent='用 Google 登入';$('ta-top-signin').classList.remove('out')}}
       });
       setInterval(async function(){var u=AUTH.currentUser;if(u)TOK=await u.getIdToken()},50*60*1000);
-      var doSign=function(){if(AUTH.currentUser)AUTH.signOut();else AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){add('err','登入沒有完成：'+(e&&e.code||'')+'。若是被瀏覽器擋住彈出視窗，請允許後再按一次。')})};$('ta-signin').addEventListener('click',doSign);if($('ta-top-signin'))$('ta-top-signin').addEventListener('click',doSign);if($('ta-pill-btn'))$('ta-pill-btn').addEventListener('click',doSign)
-    }catch(e){$('ta-who').textContent='登入功能載入失敗（網路？）'}
+      var doSign=function(){if(IAB&&!AUTH.currentUser){var tw0=$('ta-top-who');if(tw0){tw0.textContent='這個 App 內建的瀏覽器不能用 Google 登入。請按右上角「⋯」→「用瀏覽器開啟」，改用 Chrome 或 Safari。　';var rb=document.createElement('button');rb.type='button';rb.className='loginbtn out';rb.textContent='先只閱讀（不能用AI助教）';rb.addEventListener('click',function(){setGate(false)});tw0.appendChild(rb)}return}if(AUTH.currentUser)AUTH.signOut();else AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){add('err','登入沒有完成：'+(e&&e.code||'')+'。若是被瀏覽器擋住彈出視窗，請允許後再按一次。')})};$('ta-signin').addEventListener('click',doSign);if($('ta-top-signin'))$('ta-top-signin').addEventListener('click',doSign);if($('ta-pill-btn'))$('ta-pill-btn').addEventListener('click',doSign)
+    }catch(e){setGate(false);var tb3=$('ta-top-signin');if(tb3){tb3.disabled=false;tb3.textContent='用 Google 登入'}$('ta-who').textContent='登入功能載入失敗（網路？）'}
   }
   initAuth();
   [].slice.call(document.querySelectorAll('input.stepchk,input.gatechk,input.fin')).forEach(function(b){
