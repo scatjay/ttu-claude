@@ -245,13 +245,17 @@ table.rt td.full{color:var(--good);font-weight:700}
   (async function(){
     if(!C.db){$('empty').hidden=false;$('stamp').textContent='沒有資料庫設定';return}
     if(!C.auth){startPolling();return}
-    $('stamp').textContent='請先登入';
-    var b=document.createElement('button');b.id='signin';b.type='button';b.textContent='用講師的 Google 帳號登入';b.style.cssText='font:inherit;font-weight:700;padding:8px 16px;margin-top:8px;border-radius:8px;border:0;background:var(--accent);color:var(--surface);cursor:pointer';
+    $('stamp').textContent='確認登入狀態…';
+    var b=document.createElement('button');b.id='signin';b.type='button';b.hidden=true;b.textContent='用講師的 Google 帳號登入';b.style.cssText='font:inherit;font-weight:700;padding:8px 16px;margin-top:8px;border-radius:8px;border:0;background:var(--accent);color:var(--surface);cursor:pointer';
     $('stamp').after(b);
     try{
       var v=C.auth.sdk||'10.12.2';await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-app-compat.js');await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-auth-compat.js');
       firebase.initializeApp({apiKey:C.auth.apiKey,authDomain:C.auth.authDomain,projectId:C.auth.projectId});AUTH=firebase.auth();
-      AUTH.onAuthStateChanged(async function(u){if(u){TOK=await u.getIdToken();b.hidden=true;startPolling();setInterval(async function(){if(AUTH.currentUser)TOK=await AUTH.currentUser.getIdToken()},50*60*1000)}});
+      try{await AUTH.setPersistence(firebase.auth.Auth.Persistence.LOCAL)}catch(e){}
+      var out=document.createElement('button');out.id='adm-out';out.type='button';out.textContent='登出';out.hidden=true;out.style.cssText='font:inherit;font-size:13px;padding:4px 12px;margin-left:10px;border-radius:99px;border:1px solid var(--hair);background:var(--surface);color:var(--muted);cursor:pointer';$('stamp').after(out);
+      out.addEventListener('click',function(){AUTH.signOut().then(function(){location.reload()})});
+      var polled=false;
+      AUTH.onAuthStateChanged(async function(u){if(u){TOK=await u.getIdToken();b.hidden=true;out.hidden=false;if(!polled){polled=true;startPolling();setInterval(async function(){if(AUTH.currentUser)TOK=await AUTH.currentUser.getIdToken()},50*60*1000)}}else{TOK='';b.hidden=false;out.hidden=true;$('stamp').textContent='請先登入'}});
       b.addEventListener('click',function(){AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider())});
     }catch(e){$('stamp').textContent='登入功能載入失敗（網路？）'}
   })();

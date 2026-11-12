@@ -85,7 +85,7 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
   function setMode(m){mode=m;if(m==='enter'){btn.textContent='進入學習單';out.hidden=false}else{btn.textContent='用 Google 登入進入學習單';out.hidden=true}paint()}
   function profUrl(u,tok){return C.db+'/dt1116/'+C.sess+'/profile/'+u.uid+'.json'+(tok?'?auth='+encodeURIComponent(tok):'')}
   async function saveNick(n){try{var u=AUTH.currentUser;if(!u||!n)return;var tok=await u.getIdToken();await fetch(profUrl(u,tok),{method:'PUT',body:JSON.stringify({nick:n.slice(0,20),t:Date.now()})})}catch(e){}}
-  async function loadNick(){try{var u=AUTH.currentUser;if(!u)return;var tok=await u.getIdToken();var r=await fetch(profUrl(u,tok));if(!r.ok)return;var d=await r.json();if(d&&d.nick){nickEl.value=d.nick;ls(NICK_LAST,d.nick);paint()}}catch(e){}}
+  async function loadNick(){try{var u=AUTH.currentUser;if(!u)return false;var tok=await u.getIdToken();var r=await fetch(profUrl(u,tok));if(!r.ok)return false;var d=await r.json();if(d&&d.nick){nickEl.value=d.nick;ls(NICK_LAST,d.nick);paint();return true}}catch(e){}return false}
   nickEl.addEventListener('input',paint);nickEl.addEventListener('keydown',function(e){if(e.key==='Enter'&&!btn.disabled)btn.click()});
   try{var lastN=ls(NICK_LAST);if(lastN)nickEl.value=lastN}catch(e){}
   function signIn(){
@@ -109,10 +109,11 @@ h1{font-size:clamp(22px,6vw,30px);font-weight:900;line-height:1.25;margin:0;text
       var v=(C.auth&&C.auth.sdk)||'10.12.2';
       await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-app-compat.js');await loadJs('https://www.gstatic.com/firebasejs/'+v+'/firebase-auth-compat.js');
       firebase.initializeApp({apiKey:C.auth.apiKey,authDomain:C.auth.authDomain,projectId:C.auth.projectId});AUTH=firebase.auth();
+      try{await AUTH.setPersistence(firebase.auth.Auth.Persistence.LOCAL)}catch(e){}
       var back=null;try{back=await AUTH.getRedirectResult()}catch(e){show('登入失敗：'+((e&&(e.message||e.code))||'不明原因'))}
       if(back&&back.user){ls(PEND,null);var pn=ls(NICK_PEND);if(pn)await saveNick(pn);ls(NICK_PEND,null);return go()}
-      AUTH.onAuthStateChanged(function(u){
-        if(u){ls(PEND,null);setMode('enter');loadNick()}
+      AUTH.onAuthStateChanged(async function(u){
+        if(u){ls(PEND,null);var has=await loadNick();if(has&&!/[?&]stay\b/.test(location.search))return go();setMode('enter')}
         else{
           if(ls(PEND)==='1'){ls(PEND,null);ls(POP,'1');show('手機登入結果沒有帶回來（有些手機瀏覽器會這樣）。請再按一次，這次會改用彈出視窗登入。')}
           setMode('login')}
