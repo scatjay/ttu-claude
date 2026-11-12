@@ -876,6 +876,12 @@ document.addEventListener('change',function(){setTimeout(chips,0)});chips();
 #ta-body .me{margin-left:auto;max-width:88%;background:color-mix(in srgb,var(--uc) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--uc) 22%,transparent);border-radius:14px 14px 4px 14px}
 #ta-body .ai{margin-right:auto;max-width:94%;background:var(--surface2);border:1px solid var(--hair);border-left:4px solid var(--uc);border-radius:14px 14px 14px 4px}
 #ta-form .row{margin-top:8px}
+/* ---- 助教回答裡的位置連結 ---- */
+a.tolink{display:inline-block;margin:1px 2px;padding:1px 10px;border-radius:99px;font-weight:700;font-size:.95em;text-decoration:none;color:var(--onbrand,#fff);background:var(--uc,var(--accent));line-height:1.6;cursor:pointer}
+a.tolink:hover{filter:brightness(1.08)}
+a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@keyframes ta-hit{0%,60%{box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 55%,transparent);outline:3px solid var(--accent)}100%{box-shadow:0 0 0 0 transparent;outline:3px solid transparent}}
+.ta-hit{animation:ta-hit 2.6s ease-out;border-radius:10px}
 /* ---- 各單元完成人數 ---- */
 .ucnt{display:inline-block;margin-left:5px;padding:0 6px;border-radius:99px;font-size:11.5px;font-weight:700;line-height:1.6;background:color-mix(in srgb,var(--uc,var(--accent)) 16%,transparent);color:var(--uc,var(--accent))}
 .ucnt:empty{display:none}
@@ -885,6 +891,16 @@ nav.tabs a.tx1{--uc:var(--u1)}nav.tabs a.tx2{--uc:var(--u2)}nav.tabs a.tx3{--uc:
 .ustat b,.ucnt{transition:background-color .6s}
 @keyframes ta-flash{0%{opacity:.25}100%{opacity:1}}
 .flash{animation:ta-flash 1.1s ease-out}
+
+/* ---- 影片鈕：頁內播放器、從該步驟的秒數開始 ---- */
+#ta-vp{position:fixed;inset:0;z-index:80;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top,0px)) max(12px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(12px,env(safe-area-inset-left,0px));background:rgba(20,16,12,.72)}
+#ta-vp[hidden]{display:none}
+#ta-vp .box{width:min(860px,100%);max-height:100%;background:var(--surface);border:1px solid var(--hair);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+#ta-vp .bar{display:flex;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--hair);font-size:14px;font-weight:700}
+#ta-vp .bar span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ta-vp .bar button{font:inherit;font-size:14px;font-weight:700;color:var(--onbrand,#fff);background:var(--accent);border:0;border-radius:8px;padding:6px 14px;cursor:pointer}
+#ta-vp video{display:block;width:100%;max-height:70vh;background:#000}
+.vidmsg{margin-left:8px;font-size:13px;font-weight:600;color:var(--warn)}
 </style>
 <div id="ta-pill" hidden><span id="ta-pill-who"></span><button type="button" id="ta-pill-btn" class="loginbtn">用 Google 登入</button></div>
 <button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel">問AI助教</button>
@@ -976,7 +992,30 @@ nav.tabs a.tx1{--uc:var(--u1)}nav.tabs a.tx2{--uc:var(--u2)}nav.tabs a.tx3{--uc:
   $('ta-x').addEventListener('click',function(){open(false)});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')open(false)});
   $('ta-q').addEventListener('input',function(){$('ta-cnt').firstChild.nodeValue=$('ta-q').value.length+' / '+TA.maxQ+'　今天剩 '});
-  function add(cls,text,vf){var d=document.createElement('div');d.className='msg '+cls;d.textContent=text;if(vf){var s=document.createElement('span');s.className='vf';s.textContent=VF;d.appendChild(s)}$('ta-body').appendChild(d);$('ta-body').scrollTop=1e9;return d}
+  /* ---- 助教回答裡的 [[id|文字]]：id 在學習單上真的有才變成連結；點了同頁切分頁、捲到那一步、短暫高亮 ---- */
+  var LINKRE=/\[\[([A-Za-z0-9_-]{1,24})\|([^\[\]|\n]{1,40})\]\]/g;
+  function linkOk(id){var e=document.getElementById(id);return !!(e&&(e.matches('section[data-page]')||e.matches('li.stp')||e.matches('.qa[id]')||e.matches('details.dd')))}
+  function goTo(id){
+    var el=document.getElementById(id);if(!el)return;
+    var pg=el.closest('[data-page]'),p=pg&&pg.getAttribute('data-page');
+    if(window.matchMedia('(max-width:700px)').matches)open(false);
+    var tab=p&&document.querySelector('#tb a[data-p="'+p+'"]');if(tab)tab.click();
+    for(var q=el;q;q=q.parentElement){if(q.tagName==='DETAILS')q.open=true}
+    setTimeout(function(){try{el.scrollIntoView({behavior:'smooth',block:'center'})}catch(e){el.scrollIntoView()}
+      el.classList.remove('ta-hit');void el.offsetWidth;el.classList.add('ta-hit');setTimeout(function(){el.classList.remove('ta-hit')},2600)},160);
+  }
+  window.__taGo=goTo;
+  function fillText(d,text){
+    var last=0,m,n=0;LINKRE.lastIndex=0;
+    while((m=LINKRE.exec(text))){
+      d.appendChild(document.createTextNode(text.slice(last,m.index)));
+      if(n<3&&linkOk(m[1])){var a=document.createElement('a');a.href='#'+m[1];a.className='tolink';a.setAttribute('data-go',m[1]);a.textContent=m[2];(function(id){a.addEventListener('click',function(ev){ev.preventDefault();goTo(id)})})(m[1]);d.appendChild(a);n++}
+      else d.appendChild(document.createTextNode(m[2]));
+      last=m.index+m[0].length;
+    }
+    d.appendChild(document.createTextNode(text.slice(last).replace(/\[\[|\]\]/g,'')));
+  }
+  function add(cls,text,vf){var d=document.createElement('div');d.className='msg '+cls;if(cls==='ai')fillText(d,text);else d.textContent=text;if(vf){var s=document.createElement('span');s.className='vf';s.textContent=VF;d.appendChild(s)}$('ta-body').appendChild(d);$('ta-body').scrollTop=1e9;return d}
   function buildPrompt(q){
     return SYS+'\n\n[學員目前位置] '+(ctx.unit||'未指定')+(ctx.step?'；步驟：'+ctx.step:'')+(ctx.done?'；這步做完的樣子：'+ctx.done:'')+'\n[學員問題] '+q;
   }
@@ -1102,6 +1141,37 @@ nav.tabs a.tx1{--uc:var(--u1)}nav.tabs a.tx2{--uc:var(--u2)}nav.tabs a.tx3{--uc:
   }
   [].slice.call(document.querySelectorAll('input.gatechk')).forEach(function(g){g.addEventListener('change',function(){var s=g.closest('section[id]');if(s&&g.checked)checkDone(s.id)})});
   window.__stats={get n(){return NCNT},get done(){return DONE},check:checkDone};
+  /* ---- 影片鈕：依所在步驟找秒數，在頁內播放器從該秒開始播；沒有網址就標「待上傳」 ---- */
+  var VCFG=null;
+  try{if(location.protocol!=='file:')fetch('videos.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(j){VCFG=j;markVids()}).catch(function(){})}catch(e){}
+  function markVids(){[].slice.call(document.querySelectorAll('a.vid[data-video]')).forEach(function(x){var c=VCFG&&VCFG[x.getAttribute('data-video')];if(c&&c.src){x.setAttribute('href','#v-'+x.getAttribute('data-video'));x.classList.remove('todo');x.removeAttribute('title')}})}
+  function vidT(v,step){var c=(VCFG&&VCFG[v]&&VCFG[v].chapters)||[];for(var i=0;i<c.length;i++){if(c[i].step===step)return +c[i].t||0}return 0}
+  function vidMsg(a,text){var m=a.parentNode.querySelector('.vidmsg');if(!m){m=document.createElement('span');m.className='vidmsg';m.setAttribute('role','status');a.parentNode.insertBefore(m,a.nextSibling)}m.textContent=text;clearTimeout(m._t);m._t=setTimeout(function(){m.textContent=''},5000)}
+  var VP=null;
+  function vpEnsure(){
+    if(VP)return VP;var d=document.createElement('div');d.id='ta-vp';d.hidden=true;
+    d.innerHTML='<div class="box" role="dialog" aria-label="影片"><div class="bar"><span id="ta-vp-t"></span><button type="button" id="ta-vp-x">關閉</button></div><video id="ta-vp-v" controls playsinline preload="auto"></video></div>';
+    document.body.appendChild(d);VP=d;
+    function close(){var v=$('ta-vp-v');try{v.pause()}catch(e){}v.removeAttribute('src');try{v.load()}catch(e){}d.hidden=true}
+    $('ta-vp-x').addEventListener('click',close);d.addEventListener('click',function(e){if(e.target===d)close()});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!d.hidden)close()});
+    return d;
+  }
+  function openVideo(src,t,title){
+    var d=vpEnsure(),v=$('ta-vp-v');$('ta-vp-t').textContent=title||'影片';d.hidden=false;
+    var go=function(){try{v.currentTime=t||0}catch(e){}var p=v.play();if(p&&p.catch)p.catch(function(){})};
+    v.addEventListener('loadedmetadata',function h(){v.removeEventListener('loadedmetadata',h);go()});
+    v.addEventListener('canplay',function h2(){v.removeEventListener('canplay',h2);if(t&&Math.abs(v.currentTime-t)>1){try{v.currentTime=t}catch(e){}}});
+    v.src=src;try{v.load()}catch(e){}
+  }
+  window.__vid={open:openVideo,get cfg(){return VCFG},t:vidT};
+  document.addEventListener('click',function(ev){
+    var a=ev.target.closest&&ev.target.closest('a.vid[data-video]');if(!a)return;ev.preventDefault();
+    var v=a.getAttribute('data-video'),li=a.closest('li.stp'),step=li?li.id:'',cfg=VCFG&&VCFG[v],src=cfg&&cfg.src,t=vidT(v,step);
+    if(!src){vidMsg(a,'影片待上傳，上傳後這裡就能直接播放。');return}
+    if(/^https?:[/][/](www[.])?(youtu|drive[.]google)/.test(src)){window.open(src+(src.indexOf('youtu')>=0?(src.indexOf('?')<0?'?':'&')+'t='+t:'#t='+t),'_blank','noopener');return}
+    openVideo(src,t,'影片 '+v+(step?'（'+step+'）':''));
+  },true);
   /* ---- 暱稱：登入後從資料庫帶出；沒有就請他補填；可修改。只有本人與講師看得到 ---- */
   var NICK='';
   function nickUI(){
@@ -1125,7 +1195,7 @@ nav.tabs a.tx1{--uc:var(--u1)}nav.tabs a.tx2{--uc:var(--u2)}nav.tabs a.tx3{--uc:
   });
   if($('ta-nick-in'))$('ta-nick-in').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();$('ta-nick-save').click()}});
   window.__loadProfile=loadProfile;
-  window.__taDebug={emit:emit,get sid(){return sid},TA:TA};
+  window.__taDebug={add:add,emit:emit,get sid(){return sid},TA:TA};
 })();
 </script>
 </body></html>
