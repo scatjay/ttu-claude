@@ -118,6 +118,7 @@ table.rt td.full{color:var(--good);font-weight:700}
 <section class="tiles" aria-label="總覽" id="tiles"></section>
 <section class="panel" style="margin-top:22px"><h2>各單元：過關人數、卡關次數、助教提問</h2><div id="units"></div><p class="note">「過關」＝該單元過關檢核至少勾了一格的人數（粗指標）；長條是占開過頁面人數的比例。</p></section>
 <section class="panel" id="fbPanel" style="margin-top:22px" hidden><h2>即時意見（最新在最上面，每 30 秒更新）</h2><ol class="fblist" id="fbList"></ol><p class="note" id="fbEmpty" hidden>還沒有人送出意見。</p></section>
+<section class="panel" id="onPanel" style="margin-top:22px" hidden><h2>同時在線 <span class="note" id="onCnt"></span></h2><div class="tbl"><table class="rt" id="onT"></table></div><p class="note">綠點＝現在連著網站；灰點＝已離線（顯示最後活動時間與當時所在單元）。每 15 秒更新。只存暱稱、時間與單元，不存 email。</p></section>
 <section class="panel" id="rosterPanel" style="margin-top:22px" hidden><h2>學員進度（依暱稱，只有講師看得到）</h2><div class="tbl"><table class="rt" id="rosterT"></table></div><p class="note">格子＝已勾步驟／全部步驟．已過檢查點／全部檢查點；綠色＝該單元步驟全勾。沒填暱稱的舊帳號才顯示代號。自評分頁只用代號，不與暱稱並列。</p></section>
 <div class="cols" style="margin-top:22px">
 <section class="panel"><h2>卡關熱點（按「其他卡關」最多的步驟）</h2><div id="hot"></div></section>
@@ -316,6 +317,24 @@ table.rt td.full{color:var(--good);font-weight:700}
   if($('alOneBtn')){$('alOneBtn').addEventListener('click',alOne);$('alOne').addEventListener('keydown',function(ev){if(ev.key==='Enter'){ev.preventDefault();alOne()}})}
   if($('alPreview')){$('alPreview').addEventListener('click',alPreview);$('alAdd').addEventListener('click',alAdd);$('alText').addEventListener('input',function(){$('alAdd').disabled=true;PREV=null})}
   window.__alLoad=alLoad;
+  /* ---- 同時在線：presence（在線中）＋lastseen（最後活動）；每 15 秒更新 ---- */
+  var UNAME={pre:'開始前',u1:'單元 1',u2:'單元 2',u3:'單元 3',u4:'單元 4',u5:'單元 5',u6:'單元 6',tpl:'報告模板',decl:'AI 使用聲明',fin:'總檢核',after:'課後'};
+  async function refreshOn(){
+    try{
+      var r=await Promise.all([get('presence'),get('lastseen')]),pr=r[0]||{},ls=r[1]||{};
+      var uids={};Object.keys(pr).forEach(function(k){uids[k]=1});Object.keys(ls).forEach(function(k){uids[k]=1});
+      var rows=Object.keys(uids).map(function(k){var p=pr[k],l=ls[k]||p||{};return {k:k,on:!!p,nick:(p&&p.nick)||l.nick||'（未填）',t:(p&&p.t)||l.t||0,u:(p&&p.u)||l.u||''}});
+      rows.sort(function(a,b){return (b.on-a.on)||(b.t-a.t)});
+      var n=rows.filter(function(x){return x.on}).length,T=$('onT'),panel=$('onPanel');if(!T||!panel)return;
+      panel.hidden=false;$('onCnt').textContent='（現在 '+n+' 人在線，累計出現過 '+rows.length+' 人）';T.textContent='';
+      var hr=document.createElement('tr');['','暱稱','目前所在','最後活動'].forEach(function(h){var th=document.createElement('th');th.textContent=h;hr.appendChild(th)});var th0=document.createElement('thead');th0.appendChild(hr);T.appendChild(th0);
+      var tb=document.createElement('tbody');
+      if(!rows.length){var er=document.createElement('tr'),ec=document.createElement('td');ec.colSpan=4;ec.textContent='還沒有人上線。';ec.style.color='var(--muted)';er.appendChild(ec);tb.appendChild(er)}
+      rows.forEach(function(x){var tr=document.createElement('tr'),d=document.createElement('td'),dot=document.createElement('span');dot.textContent='●';dot.style.color=x.on?'#2f9e44':'var(--muted)';dot.setAttribute('aria-label',x.on?'在線':'離線');d.appendChild(dot);tr.appendChild(d);
+        [x.nick,UNAME[x.u]||x.u||'—',x.on?'現在':ago(x.t)].forEach(function(v,i){var td=document.createElement('td');td.textContent=v;if(i===0)td.className='nm';tr.appendChild(td)});tb.appendChild(tr)});
+      T.appendChild(tb);
+    }catch(e){}
+  }
   async function refresh(){
     try{
       var r=await Promise.all([get('ev'),get('usage'),get('config'),get('hb'),get('self'),get('profile')]);
@@ -326,7 +345,7 @@ table.rt td.full{color:var(--good);font-weight:700}
       else $('stamp').textContent='讀取失敗：'+((e&&e.code)||e)+'，20 秒後重試。';
     }
   }
-  function startPolling(){refresh();setInterval(refresh,20000);setInterval(refreshFb,30000)}
+  function startPolling(){refresh();setInterval(refresh,20000);setInterval(refreshFb,30000);refreshOn();setInterval(refreshOn,15000)}
   (async function(){
     if(!C.db){$('empty').hidden=false;$('stamp').textContent='沒有資料庫設定';return}
     if(!C.auth){startPolling();return}
