@@ -1166,6 +1166,7 @@ window.addEventListener('hashchange',reveal);reveal();
 #ta-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;font:inherit;font-weight:700;font-size:14px;color:var(--onbrand);background:var(--accent);border:0;border-radius:99px;padding:11px 18px;box-shadow:var(--shadow);cursor:pointer}
 #ta-panel{position:fixed;right:16px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:61;width:min(400px,calc(100vw - 32px));max-height:min(78vh,640px);display:none;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);font-family:var(--sans)}
 #ta-panel.open{display:flex}
+.packdl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;margin:6px 0 10px}.packbtn{font:inherit;font-weight:700;padding:8px 14px;border-radius:10px;border:2px solid var(--accent,#2563eb);background:var(--surface,#fff);color:var(--accent,#2563eb);cursor:pointer;min-height:40px}.packbtn:hover{background:var(--accent,#2563eb);color:#fff}.packmsg{font-size:13px;color:var(--muted,#6b7280)}
 .vnote{display:inline-block;margin-left:8px;font-size:12px;color:var(--muted,#6b7280);font-style:normal}
 #ta-fab .fs{display:none}
 body:has(#ta-fab)::after{content:"";display:block;height:0}
@@ -1838,7 +1839,28 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     if(/^https?:[/][/](www[.])?(youtu|drive[.]google)/.test(src)){window.open(src+(src.indexOf('youtu')>=0?(src.indexOf('?')<0?'?':'&')+'t='+t:'#t='+t),'_blank','noopener');return}
     openVideo(src,t,'影片 '+v+(step?'（'+step+'）':''));
   },true);
+
+  /* ---- 學員教材包下載：資料放在資料庫 pack 節點（與學習單同一道登入閘門），登入後才取得，不是公開網址 ---- */
+  function packBox(){
+    var d=document.createElement('div');d.className='packdl';d.innerHTML='<button type="button" class="packbtn">⬇ 下載學員教材包（zip）</button><span class="packmsg" aria-live="polite"></span>';
+    d.querySelector('.packbtn').addEventListener('click',async function(){
+      var m=d.querySelector('.packmsg');m.textContent='取得中…';
+      try{
+        var r=await fetch(RT+'/pack.json'+qs());if(!r.ok)throw new Error(r.status);var p=await r.json();
+        if(!p||!p.b64)throw new Error('empty');
+        var bin=atob(p.b64),u=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+        var url=URL.createObjectURL(new Blob([u],{type:'application/zip'})),a=document.createElement('a');a.href=url;a.download=p.name||'學員教材包.zip';document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},4000);
+        m.textContent='已下載「'+(p.name||'學員教材包.zip')+'」（'+Math.round(u.length/1024)+' KB），解壓縮後放進「大同練習」。';
+      }catch(e){m.textContent='目前取不到教材包，請舉手問講師（USB 或共用連結）。'}
+    });
+    return d}
+  function placePack(){
+    if(!RT||document.querySelector('.packdl'))return;
+    var pre=document.querySelector('#pre h2'),own=document.querySelector('#u2-own .body');
+    if(pre){var n=packBox();n.style.marginTop='8px';pre.insertAdjacentElement('afterend',n)}
+    if(own)own.insertBefore(packBox(),own.firstChild)}
   /* ---- 帳號膠囊選單 ---- */
+  try{setTimeout(placePack,400);setTimeout(placePack,2500)}catch(e){}
   function closeMenu(){var m=$('ta-menu'),u=$('ta-user');if(m)m.hidden=true;if(u)u.setAttribute('aria-expanded','false')}
   if($('ta-user')){
     $('ta-user').addEventListener('click',function(ev){ev.stopPropagation();var m=$('ta-menu'),on=m.hidden;m.hidden=!on;$('ta-user').setAttribute('aria-expanded',on?'true':'false');if(on){var f=m.querySelector('button');if(f)f.focus()}});
