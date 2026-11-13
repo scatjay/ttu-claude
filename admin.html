@@ -296,11 +296,13 @@ table.rt td.full{color:var(--good);font-weight:700}
   async function alLoad(){
     try{ALLOW=(await get('allow'))||{}}catch(e){return}
     try{ALLOWG=(await get('allowg'))||{}}catch(e){ALLOWG={}}
+    var NOTE={};try{NOTE=(await get('allownote'))||{}}catch(e){}
     try{var sp=(await get('libshare'))||{},sk=Object.keys(sp).sort(),H=$('alShare');if(H){H.textContent='';$('alShareBox').hidden=!sk.length;sk.forEach(function(k){var l=document.createElement('li');l.textContent=sp[k].email;H.appendChild(l)})}}catch(e){}
     var L=$('alList');L.textContent='';var ks=Object.keys(ALLOW).sort();$('alCount').textContent='（'+ks.length+' 個）';
     ks.forEach(function(k){var l=document.createElement('li'),sp=document.createElement('span');sp.className='em';sp.textContent=dk(k);l.appendChild(sp);
       if(dk(k)===ADMIN_EMAIL){var b=document.createElement('span');b.className='badge';b.textContent='講師';l.appendChild(b)}
       else{var bt=document.createElement('button');bt.type='button';bt.textContent='移除';bt.setAttribute('aria-label','移除 '+dk(k));bt.addEventListener('click',function(){alRemove(k)});l.appendChild(bt)}
+      if(NOTE[k]==='need-gmail'){var nb=document.createElement('span');nb.className='badge';nb.style.background='var(--warn,#b4552c)';nb.style.color='#fff';nb.textContent='需改用 Gmail';nb.title='這個信箱沒辦法用 Google 登入（非 Google 帳戶或疑似打錯），當天請學員改用 Gmail 並現場補登記';l.appendChild(nb)}
       L.appendChild(l)});
   }
   async function alOne(){
