@@ -246,7 +246,8 @@ a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
       AUTH.onAuthStateChanged(async function(u){
         if(!u){showGate('文獻庫只開放給名單內的同學，請先登入。',null,true);return}
         TOK=await u.getIdToken();
-        if(await allowed()){$('#gate').hidden=true;$('#app').hidden=false;$('#who').textContent=u.email||'';document.documentElement.classList.remove('lib-gated');route()}
+        if(await allowed()){try{var pr=await fetch(CFG.db+'/dt1116/'+CFG.sess+'/profile/'+u.uid+'.json?auth='+encodeURIComponent(TOK));if(pr.ok){var pd=await pr.json();if(pd&&TRK[pd.track]){trk=TRK[pd.track];try{localStorage.setItem('dt-ws-track',pd.track)}catch(e){}}}}catch(e){}
+          $('#gate').hidden=true;$('#app').hidden=false;$('#who').textContent=u.email||'';document.documentElement.classList.remove('lib-gated');route()}
         else showGate('這個帳號（'+(u.email||'')+'）不在文獻庫名單內。','如果你是這次工作坊的學員，請告訴講師你登入用的 Gmail。',false)});
       $('#out').addEventListener('click',function(){AUTH.signOut()});
     }catch(e){showGate('登入功能載入失敗，請檢查網路後重新整理。',null,false)}
