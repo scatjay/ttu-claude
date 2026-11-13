@@ -340,7 +340,7 @@ a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
     var RULES={lib:'只根據朱老師團隊的論文全文與書目回答，每個重點附出處（哪一篇、第幾段），找不到依據會說「沒有提到」。這是閱讀輔助，請對照原文再引用。',sheet:'只回答這份學習單和 Claude 桌面版的操作。不會幫你寫報告，也不會給 DOI。每個答案都要你自己對照畫面或原文驗證。'};
     var LINK=/\[\[(?:p:([a-z0-9_]{3,60})|([A-Za-z0-9_-]{1,24}))\|([^\[\]|\n]{1,40})\]\]/g;
     function open(on){$('#ta-panel').classList.toggle('open',on);$('#ta-fab').setAttribute('aria-expanded',on?'true':'false');if(on)$('#ta-q').focus()}
-    function cnt(){var n=$('#ta-q').value.length;$('#ta-cnt').firstChild.nodeValue=n+' / '+(MODE==='lib'?200:300)+(MODE==='lib'?'　每人每天 20':'　每人每天 15')}
+    function cnt(){var n=$('#ta-q').value.length;$('#ta-cnt').firstChild.nodeValue=n+' / '+(MODE==='lib'?200:300)+(MODE==='lib'?'　每人每天 20':'　每人每天 15');var l=$('#ta-left');if(l)l.style.display='none'}
     function scopeOpts(){var sc=$('#ta-scope');sc.textContent='';var o=document.createElement('option');o.value='all';o.textContent='全部論文';sc.appendChild(o);if(PAPER){var e=document.createElement('option');e.value=PAPER.id;e.textContent='這一篇：'+PAPER.zh.slice(0,20);sc.appendChild(e);sc.value=SC==='all'?'all':PAPER.id}else SC='all';sc.hidden=MODE!=='lib'}
     function setMode(m){
       MODE=m;[].slice.call(document.querySelectorAll('#ta-mode button')).forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-m')===m?'true':'false')});
