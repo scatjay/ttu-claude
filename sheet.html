@@ -1108,6 +1108,9 @@ window.addEventListener('hashchange',reveal);reveal();
 #ta-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;font:inherit;font-weight:700;font-size:14px;color:var(--onbrand);background:var(--accent);border:0;border-radius:99px;padding:11px 18px;box-shadow:var(--shadow);cursor:pointer}
 #ta-panel{position:fixed;right:16px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:61;width:min(400px,calc(100vw - 32px));max-height:min(78vh,640px);display:none;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);font-family:var(--sans)}
 #ta-panel.open{display:flex}
+#ta-fab .fs{display:none}
+body:has(#ta-fab)::after{content:"";display:block;height:0}
+@media(max-width:700px){#ta-fab{right:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:52px;height:52px;padding:0;border-radius:50%;font-size:12.5px;line-height:1;display:flex;align-items:center;justify-content:center;white-space:nowrap}#ta-fab .fl{display:none}#ta-fab .fs{display:inline}#ta-panel{bottom:calc(72px + env(safe-area-inset-bottom,0px))}body:has(#ta-fab)::after{height:calc(84px + env(safe-area-inset-bottom,0px))}}
 /* ---- 學習線：醒目標籤、選單切換區、切換提醒、小標、跨線建議卡 ---- */
 :root:not([data-theme="dark"]){--tr-research:#3B4BD8;--tr-teaching:#0B7D3E;--tr-work:#A65A00;--tr-research-soft:#E8EBFF;--tr-teaching-soft:#E3F5EA;--tr-work-soft:#FFF3DC;--tr-on:#fff}
 :root[data-theme="dark"]{--tr-research:#9DB0FF;--tr-teaching:#7BE495;--tr-work:#FFB830;--tr-research-soft:#232C57;--tr-teaching-soft:#163A24;--tr-work-soft:#43301A;--tr-on:#16130f}
@@ -1115,6 +1118,10 @@ window.addEventListener('hashchange',reveal);reveal();
 #ta-trkflag{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left,0px));z-index:75;font-size:13px;font-weight:800;line-height:1.5;color:var(--tr-on,#fff);background:var(--tkc,var(--accent));border-radius:99px;padding:2px 13px;box-shadow:var(--shadow);letter-spacing:.02em;pointer-events:none}
 #ta-trkflag[hidden]{display:none}
 .ta-tk{display:inline-block;font-size:11px;font-weight:800;line-height:1.6;color:var(--tr-on,#fff);background:var(--tkc,var(--accent));border-radius:5px;padding:0 7px;margin:0 6px 2px 0;vertical-align:middle;white-space:nowrap}
+.trackbar button[data-set=research][aria-pressed=true]{background:var(--tr-research);border-color:var(--tr-research);color:var(--tr-on,#fff)}
+.trackbar button[data-set=teaching][aria-pressed=true]{background:var(--tr-teaching);border-color:var(--tr-teaching);color:var(--tr-on,#fff)}
+.trackbar button[data-set=work][aria-pressed=true]{background:var(--tr-work);border-color:var(--tr-work);color:var(--tr-on,#fff)}
+.trackbar button[data-set=research]:not([aria-pressed=true]){border-color:var(--tr-research)}.trackbar button[data-set=teaching]:not([aria-pressed=true]){border-color:var(--tr-teaching)}.trackbar button[data-set=work]:not([aria-pressed=true]){border-color:var(--tr-work)}
 #ta-trkgrp{border-top:1px solid var(--hair);margin-top:4px;padding:8px 6px 4px}
 #ta-trkgrp .gl{display:block;font-size:12px;color:var(--muted);margin:0 6px 6px}
 #ta-trkgrp .trkopt{display:flex;align-items:center;gap:8px;padding:8px 10px;margin:0 0 4px;border:2px solid var(--hair);border-radius:10px;cursor:pointer;font-size:14px;color:var(--ink);background:var(--surface)}
@@ -1144,7 +1151,7 @@ window.addEventListener('hashchange',reveal);reveal();
 @media(max-width:560px){#ta-on-k{display:none}}
 .ta-ut{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
 /* ---- 學習線徽章、選線視窗、篩選器、跳著學 ---- */
-.ta-trkbadge{font-size:11.5px;font-weight:700;color:var(--tr-on,#fff);background:var(--tkc,var(--accent));border-radius:99px;padding:1px 8px;margin-left:6px;white-space:nowrap}
+.ta-trkbadge{font-size:12.5px;font-weight:800;color:var(--tr-on,#fff);background:var(--tkc,var(--accent));border-radius:99px;padding:1px 8px;margin-left:6px;white-space:nowrap}
 #ta-trkmodal{position:fixed;inset:0;z-index:90;background:rgba(20,16,10,.55);display:flex;align-items:center;justify-content:center;padding:16px}
 #ta-trkmodal[hidden]{display:none}
 #ta-trkmodal .box{background:var(--surface);color:var(--ink);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);max-width:560px;width:100%;max-height:92vh;overflow:auto;padding:18px 18px 14px}
@@ -1294,7 +1301,7 @@ nav.tabs a.tx1{--uc:var(--u1)}nav.tabs a.tx2{--uc:var(--u2)}nav.tabs a.tx3{--uc:
 #ta-nick-msg{font-size:13px;color:var(--muted)}
 body{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
 @media(max-width:600px){
-  #ta-fab{right:12px;width:60px;height:60px;padding:0;border-radius:50%;font-size:12px;line-height:1.1;white-space:nowrap;display:flex;align-items:center;justify-content:center}
+  #ta-fab{right:10px;width:52px;height:52px;padding:0;border-radius:50%;font-size:12px;line-height:1.1;white-space:nowrap;display:flex;align-items:center;justify-content:center}
   #ta-panel{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 }
 @media(max-width:520px){
@@ -1394,7 +1401,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
 .libnote{margin:var(--s3) 0 0;font-size:14px}
 </style>
 <div id="ta-pill" hidden><span id="ta-pill-who"></span><button type="button" id="ta-pill-btn" class="loginbtn">用 Google 登入</button></div>
-<button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel">問AI助教</button>
+<button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel" aria-label="問AI助教"><span class="fl">問AI助教</span><span class="fs">助教</span></button>
 <div id="ta-panel" role="dialog" aria-label="AI助教">
 <header><b>AI助教</b><span class="ctx" id="ta-ctx"></span><button id="ta-x" type="button" aria-label="關閉AI助教">×</button></header>
 <div id="ta-mode" role="group" aria-label="要問什麼"><button type="button" data-m="sheet" aria-pressed="true">問學習單</button><button type="button" data-m="lib" aria-pressed="false">問文獻庫</button><select id="ta-scope" aria-label="文獻庫範圍" hidden><option value="all">全部文獻庫</option></select></div>
@@ -1912,7 +1919,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   var TRKN={research:'研究線',teaching:'教學線',work:'工作線'},TRK='';
   var TRKINFO=[['research','研究線','讀文獻、查 DOI，寫成投稿格式的研究報告。成品：研究報告。'],['teaching','教學線','用你的教材與課綱，做一份教學包。成品：教案＋學習單＋評量規準。'],['work','工作線','用你的會議紀錄與作業說明，做一份流程手冊。成品：SOP＋規則檔。']];
   function trkBadge(){var t=TRK||window.dtTrack||'',b=$('ta-trk-badge');if(b){b.hidden=!TRKN[t];b.textContent=TRKN[t]||'';b.className='ta-trkbadge ta-tk-'+t}flagUp(t);renderTrkMenu()}
-  function flagUp(t){var f=$('ta-trkflag');if(!f){f=document.createElement('div');f.id='ta-trkflag';f.setAttribute('role','status');document.body.appendChild(f)}f.hidden=!TRKN[t];f.className=TRKN[t]?'ta-tk-'+t:'';f.textContent=TRKN[t]?('目前：'+TRKN[t]):''}
+  function flagUp(t){var f=$('ta-trkflag');if(f)f.remove()}   // 左上浮動標籤已拿掉（與帳號膠囊的線別重複，還會蓋住「在線」）
   function trkProg(t){var d=0,n=0;Object.keys(STEPS).forEach(function(id){var m=STEPS[id];if((m.p||[]).indexOf(t)<0||!stpEl(id))return;n++;if(doneS(id))d++});return {d:d,n:n}}
   function renderTrkMenu(){var cur=TRK||window.dtTrack;[].slice.call(document.querySelectorAll('#ta-trkgrp .trkopt')).forEach(function(o){var t=o.getAttribute('data-t'),p=trkProg(t),full=p.n>0&&p.d>=p.n;o.className='trkopt ta-tk-'+t+(full?' full':'');o.setAttribute('aria-checked',t===cur?'true':'false');o.querySelector('.pg').textContent=(full?'已完成　':'')+p.d+'/'+p.n+' 步'})}
   function labelTracks(){return;/* 小標改由底稿（↳校⑭ 的 tr-css）統一提供，避免重複 */[].slice.call(document.querySelectorAll('[data-track]')).forEach(function(el){if(el.getAttribute('data-tkdone'))return;var t=el.getAttribute('data-track');if(!TRKN[t]||!/^(DIV|LI|SECTION|DETAILS|P|FIELDSET)$/.test(el.tagName)||el.classList.contains('tb-h')||el.classList.contains('promptbox'))return;if(el.parentElement&&el.parentElement.closest('[data-track]'))return;

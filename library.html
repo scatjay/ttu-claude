@@ -138,6 +138,13 @@ nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:
 #ta-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;font:inherit;font-weight:700;font-size:14px;color:var(--onbrand);background:var(--accent);border:0;border-radius:99px;padding:11px 18px;box-shadow:var(--shadow);cursor:pointer}
 #ta-panel{position:fixed;right:16px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:61;width:min(400px,calc(100vw - 32px));max-height:min(78vh,640px);display:none;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);font-family:var(--sans)}
 #ta-panel.open{display:flex}
+#ta-fab .fs{display:none}
+body:has(#ta-fab)::after{content:"";display:block;height:0}
+@media(max-width:700px){#ta-fab{right:10px;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:52px;height:52px;padding:0;border-radius:50%;font-size:12.5px;line-height:1;display:flex;align-items:center;justify-content:center;white-space:nowrap}
+#ta-fab .fl{display:none}
+#ta-fab .fs{display:inline}
+#ta-panel{bottom:calc(72px + env(safe-area-inset-bottom,0px))}
+body:has(#ta-fab)::after{height:calc(84px + env(safe-area-inset-bottom,0px))}}
 #ta-body .msg.sug{background:var(--tks,var(--surface2));border:1px solid var(--tkc,var(--accent));border-left:5px solid var(--tkc,var(--accent));border-radius:12px;font-size:13.5px}
 #ta-body .msg.sug .sb{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
 #ta-body .msg.sug button{font:inherit;font-size:12.5px;font-weight:700;border-radius:99px;padding:3px 12px;cursor:pointer;border:1px solid var(--tkc,var(--accent));background:var(--surface);color:var(--ink)}
@@ -185,7 +192,7 @@ nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:
 a.tolink{display:inline-block;margin:1px 2px;padding:1px 10px;border-radius:99px;font-weight:700;font-size:.95em;text-decoration:none;color:var(--onbrand,#fff);background:var(--uc,var(--accent));line-height:1.6;cursor:pointer}
 a.tolink:hover{filter:brightness(1.08)}
 a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-@media(max-width:600px){#ta-fab{right:12px;width:60px;height:60px;padding:0;border-radius:50%;font-size:12px;line-height:1.1;white-space:nowrap;display:flex;align-items:center;justify-content:center}
+@media(max-width:600px){#ta-fab{right:10px;width:52px;height:52px;padding:0;border-radius:50%;font-size:12px;line-height:1.1;white-space:nowrap;display:flex;align-items:center;justify-content:center}
 #ta-panel{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
 /* 登入閘門 */
 #gate{max-width:420px;margin:12vh auto;text-align:center}
@@ -200,7 +207,7 @@ a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 <div id="app" hidden>
 <div class="tabs" role="navigation" aria-label="頁首"><span class="brand">大同示範文獻庫</span><span class="tnav" id="tnav"></span><span class="userbar"><span id="who"></span><button type="button" id="out">登出</button></span></div>
 <div class="toc-wrap"><nav class="toc" id="toc" aria-label="本頁目錄"></nav><main id="view"></main></div>
-<button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel">問AI助教</button>
+<button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel" aria-label="問AI助教"><span class="fl">問AI助教</span><span class="fs">助教</span></button>
 <div id="ta-panel" role="dialog" aria-label="AI助教">
 <header><b>AI助教</b><span class="ctx" id="ta-ctx"></span><button id="ta-x" type="button" aria-label="關閉AI助教">×</button></header>
 <div id="ta-mode" role="group" aria-label="要問什麼"><button type="button" data-m="sheet" aria-pressed="true">問學習單</button><button type="button" data-m="lib" aria-pressed="false">問文獻庫</button><select id="ta-scope" aria-label="文獻庫範圍" hidden><option value="all">全部文獻庫</option></select></div>
