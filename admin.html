@@ -117,7 +117,7 @@ table.rt td.full{color:var(--good);font-weight:700}
 <div id="empty" class="empty" hidden>還沒有彙整快照。學員開始使用 v9 學員版後，請在對話裡叫 Claude「更新大同後台」，它會讀學員版資料庫、彙整後寫進這一頁。</div>
 <div id="allowview" hidden>
   <section class="panel"><h2>白名單管理（哪些 Google 帳號可以用助教與學習單）</h2>
-  <p class="note">貼上學員的 Gmail 清單（一行一個，或用逗號、空白隔開）→ 按「預覽」→ 確認無誤再按「加入」。預覽只是檢查，不會寫入。</p>
+  <p class="note">貼上學員的 Gmail 清單（一行一個，或用逗號、空白隔開），再按「預覽」，確認無誤再按「加入」。預覽只是檢查，不會寫入。</p>
   <div class="alone"><label for="alOne">現場加一個人（用手機也行）</label><div class="alrow"><input id="alOne" type="email" inputmode="email" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="輸入完整 email，按加入"><button type="button" id="alOneBtn" class="albtn pri">加入</button></div></div>
   <textarea id="alText" rows="6" placeholder="例：student1@gmail.com&#10;student2@gmail.com" aria-label="學員 email 清單"></textarea>
   <div class="alrow"><button type="button" id="alPreview" class="albtn">預覽</button><button type="button" id="alAdd" class="albtn pri" disabled>確認加入</button><span id="alMsg" role="status"></span></div>
@@ -146,7 +146,7 @@ table.rt td.full{color:var(--good);font-weight:700}
 <section class="panel" style="margin-top:22px"><h2>各單元：過關人數、卡關次數、助教提問</h2><div id="units"></div><p class="note">「過關」＝該單元過關檢核至少勾了一格的人數（粗指標）；長條是占開過頁面人數的比例。</p></section>
 <section class="panel" id="fbPanel" style="margin-top:22px" hidden><h2>即時意見（最新在最上面，每 30 秒更新）</h2><ol class="fblist" id="fbList"></ol><p class="note" id="fbEmpty" hidden>還沒有人送出意見。</p></section>
 <section class="panel" id="onPanel" style="margin-top:22px" hidden><h2>同時在線 <span class="note" id="onCnt"></span></h2><div class="tbl"><table class="rt" id="onT"></table></div><p class="note">綠點＝現在連著網站；灰點＝已離線（顯示最後活動時間與當時所在單元）。每 15 秒更新。只存暱稱、時間與單元，不存 email。</p></section>
-<section class="panel" id="rosterPanel" style="margin-top:22px" hidden><h2>學員進度（依暱稱，只有講師看得到）</h2><div class="rtctl"><label>學習線 <select id="rtTrack"><option value="all">全部</option><option value="research">研究線</option><option value="teaching">教學線</option><option value="work">工作線</option><option value="none">未選</option></select></label><label>排序 <select id="rtSort"><option value="last">最後活動</option><option value="track">學習線</option><option value="prog">進度（多→少）</option><option value="sw">換線次數</option></select></label></div><div class="tbl"><table class="rt" id="rosterT"></table></div><p class="note">格子＝已勾步驟／全部步驟．已過檢查點／全部檢查點；綠色＝該單元步驟全勾。沒填暱稱的舊帳號才顯示代號。自評分頁只用代號，不與暱稱並列。</p></section>
+<section class="panel" id="rosterPanel" style="margin-top:22px" hidden><h2>學員進度（依暱稱，只有講師看得到）</h2><div class="rtctl"><label>學習線 <select id="rtTrack"><option value="all">全部</option><option value="research">研究線</option><option value="teaching">教學線</option><option value="work">工作線</option><option value="none">未選</option></select></label><label>排序 <select id="rtSort"><option value="last">最後活動</option><option value="track">學習線</option><option value="prog">進度（多到少）</option><option value="sw">換線次數</option></select></label></div><div class="tbl"><table class="rt" id="rosterT"></table></div><p class="note">格子＝已勾步驟／全部步驟．已過檢查點／全部檢查點；綠色＝該單元步驟全勾。沒填暱稱的舊帳號才顯示代號。自評分頁只用代號，不與暱稱並列。</p></section>
 <div class="cols" style="margin-top:22px">
 <section class="panel"><h2>卡關熱點（按「其他卡關」最多的步驟）</h2><div id="hot"></div></section>
 <section class="panel"><h2>助教用量</h2><dl class="kv" id="ta"></dl><p class="note" id="tanote"></p></section>
@@ -246,7 +246,7 @@ table.rt td.full{color:var(--good);font-weight:700}
     var T=$('regT');T.textContent='';var hr=document.createElement('tr');['班級','姓名・座號','身分','Claude 訂閱','建議線','實際選的線','登入','期望（報名表原文）'].forEach(function(h){var th=document.createElement('th');th.textContent=h;hr.appendChild(th)});var hd=document.createElement('thead');hd.appendChild(hr);T.appendChild(hd);var tb=document.createElement('tbody');
     keys.sort(function(a,b){var A=ROSTER[a],B=ROSTER[b];return (A.sub==='pro')-(B.sub==='pro')||String(A.cls).localeCompare(String(B.cls))||String(A.seat).localeCompare(String(B.seat))}).forEach(function(k){var g=ROSTER[k],u=byKey[k],p=u&&PROFILES[u],tr=document.createElement('tr');
       function td(t,cls){var e=document.createElement('td');if(cls)e.className=cls;e.textContent=t;tr.appendChild(e);return e}
-      td(g.cls);td(MASK?'●●●（已遮蔽）':g.nm+(g.seat?'・'+g.seat:''));td(g.role);var s2=document.createElement('td');var sp=document.createElement('span');sp.className=g.sub==='pro'?'yessub':'nosub';sp.textContent=g.sub==='pro'?'已訂 Pro':'未訂';s2.appendChild(sp);tr.appendChild(s2);
+      td(g.cls);td(MASK?'（已遮蔽）':g.nm+(g.seat?'・'+g.seat:''));td(g.role);var s2=document.createElement('td');var sp=document.createElement('span');sp.className=g.sub==='pro'?'yessub':'nosub';sp.textContent=g.sub==='pro'?'已訂 Pro':'未訂';s2.appendChild(sp);tr.appendChild(s2);
       td(TRN[g.sug]||'—');var ac=(p&&TRN[p.track])||'';var e=td(ac||(u?'（登入了，還沒選）':'—'));if(g.sug&&ac&&g.sug!==p.track){var m=document.createElement('span');m.className='mis';m.textContent='　與建議不一致';e.appendChild(m)}
       td(u?'已登入':'還沒');td(g.exp||'（沒填）','ex');tb.appendChild(tr)});T.appendChild(tb);
   }
@@ -266,7 +266,7 @@ table.rt td.full{color:var(--good);font-weight:700}
     var SL=$('tdSw');SL.textContent='';var swl=SW.slice().sort(function(a,b){return (b.t||0)-(a.t||0)});
     if(!swl.length){SL.textContent='還沒有人選線或換線。'}
     swl.slice(0,40).forEach(function(e){var p=PROFILES[e.sid],r=document.createElement('div');r.className='row';var tm=document.createElement('span');tm.className='tm';var dt=new Date(e.t||0);tm.textContent=('0'+dt.getHours()).slice(-2)+':'+('0'+dt.getMinutes()).slice(-2);
-      var tx=document.createElement('span');var cause={init:'首次選擇',self:'自己切換',suggest:'採用助教跨線建議'}[e.cause]||e.cause||'';tx.textContent=((p&&p.nick)||'（未填暱稱）')+'：'+(e.from?NM[e.from]+' → ':'')+(NM[e.to]||e.to)+'（'+cause+'）';r.appendChild(tm);r.appendChild(tx);SL.appendChild(r)});
+      var tx=document.createElement('span');var cause={init:'首次選擇',self:'自己切換',suggest:'採用助教跨線建議'}[e.cause]||e.cause||'';tx.textContent=((p&&p.nick)||'（未填暱稱）')+'：'+(e.from?NM[e.from]+' 改為 ':'')+(NM[e.to]||e.to)+'（'+cause+'）';r.appendChild(tm);r.appendChild(tx);SL.appendChild(r)});
     var A=$('tdAi');A.textContent='';
     var followed=0;NX.forEach(function(e){var id=String(e.key||'').replace(/-/g,'');if(!id)return;if(evs.some(function(x){return x.sid===e.sid&&x.type==='step'&&+x.on===1&&String(x.key||'').replace(/-/g,'')===id&&(x.t||0)>(e.t||0)}))followed++});
     [['跨線建議：出現','sugshow',SG.show],['跨線建議：採用（切線）',null,SG.adopt],['跨線建議：只看一步（不切線）',null,SG.peek],['跨線建議：按「不要再建議」',null,SG.off],['「我下一步該做什麼？」按了',null,NX.length],['其中建議的步驟後來真的有做',null,followed]].forEach(function(x){var r=document.createElement('div');r.className='row';var a=document.createElement('span');a.className='tm';a.style.minWidth='3em';a.textContent=x[2];var b=document.createElement('span');b.textContent=x[0];r.appendChild(a);r.appendChild(b);A.appendChild(r)});
@@ -352,7 +352,7 @@ table.rt td.full{color:var(--good);font-weight:700}
       var v=bn.getAttribute('data-v');$('app').hidden=(v!=='prog');$('selfview').hidden=(v!=='self');$('allowview').hidden=(v!=='allow')})});
   }
 
-  /* ---- 白名單管理：貼上清單 → 預覽 → 確認加入；可移除 ---- */
+  /* ---- 白名單管理：貼上清單、預覽、確認加入；可移除 ---- */
   var ADMIN_EMAIL='scatjay@gmail.com',ALLOW={},ALLOWG={};
   function gk(e){return /@gmail\.com$/.test(e)?e.replace(/\./g,''):''}
   function ek(e){return e.toLowerCase().replace(/\./g,',')}
@@ -367,7 +367,7 @@ table.rt td.full{color:var(--good);font-weight:700}
   var PREV=null;
   function alPreview(){
     var r=parseEmails($('alText').value);PREV=r;var box=$('alPrev');box.textContent='';box.hidden=false;
-    var h=document.createElement('div');h.innerHTML='共讀到 <b></b> 個　→　<b></b> 個會新增、<b></b> 個已在名單、<b></b> 個重複、<b></b> 個格式不對';var bs=h.querySelectorAll('b');bs[0].textContent=r.total;bs[1].textContent=r.ok.length;bs[2].textContent=r.exist.length;bs[3].textContent=r.dup.length;bs[4].textContent=r.bad.length;box.appendChild(h);
+    var h=document.createElement('div');h.innerHTML='共讀到 <b></b> 個　，其中　<b></b> 個會新增、<b></b> 個已在名單、<b></b> 個重複、<b></b> 個格式不對';var bs=h.querySelectorAll('b');bs[0].textContent=r.total;bs[1].textContent=r.ok.length;bs[2].textContent=r.exist.length;bs[3].textContent=r.dup.length;bs[4].textContent=r.bad.length;box.appendChild(h);
     if(r.ok.length){var u=document.createElement('ul');r.ok.forEach(function(x){u.appendChild(li(x+(r.odd.indexOf(x)>=0?'　（不是 gmail.com，請確認這是學員用來登入 Google 的帳號）':'')))});var t=document.createElement('div');t.textContent='將新增：';box.appendChild(t);box.appendChild(u)}
     if(r.bad.length){var u2=document.createElement('ul');r.bad.forEach(function(x){u2.appendChild(li(x))});var t2=document.createElement('div');t2.style.marginTop='8px';t2.textContent='格式不對（不會加入）：';box.appendChild(t2);box.appendChild(u2)}
     $('alAdd').disabled=!r.ok.length;$('alMsg').textContent=r.ok.length?'請核對上面的名單，沒問題再按「確認加入」。':'沒有可新增的 email。';
@@ -425,7 +425,7 @@ table.rt td.full{color:var(--good);font-weight:700}
       var hr=document.createElement('tr');['','暱稱','目前所在','最後活動'].forEach(function(h){var th=document.createElement('th');th.textContent=h;hr.appendChild(th)});var th0=document.createElement('thead');th0.appendChild(hr);T.appendChild(th0);
       var tb=document.createElement('tbody');
       if(!rows.length){var er=document.createElement('tr'),ec=document.createElement('td');ec.colSpan=4;ec.textContent='還沒有人上線。';ec.style.color='var(--muted)';er.appendChild(ec);tb.appendChild(er)}
-      rows.forEach(function(x){var tr=document.createElement('tr'),d=document.createElement('td'),dot=document.createElement('span');dot.textContent='●';dot.style.color=x.on?'#2f9e44':'var(--muted)';dot.setAttribute('aria-label',x.on?'在線':'離線');d.appendChild(dot);tr.appendChild(d);
+      rows.forEach(function(x){var tr=document.createElement('tr'),d=document.createElement('td'),dot=document.createElement('span');dot.style.cssText='display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:middle;background:'+(x.on?'#2f9e44':'var(--muted)');dot.setAttribute('aria-label',x.on?'在線':'離線');d.appendChild(dot);tr.appendChild(d);
         [x.nick,UNAME[x.u]||x.u||'—',x.on?'現在':ago(x.t)].forEach(function(v,i){var td=document.createElement('td');td.textContent=v;if(i===0)td.className='nm';tr.appendChild(td)});tb.appendChild(tr)});
       T.appendChild(tb);
     }catch(e){}
