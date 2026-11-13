@@ -136,6 +136,11 @@ nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:
 #ta-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;font:inherit;font-weight:700;font-size:14px;color:var(--onbrand);background:var(--accent);border:0;border-radius:99px;padding:11px 18px;box-shadow:var(--shadow);cursor:pointer}
 #ta-panel{position:fixed;right:16px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:61;width:min(400px,calc(100vw - 32px));max-height:min(78vh,640px);display:none;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);font-family:var(--sans)}
 #ta-panel.open{display:flex}
+#ta-body .msg.sug{background:color-mix(in srgb,var(--tkc,var(--accent)) 10%,var(--surface));border:1px solid var(--tkc,var(--accent));border-left:5px solid var(--tkc,var(--accent));border-radius:12px;font-size:13.5px}
+#ta-body .msg.sug .sb{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+#ta-body .msg.sug button{font:inherit;font-size:12.5px;font-weight:700;border-radius:99px;padding:3px 12px;cursor:pointer;border:1px solid var(--tkc,var(--accent));background:var(--surface);color:var(--ink)}
+#ta-body .msg.sug button.go{background:var(--tkc,var(--accent));color:#fff}
+#ta-body .msg.sug button.off{border-color:var(--hair);color:var(--muted);font-weight:500}
 #ta-mode{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:8px 14px 0}
 #ta-mode button{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:var(--surface2);border:1px solid var(--hair);border-radius:99px;padding:3px 12px;cursor:pointer}
 #ta-mode button[aria-pressed=true]{background:var(--uc,var(--accent));color:var(--onbrand,#fff);border-color:var(--uc,var(--accent))}
@@ -196,7 +201,7 @@ a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 <button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel">問AI助教</button>
 <div id="ta-panel" role="dialog" aria-label="AI助教">
 <header><b>AI助教</b><span class="ctx" id="ta-ctx"></span><button id="ta-x" type="button" aria-label="關閉AI助教">×</button></header>
-<div id="ta-mode" role="group" aria-label="要問什麼"><button type="button" data-m="sheet" aria-pressed="true">問學習單</button><button type="button" data-m="lib" aria-pressed="false">問論文</button><select id="ta-scope" aria-label="論文範圍" hidden><option value="all">全部論文</option></select></div>
+<div id="ta-mode" role="group" aria-label="要問什麼"><button type="button" data-m="sheet" aria-pressed="true">問學習單</button><button type="button" data-m="lib" aria-pressed="false">問文獻庫</button><select id="ta-scope" aria-label="文獻庫範圍" hidden><option value="all">全部文獻庫</option></select></div>
 <div id="ta-quick" aria-label="快捷提問"></div>
 <div id="ta-body"><p class="rule">只回答這份學習單和 Claude 桌面版的操作。不會幫你寫報告，也不會給 DOI。每個答案都要你自己對照畫面或原文驗證。</p></div>
 <form id="ta-form"><textarea id="ta-q" maxlength="300" placeholder="卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）"></textarea>
@@ -347,26 +352,26 @@ a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
   /* ===== AI 助教：和學習單同一個浮動按鈕與面板（CSS、標記都由學習單那份建置時取用）===== */
   (function(){
     var MODE='lib',SC='all',PAPER=null,busy=false,sid=null;
-    var QUICK={lib:['朱老師的論文常用什麼研究方法？','哪一篇談到設計教育？','哪一篇談到空間能力？'],sheet:['我卡在這一步了，怎麼辦？','這一步做完要看到什麼？','我現在該先做哪一步？']};
-    var RULES={lib:'只根據朱老師團隊的論文全文與書目回答，每個重點附出處（哪一篇、第幾段），找不到依據會說「沒有提到」。這是閱讀輔助，請對照原文再引用。',sheet:'只回答這份學習單和 Claude 桌面版的操作。不會幫你寫報告，也不會給 DOI。每個答案都要你自己對照畫面或原文驗證。'};
-    var LINK=/\[\[(?:p:([a-z0-9_]{3,60})|([A-Za-z0-9_-]{1,24}))\|([^\[\]|\n]{1,40})\]\]/g;
+    var QUICK={lib:['朱老師的論文常用什麼研究方法？','有沒有教學備課的案例？','有沒有整理會議紀錄的案例？'],sheet:['我卡在這一步了，怎麼辦？','這一步做完要看到什麼？','我現在該先做哪一步？']};
+    var RULES={lib:'只根據朱老師團隊的論文（全文與書目）和三條線的應用案例回答，每個重點附出處（論文第幾段或哪一則案例），找不到依據會說「沒有提到」。這是閱讀輔助，請對照原文再引用。',sheet:'只回答這份學習單和 Claude 桌面版的操作。不會幫你寫報告，也不會給 DOI。每個答案都要你自己對照畫面或原文驗證。'};
+    var LINK=/\[\[(?:p:([a-z0-9_]{3,60})|c:([a-z0-9_-]{3,60})|([A-Za-z0-9_-]{1,24}))\|([^\[\]|\n]{1,40})\]\]/g;
     function open(on){$('#ta-panel').classList.toggle('open',on);$('#ta-fab').setAttribute('aria-expanded',on?'true':'false');if(on)$('#ta-q').focus()}
     function cnt(){var n=$('#ta-q').value.length;$('#ta-cnt').firstChild.nodeValue=n+' / '+(MODE==='lib'?200:300)+(MODE==='lib'?'　每人每天 20':'　每人每天 15');var l=$('#ta-left');if(l)l.style.display='none'}
-    function scopeOpts(){var sc=$('#ta-scope');sc.textContent='';var o=document.createElement('option');o.value='all';o.textContent='全部論文';sc.appendChild(o);if(PAPER){var e=document.createElement('option');e.value=PAPER.id;e.textContent='這一篇：'+PAPER.zh.slice(0,20);sc.appendChild(e);sc.value=SC==='all'?'all':PAPER.id}else SC='all';sc.hidden=MODE!=='lib'}
+    function scopeOpts(){var sc=$('#ta-scope');sc.textContent='';var o=document.createElement('option');o.value='all';o.textContent='全部文獻庫';sc.appendChild(o);if(PAPER){var e=document.createElement('option');e.value=PAPER.id;e.textContent='只問這一篇：'+PAPER.zh.slice(0,18);sc.appendChild(e);sc.value=SC==='all'?'all':PAPER.id}else SC='all';sc.hidden=MODE!=='lib'}
     function setMode(m){
       MODE=m;[].slice.call(document.querySelectorAll('#ta-mode button')).forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-m')===m?'true':'false')});
       var r=$('#ta-body').querySelector('.rule');if(r)r.textContent=RULES[m];
-      $('#ta-q').placeholder=m==='lib'?'問論文：例如「哪一篇談到設計教育？」':'卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）';$('#ta-q').maxLength=m==='lib'?200:300;
+      $('#ta-q').placeholder=m==='lib'?'問文獻庫：例如「哪一篇談到設計教育？」':'卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）';$('#ta-q').maxLength=m==='lib'?200:300;
       var q=$('#ta-quick');q.textContent='';QUICK[m].forEach(function(t){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){$('#ta-q').value=t;cnt();$('#ta-q').focus()});q.appendChild(b)});
       scopeOpts();cnt();
     }
-    window.__taPaper=function(p){PAPER=p;SC='all';scopeOpts();$('#ta-ctx').textContent=p?p.zh:''};
+    window.__taPaper=function(p){PAPER=p?{id:p.id,zh:p.zh||p['標題']}:null;SC='all';scopeOpts();$('#ta-ctx').textContent=p?p.zh:''};
     function fill(d,text){
       var last=0,m;LINK.lastIndex=0;
       while((m=LINK.exec(text))){d.appendChild(document.createTextNode(text.slice(last,m.index)));
-        var a=document.createElement('a');a.className='tolink';a.textContent=m[3];
-        if(m[1]){a.href='#/p/'+m[1];a.addEventListener('click',function(){if(window.matchMedia('(max-width:700px)').matches)open(false)})}   // 同一分頁跳到該篇卡片
-        else a.href='sheet.html#'+m[2];                                                                                   // 學習單的步驟（同一分頁）
+        var a=document.createElement('a');a.className='tolink';a.textContent=m[4];
+        if(m[1]||m[2]){a.href='#/'+(m[1]?'p/'+m[1]:'c/'+m[2]);a.addEventListener('click',function(){if(window.matchMedia('(max-width:700px)').matches)open(false)})}   // 同一分頁跳到該篇卡片或案例
+        else a.href='sheet.html#'+m[3];                                                                                   // 學習單的步驟（同一分頁）
         d.appendChild(a);last=m.index+m[0].length}
       d.appendChild(document.createTextNode(text.slice(last).replace(/\[\[|\]\]/g,'')));
     }
@@ -409,7 +414,7 @@ a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
       '<div class="foot"><p>案例內容為示範用，檔名與資料均為虛構的練習素材；提示詞的產出請自己對照原文或畫面驗證，我可能說錯。</p></div></div>';
     $('#cpre').textContent=c['提示詞'];
     $('#ccopy').onclick=function(){var m=$('#cmsg');function ok(){m.textContent='已複製。'}function fb(){var r=document.createRange();r.selectNodeContents($('#cpre'));var sl=getSelection();sl.removeAllRanges();sl.addRange(r);m.textContent='請按 Ctrl+C 複製（已選取）。'}try{navigator.clipboard.writeText(c['提示詞']).then(ok,fb)}catch(e){fb()}};
-    setNav([['c-prompt','提示詞'],['c-out','產出示意'],['c-note','適合誰與注意事項'],['c-steps','在學習單練習']],true);if(window.__taPaper)window.__taPaper(null);window.scrollTo(0,0);
+    setNav([['c-prompt','提示詞'],['c-out','產出示意'],['c-note','適合誰與注意事項'],['c-steps','在學習單練習']],true);if(window.__taPaper)window.__taPaper({id:c.id,zh:c['標題']});window.scrollTo(0,0);
   }
   function route(){var m=/^#\/p\/([A-Za-z0-9_-]+)/.exec(location.hash),c=/^#\/c\/([A-Za-z0-9_-]+)/.exec(location.hash);if(m)paper(m[1]);else if(c)caseView(c[1]);else hub()}
   window.addEventListener('hashchange',function(){if(!$('#app').hidden)route()});

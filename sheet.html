@@ -384,7 +384,7 @@ p.tb-s{margin:6px 0 8px;padding:5px 10px;border:1px dashed var(--hair);border-ra
 p.tb-s a{color:var(--accent);font-weight:700}
 </style>
 </head><body><div id="ta-wait" style="display:none;padding:48px 16px;text-align:center;font:16px system-ui,sans-serif;color:#6f685d">確認登入狀態…</div><div class="wrap">
-<div id="ta-toplogin" hidden><span id="ta-top-who"></span><span id="ta-nickedit" hidden><input id="ta-nick-in" type="text" maxlength="20" aria-label="姓名或暱稱" placeholder="姓名或暱稱"> <button type="button" id="ta-nick-save">儲存</button> <span id="ta-nick-msg"></span></span><div id="ta-onwrap" class="ta-menuwrap" hidden style="margin-left:0"><button type="button" id="ta-on" class="userpill" aria-expanded="false" aria-controls="ta-onlist"><b id="ta-on-n">在線 0</b></button><div id="ta-onlist" role="region" aria-label="目前在線的同學" hidden></div></div><div id="ta-nickwrap" class="ta-menuwrap" hidden><button type="button" id="ta-user" class="userpill" aria-haspopup="menu" aria-expanded="false" aria-controls="ta-menu"><b id="ta-nick"></b><span id="ta-trk-badge" class="ta-trkbadge" hidden></span><span aria-hidden="true">▾</span></button><div id="ta-menu" role="menu" hidden><button type="button" role="menuitem" id="ta-nick-edit">修改暱稱</button><button type="button" role="menuitem" id="ta-trk-change">換學習線</button><button type="button" role="menuitem" id="theme">切換亮／暗</button><button type="button" role="menuitem" id="reset">清除勾選</button><button type="button" role="menuitem" id="ta-top-signin">登出</button></div></div></div><header data-page="top" id="top"><p class="eyebrow">設計學特論 · 2026-11-16 · 學習單</p><h1>從零開始的 Claude Code：六小時完成一篇 AI 協作報告</h1><p class="lede">從安裝開始。今天結束前，你要交出<b>一篇投稿格式的 AI 協作報告</b>：Claude 負責起草，<b>你負責驗收、改寫與署名</b>：每一句都要你對照原文確認過，才算你的報告。報告分六個單元，一節一節長出來。<b>今天的報告是練習稿，用來學流程；真的要投稿，文獻量、方法與查證都要另外補足。</b></p><div class="trackbox" id="trackbox"><p class="tb-goal"><b>今天的目標是熟悉工具。</b>研究、教學、工作三條線的核心功能教學完全一樣（安裝、讀資料夾、權限、規則檔、新工作階段驗證、成品），不同的是練習素材與範例提示詞、單元 5 查核的對象，以及最後交出的成品。</p><div aria-label="選擇你的路線" class="trackbar" role="group"><span class="tb-t">第一步：選你的路線</span><button aria-pressed="true" data-set="research" type="button">研究線</button><button aria-pressed="false" data-set="teaching" type="button">教學線</button><button aria-pressed="false" data-set="work" type="button">工作線</button></div><div class="tb-h" data-track="research"><b>你的路線：研究線</b>　維持原本的設計：讀文獻、查 DOI、寫投稿格式的研究報告。</div><div class="tb-h" data-track="teaching"><b>你的路線：教學線</b>　用你的教材、課綱、去識別的學生回饋，做一份教學包（教案＋學習單＋評量規準）。<div class="tb-m">讀到「文獻」＝你的教學素材；「報告」＝你的教學包（檔名固定叫 報告.md，後面的提示句才通用）；「研究問題」＝教學問題。報告第 1 到 5 節＝教學背景與目標／教學設計／AI 協作過程與紀錄／學習單與評量規準／反思與限制，第 6 節＝AI 使用聲明。單元 5 改做「查核 AI 產出的事實」。</div></div><div class="tb-h" data-track="work"><b>你的路線：工作線</b>　用你的會議紀錄、作業說明、範例信件，做一份重複性工作的流程手冊（SOP＋規則檔）。<div class="tb-m">讀到「文獻」＝你的工作素材；「報告」＝你的工作流程手冊（檔名固定叫 報告.md，後面的提示句才通用）；「研究問題」＝這項工作要解決的問題。報告第 1 到 5 節＝工作情境與目標／作業流程／AI 協作過程與紀錄／檢核與例外處理／限制與注意事項，第 6 節＝AI 使用聲明。單元 5 改做「查核 AI 產出的事實」。</div></div><p class="tb-n">成品三選一：研究報告、教學包（教案＋學習單＋評量規準）、工作流程手冊（SOP＋規則檔）。登入後的選擇會記在你的帳號；改路線請回到這裡再按一次，或用帳號選單。</p></div><div class="meta"><span>10:00 – 16:30</span><span>淨授課 <b>300 分</b></span><span>六單元 × 50 分</span><span>工具：Claude 桌面版（裝在你電腦上的 App）</span><span>今天用左上的「程式碼」分頁（另一個是「對話」分頁）</span><span>授課：楊智傑 老師</span></div><details class="card pcard" id="pcard" style="margin-top:16px"><summary><div class="psum-h"><div class="pnum">已勾選 <b id="pn">0</b> / <span id="pt">0</span> 個步驟與開始前項目</div><span class="chev"></span></div><div class="pbar"><i id="pf"></i></div></summary><div class="pbody"><div class="uphead"><span>分段</span><span></span><span>本段</span><span>累計</span></div><div class="uprog" id="uprog"></div><p class="note" style="margin-top:10px">你的勾選會存在這台電腦；登入後也會送給老師，老師看得到你的進度（含你填的暱稱），其他同學看不到你的進度；頁首的「在線」名單會讓同學看到你的暱稱（只有暱稱）。各單元完成人數只顯示人數，不顯示是誰。</p></div></details><div class="warnbar" id="nostore">這個瀏覽器不讓本頁儲存勾選（可能是無痕或封鎖），頁面仍可使用，但重新整理後勾選會清空。</div>
+<div id="ta-toplogin" hidden><span id="ta-top-who"></span><span id="ta-nickedit" hidden><input id="ta-nick-in" type="text" maxlength="20" aria-label="姓名或暱稱" placeholder="姓名或暱稱"> <button type="button" id="ta-nick-save">儲存</button> <span id="ta-nick-msg"></span></span><div id="ta-onwrap" class="ta-menuwrap" hidden style="margin-left:0"><button type="button" id="ta-on" class="userpill" aria-expanded="false" aria-controls="ta-onlist"><b id="ta-on-n">在線 0</b><small id="ta-on-k"></small></button><div id="ta-onlist" role="region" aria-label="目前在線的同學" hidden></div></div><div id="ta-nickwrap" class="ta-menuwrap" hidden><button type="button" id="ta-user" class="userpill" aria-haspopup="menu" aria-expanded="false" aria-controls="ta-menu"><b id="ta-nick"></b><span id="ta-trk-badge" class="ta-trkbadge" hidden></span><span aria-hidden="true">▾</span></button><div id="ta-menu" role="menu" hidden><button type="button" role="menuitem" id="ta-nick-edit">修改暱稱</button><div id="ta-trkgrp" role="group" aria-label="學習線"><span class="gl">學習線（點一下切換）</span><div class="trkopt" role="menuitemradio" tabindex="0" data-t="research" aria-checked="false"><b>研究</b><span class="pg"></span></div><div class="trkopt" role="menuitemradio" tabindex="0" data-t="teaching" aria-checked="false"><b>教學</b><span class="pg"></span></div><div class="trkopt" role="menuitemradio" tabindex="0" data-t="work" aria-checked="false"><b>工作</b><span class="pg"></span></div></div><button type="button" role="menuitem" id="theme">切換亮／暗</button><button type="button" role="menuitem" id="reset">清除勾選</button><button type="button" role="menuitem" id="ta-top-signin">登出</button></div></div></div><header data-page="top" id="top"><p class="eyebrow">設計學特論 · 2026-11-16 · 學習單</p><h1>從零開始的 Claude Code：六小時完成一篇 AI 協作報告</h1><p class="lede">從安裝開始。今天結束前，你要交出<b>一篇投稿格式的 AI 協作報告</b>：Claude 負責起草，<b>你負責驗收、改寫與署名</b>：每一句都要你對照原文確認過，才算你的報告。報告分六個單元，一節一節長出來。<b>今天的報告是練習稿，用來學流程；真的要投稿，文獻量、方法與查證都要另外補足。</b></p><div class="trackbox" id="trackbox"><p class="tb-goal"><b>今天的目標是熟悉工具。</b>研究、教學、工作三條線的核心功能教學完全一樣（安裝、讀資料夾、權限、規則檔、新工作階段驗證、成品），不同的是練習素材與範例提示詞、單元 5 查核的對象，以及最後交出的成品。</p><div aria-label="選擇你的路線" class="trackbar" role="group"><span class="tb-t">第一步：選你的路線</span><button aria-pressed="true" data-set="research" type="button">研究線</button><button aria-pressed="false" data-set="teaching" type="button">教學線</button><button aria-pressed="false" data-set="work" type="button">工作線</button></div><div class="tb-h" data-track="research"><b>你的路線：研究線</b>　維持原本的設計：讀文獻、查 DOI、寫投稿格式的研究報告。</div><div class="tb-h" data-track="teaching"><b>你的路線：教學線</b>　用你的教材、課綱、去識別的學生回饋，做一份教學包（教案＋學習單＋評量規準）。<div class="tb-m">讀到「文獻」＝你的教學素材；「報告」＝你的教學包（檔名固定叫 報告.md，後面的提示句才通用）；「研究問題」＝教學問題。報告第 1 到 5 節＝教學背景與目標／教學設計／AI 協作過程與紀錄／學習單與評量規準／反思與限制，第 6 節＝AI 使用聲明。單元 5 改做「查核 AI 產出的事實」。</div></div><div class="tb-h" data-track="work"><b>你的路線：工作線</b>　用你的會議紀錄、作業說明、範例信件，做一份重複性工作的流程手冊（SOP＋規則檔）。<div class="tb-m">讀到「文獻」＝你的工作素材；「報告」＝你的工作流程手冊（檔名固定叫 報告.md，後面的提示句才通用）；「研究問題」＝這項工作要解決的問題。報告第 1 到 5 節＝工作情境與目標／作業流程／AI 協作過程與紀錄／檢核與例外處理／限制與注意事項，第 6 節＝AI 使用聲明。單元 5 改做「查核 AI 產出的事實」。</div></div><p class="tb-n">成品三選一：研究報告、教學包（教案＋學習單＋評量規準）、工作流程手冊（SOP＋規則檔）。登入後的選擇會記在你的帳號；改路線請回到這裡再按一次，或用帳號選單。</p></div><div class="meta"><span>10:00 – 16:30</span><span>淨授課 <b>300 分</b></span><span>六單元 × 50 分</span><span>工具：Claude 桌面版（裝在你電腦上的 App）</span><span>今天用左上的「程式碼」分頁（另一個是「對話」分頁）</span><span>授課：楊智傑 老師</span></div><details class="card pcard" id="pcard" style="margin-top:16px"><summary><div class="psum-h"><div class="pnum">已勾選 <b id="pn">0</b> / <span id="pt">0</span> 個步驟與開始前項目</div><span class="chev"></span></div><div class="pbar"><i id="pf"></i></div></summary><div class="pbody"><div class="uphead"><span>分段</span><span></span><span>本段</span><span>累計</span></div><div class="uprog" id="uprog"></div><p class="note" style="margin-top:10px">你的勾選會存在這台電腦；登入後也會送給老師，老師看得到你的進度（含你填的暱稱），其他同學看不到你的進度；頁首的「在線」名單會讓同學看到你的暱稱（只有暱稱）。各單元完成人數只顯示人數，不顯示是誰。</p></div></details><div class="warnbar" id="nostore">這個瀏覽器不讓本頁儲存勾選（可能是無痕或封鎖），頁面仍可使用，但重新整理後勾選會清空。</div>
 <h3 style="margin-top:20px">各單元進度（點一下切到該單元）</h3><div class="upchips"><a class="upchip" data-u="1" href="#u1" style="--cu:var(--u1)"><b>單元 1</b>安裝與第一次對話<br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="2" href="#u2" style="--cu:var(--u2)"><b>單元 2</b>讓 Claude 讀你的資料夾<br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="3" href="#u3" style="--cu:var(--u3)"><b>單元 3</b>規則檔、任務檔、進度檔<br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="4" href="#u4" style="--cu:var(--u4)"><b>單元 4</b>讀文獻：讀取程度與出處<br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="5" href="#u5" style="--cu:var(--u5)"><b>單元 5</b><span data-track="research">DOI 查證、取全文、文獻 dashboard</span><span data-track="teaching">查核教材的事實正確性</span><span data-track="work">查核報告的數據與來源</span><br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="6" href="#u6" style="--cu:var(--u6)"><b>單元 6</b>研究問題、討論、聲明與定稿<br/><small>步驟 0/0・檢查點 0/0</small></a></div><h3 style="margin-top:20px">你的報告，怎麼一單元長一節</h3><p class="sub" style="margin:0">每單元最後勾「本單元寫進報告」，下面對應的節就亮起來。目前完成 <b id="secn">0</b> / 10 節。</p><div class="map" data-track="research">
 <div class="cell" data-u="1" style="--cu:var(--u1)">題目<small>單元 1 <b>★入門</b></small></div>
 <div class="cell" data-u="6" style="--cu:var(--u6)">摘要<small>單元 6</small></div>
@@ -1066,6 +1066,39 @@ document.addEventListener('change',function(){setTimeout(chips,0)});chips();
 #ta-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;font:inherit;font-weight:700;font-size:14px;color:var(--onbrand);background:var(--accent);border:0;border-radius:99px;padding:11px 18px;box-shadow:var(--shadow);cursor:pointer}
 #ta-panel{position:fixed;right:16px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:61;width:min(400px,calc(100vw - 32px));max-height:min(78vh,640px);display:none;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);font-family:var(--sans)}
 #ta-panel.open{display:flex}
+/* ---- 學習線：醒目標籤、選單切換區、切換提醒、小標、跨線建議卡 ---- */
+.ta-tk-research{--tkc:var(--u1)}.ta-tk-teaching{--tkc:var(--u2)}.ta-tk-work{--tkc:var(--u4)}
+#ta-trkflag{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left,0px));z-index:75;font-size:13px;font-weight:800;line-height:1.5;color:#fff;background:var(--tkc,var(--accent));border-radius:99px;padding:2px 13px;box-shadow:var(--shadow);letter-spacing:.02em;pointer-events:none}
+#ta-trkflag[hidden]{display:none}
+.ta-tk{display:inline-block;font-size:11px;font-weight:800;line-height:1.6;color:#fff;background:var(--tkc,var(--accent));border-radius:5px;padding:0 7px;margin:0 6px 2px 0;vertical-align:middle;white-space:nowrap}
+#ta-trkgrp{border-top:1px solid var(--hair);margin-top:4px;padding:8px 6px 4px}
+#ta-trkgrp .gl{display:block;font-size:12px;color:var(--muted);margin:0 6px 6px}
+#ta-trkgrp .trkopt{display:flex;align-items:center;gap:8px;padding:8px 10px;margin:0 0 4px;border:2px solid var(--hair);border-radius:10px;cursor:pointer;font-size:14px;color:var(--ink);background:var(--surface)}
+#ta-trkgrp .trkopt:hover,#ta-trkgrp .trkopt:focus-visible{border-color:var(--tkc);outline:none}
+#ta-trkgrp .trkopt b{font-size:14px;min-width:2.2em}
+#ta-trkgrp .trkopt .pg{font-size:12.5px;color:var(--muted);flex:1}
+#ta-trkgrp .trkopt[aria-checked=true]{border-color:var(--tkc);background:color-mix(in srgb,var(--tkc) 14%,var(--surface))}
+#ta-trkgrp .trkopt[aria-checked=true] b::after{content:"　目前";font-size:11px;font-weight:700;color:var(--tkc)}
+#ta-trkgrp .trkopt.full .pg{color:var(--ink);font-weight:700}
+#ta-trkgrp .trkopt.full .pg::before{content:"";display:inline-block;width:.55em;height:.3em;border-left:2px solid #2f9e44;border-bottom:2px solid #2f9e44;transform:rotate(-45deg);margin:0 .5em .15em 0}
+.ta-modal{position:fixed;inset:0;z-index:95;background:rgba(20,16,10,.55);display:flex;align-items:center;justify-content:center;padding:16px}
+.ta-modal[hidden]{display:none}
+.ta-modal .box{background:var(--surface);color:var(--ink);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);max-width:520px;width:100%;max-height:92vh;overflow:auto;padding:18px}
+.ta-modal h2{margin:0 0 8px;font-size:19px}
+.ta-modal p{margin:0 0 10px;font-size:14.5px;line-height:1.7}
+.ta-modal .acts{display:flex;gap:10px;justify-content:flex-end;margin-top:12px;flex-wrap:wrap}
+.ta-modal .acts button{font:inherit;font-weight:700;font-size:14.5px;border-radius:10px;padding:8px 18px;cursor:pointer;border:1px solid var(--hair);background:var(--surface2);color:var(--ink)}
+.ta-modal .acts button.go{background:var(--tkc,var(--accent));border-color:var(--tkc,var(--accent));color:#fff}
+.ta-modal .peekbody{border:1px dashed var(--hair);border-radius:10px;padding:10px 12px;font-size:14px;max-height:56vh;overflow:auto}
+.ta-modal .peekbody input{pointer-events:none}
+#ta-body .msg.sug{background:color-mix(in srgb,var(--tkc,var(--accent)) 10%,var(--surface));border:1px solid var(--tkc,var(--accent));border-left:5px solid var(--tkc,var(--accent));border-radius:12px;font-size:13.5px}
+#ta-body .msg.sug .sb{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+#ta-body .msg.sug button{font:inherit;font-size:12.5px;font-weight:700;border-radius:99px;padding:3px 12px;cursor:pointer;border:1px solid var(--tkc,var(--accent));background:var(--surface);color:var(--ink)}
+#ta-body .msg.sug button.go{background:var(--tkc,var(--accent));color:#fff}
+#ta-body .msg.sug button.off{border-color:var(--hair);color:var(--muted);font-weight:500}
+#ta-on-k{font-size:11.5px;color:var(--muted);margin-left:6px;font-weight:600}
+@media(max-width:560px){#ta-on-k{display:none}}
+.ta-ut{display:block;font-size:12.5px;color:var(--muted);margin-top:2px}
 /* ---- 學習線徽章、選線視窗、篩選器、跳著學 ---- */
 .ta-trkbadge{font-size:11.5px;font-weight:700;color:var(--onbrand,#fff);background:var(--accent);border-radius:99px;padding:1px 8px;margin-left:6px;white-space:nowrap}
 #ta-trkmodal{position:fixed;inset:0;z-index:90;background:rgba(20,16,10,.55);display:flex;align-items:center;justify-content:center;padding:16px}
@@ -1318,7 +1351,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
 <button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel">問AI助教</button>
 <div id="ta-panel" role="dialog" aria-label="AI助教">
 <header><b>AI助教</b><span class="ctx" id="ta-ctx"></span><button id="ta-x" type="button" aria-label="關閉AI助教">×</button></header>
-<div id="ta-mode" role="group" aria-label="要問什麼"><button type="button" data-m="sheet" aria-pressed="true">問學習單</button><button type="button" data-m="lib" aria-pressed="false">問論文</button><select id="ta-scope" aria-label="論文範圍" hidden><option value="all">全部論文</option></select></div>
+<div id="ta-mode" role="group" aria-label="要問什麼"><button type="button" data-m="sheet" aria-pressed="true">問學習單</button><button type="button" data-m="lib" aria-pressed="false">問文獻庫</button><select id="ta-scope" aria-label="文獻庫範圍" hidden><option value="all">全部文獻庫</option></select></div>
 <div id="ta-quick" aria-label="快捷提問"></div>
 <div id="ta-login" hidden><button type="button" id="ta-signin">用 Google 登入</button><span id="ta-who"></span></div>
 <p id="ta-lockmsg" hidden style="margin:0;padding:8px 14px;font-size:13px;background:var(--accent-soft);color:var(--ink)">尚未登入：AI助教已鎖住。請按左下角或這個面板上方的「用 Google 登入」。</p>
@@ -1420,7 +1453,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   $('ta-q').addEventListener('input',function(){cntText()});
   /* ---- 助教回答裡的 [[id|文字]]：id 在學習單上真的有才變成連結；點了同頁切分頁、捲到那一步、短暫高亮 ---- */
   var LINKRE=/\[\[([A-Za-z0-9_-]{1,24})\|([^\[\]|\n]{1,40})\]\]/g;
-  var LINKRE2=/\[\[(?:p:([a-z0-9_]{3,60})|([A-Za-z0-9_-]{1,24}))\|([^\[\]|\n]{1,40})\]\]/g;
+  var LINKRE2=/\[\[(?:p:([a-z0-9_]{3,60})|c:([a-z0-9_-]{3,60})|([A-Za-z0-9_-]{1,24}))\|([^\[\]|\n]{1,40})\]\]/g;
   function linkOk(id){var e=document.getElementById(id);return !!(e&&(e.matches('section[data-page]')||e.matches('li.stp')||e.matches('.qa[id]')||e.matches('details.dd')))}
   function goTo(id){
     var el=document.getElementById(id);if(!el)return;
@@ -1436,24 +1469,24 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     var last=0,m,n=0;LINKRE2.lastIndex=0;
     while((m=LINKRE2.exec(text))){
       d.appendChild(document.createTextNode(text.slice(last,m.index)));
-      if(m[1]){var pa=document.createElement('a');pa.href='library.html#/p/'+m[1];pa.className='tolink';pa.textContent=m[3];d.appendChild(pa)}
-      else if(n<3&&linkOk(m[2])){var a=document.createElement('a');a.href='#'+m[2];a.className='tolink';a.setAttribute('data-go',m[2]);a.textContent=m[3];(function(id){a.addEventListener('click',function(ev){ev.preventDefault();goTo(id)})})(m[2]);d.appendChild(a);n++}
-      else d.appendChild(document.createTextNode(m[3]));
+      if(m[1]||m[2]){var pa=document.createElement('a');pa.href='library.html#/'+(m[1]?'p/'+m[1]:'c/'+m[2]);pa.className='tolink';pa.textContent=m[4];d.appendChild(pa)}
+      else if(n<3&&linkOk(m[3])){var a=document.createElement('a');a.href='#'+m[3];a.className='tolink';a.setAttribute('data-go',m[3]);a.textContent=m[4];(function(id){a.addEventListener('click',function(ev){ev.preventDefault();goTo(id)})})(m[3]);d.appendChild(a);n++}
+      else d.appendChild(document.createTextNode(m[4]));
       last=m.index+m[0].length;
     }
     d.appendChild(document.createTextNode(text.slice(last).replace(/\[\[|\]\]/g,'')));
   }
   function add(cls,text,vf){var d=document.createElement('div');d.className='msg '+cls;if(cls==='ai')fillText(d,text);else d.textContent=text;if(vf){var s=document.createElement('span');s.className='vf';s.textContent=VF;d.appendChild(s)}$('ta-body').appendChild(d);$('ta-body').scrollTop=1e9;return d}
-  /* ---- 兩種問法共用同一個面板：問學習單（q／a）、問論文（lib_q／lib_a，全文只在講師電腦）----
+  /* ---- 兩種問法共用同一個面板：問學習單（q／a）、問文獻庫（lib_q／lib_a，全文只在講師電腦）----
      論文答案裡的 [[p:論文id|文字]] 會連到 library.html#/p/論文id（同一分頁）。 */
   var NEXTQ='我下一步該做什麼？';var MODE='sheet',RULE_SHEET=($('ta-body').querySelector('.rule')||{}).textContent||'';
-  var QUICK={sheet:[NEXTQ,'我卡在這一步了，怎麼辦？','這一步做完要看到什麼？'],lib:['朱老師的論文常用什麼研究方法？','哪一篇談到設計教育？','哪一篇談到空間能力？']};
+  var QUICK={sheet:[NEXTQ,'我卡在這一步了，怎麼辦？','這一步做完要看到什麼？'],lib:['朱老師的論文常用什麼研究方法？','有沒有教學備課的案例？','有沒有整理會議紀錄的案例？']};
   function cntText(){var n=$('ta-q').value.length;$('ta-cnt').firstChild.nodeValue=n+' / '+(MODE==='lib'?200:TA.maxQ)+(MODE==='lib'?'　每人每天 20':'　今天剩 ');var l=$('ta-left');if(l)l.style.display=MODE==='lib'?'none':''}
   function setMode(m){
     MODE=m;[].slice.call(document.querySelectorAll('#ta-mode button')).forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-m')===m?'true':'false')});
     var sc=$('ta-scope');sc.hidden=!(m==='lib'&&sc.options.length>1);
-    var r=$('ta-body').querySelector('.rule');if(r)r.textContent=m==='lib'?'只根據朱老師團隊的論文全文與書目回答，每個重點附出處（哪一篇、第幾段），找不到依據會說「沒有提到」。這是閱讀輔助，請對照原文再引用。':RULE_SHEET;
-    $('ta-q').placeholder=m==='lib'?'問論文：例如「哪一篇談到設計教育？」':'卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）';
+    var r=$('ta-body').querySelector('.rule');if(r)r.textContent=m==='lib'?'只根據朱老師團隊的論文（全文與書目）和三條線的應用案例回答，每個重點附出處（論文第幾段或哪一則案例），找不到依據會說「沒有提到」。這是閱讀輔助，請對照原文再引用。':RULE_SHEET;
+    $('ta-q').placeholder=m==='lib'?'問文獻庫：例如「哪一篇談到設計教育？」':'卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）';
     $('ta-q').maxLength=m==='lib'?200:TA.maxQ;
     var q=$('ta-quick');q.textContent='';QUICK[m].forEach(function(t){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){$('ta-q').value=t;cntText();if(t===NEXTQ&&m==='sheet')$('ta-form').requestSubmit();else $('ta-q').focus()});q.appendChild(b)});
     cntText();
@@ -1509,6 +1542,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     ev.preventDefault();
     var q=$('ta-q').value.trim();if(!q)return;
     var isNext=(MODE!=='lib'&&q===NEXTQ),paused=(MODE!=='lib')&&await checkHb(),capped=(MODE!=='lib')&&left()<=0;
+    if(isNext){try{emit({type:'nextbtn',key:(suggest(1)[0]||'')})}catch(e){}}
     if(isNext&&(paused||capped)){add('me',q);$('ta-q').value='';cntText();add('ai',localNext());return}    // 助教暫停或次數用完時，「下一步」的本機建議仍然給
     if(paused){add('err','助教暫停中，請先看影片或舉手。');return}
     if(capped){add('err','今天的提問次數用完了（每人每天 '+TA.dayLimit+' 次）。請舉手問講師。');return}
@@ -1519,6 +1553,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     try{res=await ask(q);ok=true;src=res.src}catch(e){ok=false;lastErr=e}
     if(ok){var txt=clean(res.text);wait.textContent='';fillText(wait,txt);var s=document.createElement('span');s.className='vf';s.textContent=VF;if(MODE!=='lib')wait.appendChild(s);if(MODE!=='lib')store.set(dk,String(used()+1))}
     else if(!loc){wait.className='msg err';wait.textContent=(lastErr&&lastErr.shown)||'AI助教暫時不能用，請舉手問講師，或先看「卡住了？備案分流」。'}
+    if(MODE!=='lib')try{crossSuggest(q)}catch(e){}
     $('ta-left').textContent=left();$('ta-send').disabled=false;
     if(MODE!=='lib')emit({type:'ask',unit:ctx.u||'top',key:ctx.id||'',qchars:q.length,achars:ok?clean(res.text).length:0,ok:ok?1:0,src:src,err:ok?'':String((lastErr&&lastErr.code)||'')});
   });
@@ -1574,9 +1609,16 @@ li.stp.done .st,.done .st{text-decoration:none!important}
       if(p.textContent!==t){p.textContent=t;p.hidden=false;if(changed===u){p.classList.remove('flash');void p.offsetWidth;p.classList.add('flash')}}else p.hidden=false;
     });
   }
-  function setN(u,v,fromSse){if(UNITS.indexOf(u)<0||typeof v!=='number')return;var ch=(NCNT[u]!==v);NCNT[u]=v;paintCounts(ch&&fromSse?u:null)}
+  function setN(u,v,fromSse){if(UNITS.indexOf(u)<0||typeof v!=='number')return;var ch=(NCNT[u]!==v);NCNT[u]=v;paintCounts(ch&&fromSse?u:null);if(ch&&fromSse)setTimeout(pollDt,500)}
   function stopStats(){try{if(sse)sse.close()}catch(e){}sse=null;clearTimeout(sseT)}
-  async function pollStats(){try{var r=await fetch(RT+'/stats/n.json'+qs());if(r.ok){var d=await r.json()||{};UNITS.forEach(function(u){setN(u,+d[u]||0,true)})}}catch(e){}}
+  var DTK={};
+  function paintTk(){
+    UNITS.forEach(function(u){var p=document.querySelector('.ustat[data-u="'+u+'"]');if(!p)return;var c=DTK[u]||{},e=p.parentNode.querySelector('.ta-ut[data-u="'+u+'"]');
+      if(!e){e=document.createElement('span');e.className='ta-ut';e.setAttribute('data-u',u);p.insertAdjacentElement('afterend',e)}
+      e.textContent='依學習線：研究 '+(c.research||0)+'／教學 '+(c.teaching||0)+'／工作 '+(c.work||0)});
+  }
+  async function pollDt(){try{var r=await fetch(RT+'/stats/dt.json'+qs());if(r.ok){var d=await r.json()||{};DTK={};Object.keys(d).forEach(function(u){var c={research:0,teaching:0,work:0};Object.keys(d[u]||{}).forEach(function(k){var t=d[u][k];if(c[t]!==undefined)c[t]++});DTK[u]=c});paintTk()}}catch(e){}}
+  async function pollStats(){pollDt();try{var r=await fetch(RT+'/stats/n.json'+qs());if(r.ok){var d=await r.json()||{};UNITS.forEach(function(u){setN(u,+d[u]||0,true)})}}catch(e){}}
   function startStats(){
     stopStats();if(!RT||!TOK)return;
     pollStats();
@@ -1584,6 +1626,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
       sse=new EventSource(RT+'/stats/n.json'+qs());
       var onPut=function(ev){try{var m=JSON.parse(ev.data),p=m.path||'/',d=m.data;if(p==='/'){var o=d||{};UNITS.forEach(function(u){setN(u,+o[u]||0,true)})}else{var k=p.replace(/^\//,'');setN(k,+d||0,true)}}catch(e){}};
       sse.addEventListener('put',onPut);sse.addEventListener('patch',function(ev){try{var m=JSON.parse(ev.data),d=m.data||{};Object.keys(d).forEach(function(k){setN(k,+d[k]||0,true)})}catch(e){}});
+      sse.addEventListener('put',function(){setTimeout(pollDt,400)});if(!window.__dtiv)window.__dtiv=setInterval(pollDt,30000);
       sse.onerror=function(){stopStats();sseT=setTimeout(startStats,8000)};
       sse.addEventListener('auth_revoked',function(){stopStats();sseT=setTimeout(startStats,3000)});
     }catch(e){sseT=setTimeout(startStats,20000)}
@@ -1595,9 +1638,9 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   }
   async function checkDone(u){
     var sec=document.getElementById(u);if(!sec||DONE[u]||!RT||!TOK)return;
-    var gs=[].slice.call(sec.querySelectorAll('input.gatechk'));if(!gs.length||!gs.every(function(g){return g.checked}))return;
+    var gs=[].slice.call(sec.querySelectorAll('input.gatechk')).filter(function(g){return !window.dtVis||window.dtVis(g)});if(!gs.length||!gs.every(function(g){return g.checked}))return;
     DONE[u]=1;
-    try{var body={};body['done/'+u+'/'+sid]={'.sv':'timestamp'};body['n/'+u]={'.sv':{'increment':1}};
+    try{var body={};body['done/'+u+'/'+sid]={'.sv':'timestamp'};body['n/'+u]={'.sv':{'increment':1}};if(TRKN[TRK])body['dt/'+u+'/'+sid]=TRK;
       var r=await fetch(RT+'/stats.json'+qs(),{method:'PATCH',body:JSON.stringify(body)});
       if(r.ok){try{var g=await fetch(RT+'/stats/n/'+u+'.json'+qs());var k=+(await g.json());if(k>0){RANK[u]=k;store.set('dt-rank-'+sid+'-'+u,String(k))}}catch(e){}}
     }catch(e){}
@@ -1759,7 +1802,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   function unitNow(){var c=document.querySelector('#tb a.on'),p=c&&c.getAttribute('data-p');return /^(pre|u[1-6]|tpl|decl|fin|after)$/.test(p||'')?p:''}
   function presUp(){
     if(!PR.me||!NICK||!window.firebase||!firebase.database)return;
-    var o={nick:NICK,t:firebase.database.ServerValue.TIMESTAMP,u:unitNow()};
+    var o={nick:NICK,t:firebase.database.ServerValue.TIMESTAMP,u:unitNow()};if(TRKN[TRK])o.k=TRK;
     try{PR.me.set(o).catch(function(){});PR.ls.set(o).catch(function(){})}catch(e){}
   }
   function renderOnline(snap){
@@ -1771,6 +1814,13 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     ks.forEach(function(k){var li=document.createElement('li'),sp=document.createElement('span');sp.textContent=String(d[k].nick||'（未填）');li.appendChild(sp);
       if(k===sid){var e=document.createElement('em');e.textContent='你';li.appendChild(e)}ul.appendChild(li)});
     l.appendChild(ul);
+    PRK={research:0,teaching:0,work:0};ks.forEach(function(k){var t=d[k]&&d[k].k;if(PRK[t]!==undefined)PRK[t]++});paintKcount();
+  }
+  var PRK={research:0,teaching:0,work:0},TTOT={research:0,teaching:0,work:0};
+  function paintKcount(){
+    var k=$('ta-on-k');if(k)k.textContent='研究 '+PRK.research+'｜教學 '+PRK.teaching+'｜工作 '+PRK.work;
+    var l=$('ta-onlist');if(!l)return;var p=l.querySelector('.ta-kc');if(!p){p=document.createElement('p');p.className='ta-kc';p.style.cssText='margin:4px 0 8px;font-size:12.5px;color:var(--muted);line-height:1.6';var h=l.querySelector('h3');if(h)h.insertAdjacentElement('afterend',p);else l.insertBefore(p,l.firstChild)}
+    p.textContent='在線：研究 '+PRK.research+'｜教學 '+PRK.teaching+'｜工作 '+PRK.work+'　總人數：研究 '+TTOT.research+'｜教學 '+TTOT.teaching+'｜工作 '+TTOT.work;
   }
   async function startPresence(){
     if(PR.ready||!RT||!CFG||!CFG.db||!sid)return;PR.ready=1;
@@ -1779,6 +1829,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
       var db=firebase.app().database(CFG.db),base=db.ref('dt1116/'+CFG.sess);PR.base=base;PR.me=base.child('presence/'+sid);PR.ls=base.child('lastseen/'+sid);
       db.ref('.info/connected').on('value',function(s){if(s.val()===true){PR.me.onDisconnect().remove().then(presUp).catch(function(){})}});
       base.child('presence').on('value',renderOnline,function(){});
+      base.child('trk').on('value',function(sn){var v=(sn&&sn.val())||{};TTOT={research:0,teaching:0,work:0};Object.keys(v).forEach(function(u){if(TTOT[v[u]]!==undefined)TTOT[v[u]]++});paintKcount()},function(){});
       clearInterval(PR.tm);PR.tm=setInterval(presUp,45000);
       document.addEventListener('visibilitychange',function(){if(!document.hidden)presUp()});
       var tb=$('tb');if(tb)tb.addEventListener('click',function(){setTimeout(presUp,150)});
@@ -1797,7 +1848,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     if(!RT||!TOK)return;
     var pt='';try{var r=await fetch(RT+'/profile/'+sid+'.json'+qs());if(r.ok){var d=await r.json();NICK=(d&&d.nick)||'';pt=(d&&d.track)||''}}catch(e){}
     nickUI();startPresence().then(presUp);
-    if(TRKN[pt]){TRK=pt;applyTrack(pt)}else if(NICK){trkPicker(true)}else trkBadge();
+    if(TRKN[pt]){TRK=pt;applyTrack(pt);putTrkNode(pt)}else if(NICK){trkPicker(true)}else trkBadge();
   }
   async function saveProfile(n){
     n=(n||'').trim().slice(0,20);if(!n||!RT||!TOK)return false;
@@ -1814,10 +1865,16 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   /* ====================== 學習線（研究／教學／工作）====================== */
   var TRKN={research:'研究線',teaching:'教學線',work:'工作線'},TRK='';
   var TRKINFO=[['research','研究線','讀文獻、查 DOI，寫成投稿格式的研究報告。成品：研究報告。'],['teaching','教學線','用你的教材與課綱，做一份教學包。成品：教案＋學習單＋評量規準。'],['work','工作線','用你的會議紀錄與作業說明，做一份流程手冊。成品：SOP＋規則檔。']];
-  function trkBadge(){var b=$('ta-trk-badge');if(!b)return;var t=TRK||window.dtTrack||'';b.hidden=!TRKN[t];b.textContent=TRKN[t]||''}
+  function trkBadge(){var t=TRK||window.dtTrack||'',b=$('ta-trk-badge');if(b){b.hidden=!TRKN[t];b.textContent=TRKN[t]||''}flagUp(t);renderTrkMenu()}
+  function flagUp(t){var f=$('ta-trkflag');if(!f){f=document.createElement('div');f.id='ta-trkflag';f.setAttribute('role','status');document.body.appendChild(f)}f.hidden=!TRKN[t];f.className=TRKN[t]?'ta-tk-'+t:'';f.textContent=TRKN[t]?('目前：'+TRKN[t]):''}
+  function trkProg(t){var d=0,n=0;Object.keys(STEPS).forEach(function(id){var m=STEPS[id];if((m.p||[]).indexOf(t)<0||!stpEl(id))return;n++;if(doneS(id))d++});return {d:d,n:n}}
+  function renderTrkMenu(){var cur=TRK||window.dtTrack;[].slice.call(document.querySelectorAll('#ta-trkgrp .trkopt')).forEach(function(o){var t=o.getAttribute('data-t'),p=trkProg(t),full=p.n>0&&p.d>=p.n;o.className='trkopt ta-tk-'+t+(full?' full':'');o.setAttribute('aria-checked',t===cur?'true':'false');o.querySelector('.pg').textContent=(full?'已完成　':'')+p.d+'/'+p.n+' 步'})}
+  function labelTracks(){[].slice.call(document.querySelectorAll('[data-track]')).forEach(function(el){if(el.getAttribute('data-tkdone'))return;var t=el.getAttribute('data-track');if(!TRKN[t]||!/^(DIV|LI|SECTION|DETAILS|P|FIELDSET)$/.test(el.tagName)||el.classList.contains('tb-h')||el.classList.contains('promptbox'))return;if(el.parentElement&&el.parentElement.closest('[data-track]'))return;
+      var host=el.tagName==='DETAILS'?(el.querySelector('summary')||el):el,sp=document.createElement('span');sp.className='ta-tk ta-tk-'+t;sp.textContent=TRKN[t];host.insertBefore(sp,host.firstChild);el.setAttribute('data-tkdone','1')})}
+  async function putTrkNode(t){if(!RT||!TOK||!sid)return;try{await fetch(RT+'/trk/'+sid+'.json'+qs(),{method:'PUT',body:JSON.stringify(t)})}catch(e){}}
   async function saveTrack(t){
     if(!RT||!TOK||!NICK)return false;
-    try{var r=await fetch(RT+'/profile/'+sid+'.json'+qs(),{method:'PUT',body:JSON.stringify({nick:NICK,t:Date.now(),track:t})});return r.ok}catch(e){return false}
+    try{var r=await fetch(RT+'/profile/'+sid+'.json'+qs(),{method:'PUT',body:JSON.stringify({nick:NICK,t:Date.now(),track:t})});putTrkNode(t);return r.ok}catch(e){return false}
   }
   function applyTrack(t){if(!TRKN[t])return;TRK=t;if(window.dtSetTrack&&window.dtTrack!==t)window.dtSetTrack(t);trkBadge();paintLearn()}
   var trkEl=null;
@@ -1827,7 +1884,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
       document.body.appendChild(trkEl);
       var host=trkEl.querySelector('#ta-trkopts');
       TRKINFO.forEach(function(x){var b=document.createElement('button');b.type='button';b.className='opt';b.setAttribute('data-t',x[0]);b.innerHTML='<b></b><span></span>';b.firstChild.textContent=x[1];b.lastChild.textContent=x[2];
-        b.addEventListener('click',async function(){TRK=x[0];if(window.dtSetTrack)window.dtSetTrack(x[0]);trkBadge();var ok=await saveTrack(x[0]);trkEl.hidden=true;if(!ok&&NICK)add('err','學習線已切換，但沒能存到你的帳號（網路或登入問題）；重新整理後再選一次即可。');paintLearn()});host.appendChild(b)});
+        b.addEventListener('click',async function(){var fr=TRK||'';TRK=x[0];if(window.dtSetTrack)window.dtSetTrack(x[0]);trkBadge();try{emit({type:'trkswitch',from:fr,to:x[0],cause:'init'})}catch(e){}var ok=await saveTrack(x[0]);trkEl.hidden=true;if(!ok&&NICK)add('err','學習線已切換，但沒能存到你的帳號（網路或登入問題）；重新整理後再選一次即可。');paintLearn()});host.appendChild(b)});
       trkEl.querySelector('#ta-trkcancel').addEventListener('click',function(){trkEl.hidden=true});
       document.addEventListener('keydown',function(e){if(e.key==='Escape'&&trkEl&&!trkEl.hidden&&trkEl.getAttribute('data-req')!=='1')trkEl.hidden=true});
     }
@@ -1835,7 +1892,30 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     [].slice.call(trkEl.querySelectorAll('.opt')).forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-t')===(TRK||window.dtTrack)&&!required?'true':'false')});
     trkEl.hidden=false;var f=trkEl.querySelector('.opt');if(f)f.focus();
   }
-  if($('ta-trk-change'))$('ta-trk-change').addEventListener('click',function(){trkPicker(false)});
+  /* 切換：先跳提醒（顯示各線進度），確定後才換；每次換線記一筆事件（from／to／cause） */
+  var swEl=null;
+  function swModal(to,from,pf,pt,cause,ok){
+    if(!swEl){swEl=document.createElement('div');swEl.className='ta-modal';swEl.id='ta-swm';swEl.hidden=true;swEl.setAttribute('role','dialog');swEl.setAttribute('aria-modal','true');
+      swEl.innerHTML='<div class="box"><h2></h2><p class="m1"></p><p class="m2"></p><div class="acts"><button type="button" class="no">取消</button><button type="button" class="go">確定切換</button></div></div>';document.body.appendChild(swEl);
+      swEl.querySelector('.no').addEventListener('click',function(){swEl.hidden=true});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!swEl.hidden)swEl.hidden=true})}
+    swEl.className='ta-modal ta-tk-'+to;swEl.querySelector('h2').textContent='切換到'+TRKN[to]+'？';
+    swEl.querySelector('.m1').textContent=(from&&TRKN[from]?('你在'+TRKN[from]+'已完成 '+pf.d+'／'+pf.n+' 步；'):'')+'切到'+TRKN[to]+'後，會從'+TRKN[to]+'的進度繼續（目前 '+pt.d+'／'+pt.n+' 步；共用的核心步驟做過一次就算完成，不會重做）。原本那條線的進度都還在，隨時可以切回來。';
+    swEl.querySelector('.m2').textContent=cause==='suggest'?'這是助教依你的提問提出的跨線建議。':'';
+    var g=swEl.querySelector('.go'),g2=g.cloneNode(true);g.parentNode.replaceChild(g2,g);g2.addEventListener('click',function(){swEl.hidden=true;ok()});
+    swEl.hidden=false;g2.focus();
+  }
+  function switchTrack(to,cause,then){
+    if(!TRKN[to])return;var from=TRK||window.dtTrack||'';if(to===from){if(then)then();return}
+    swModal(to,from,trkProg(from),trkProg(to),cause,async function(){
+      TRK=to;if(window.dtSetTrack)window.dtSetTrack(to);trkBadge();
+      try{emit({type:'trkswitch',from:from,to:to,cause:cause})}catch(e){}
+      if(NICK&&TOK)await saveTrack(to);paintLearn();if(then)setTimeout(then,300)});
+  }
+  window.__taSwitch=switchTrack;
+  [].slice.call(document.querySelectorAll('#ta-trkgrp .trkopt')).forEach(function(o){
+    var go=function(){switchTrack(o.getAttribute('data-t'),'self')};o.addEventListener('click',go);o.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}})});
+  document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.trackbar button[data-set]');if(!b||!TOK)return;e.preventDefault();e.stopImmediatePropagation();switchTrack(b.getAttribute('data-set'),'self')},true);
+  setTimeout(function(){trkBadge();labelTracks()},400);
   document.addEventListener('dt-track',function(e){var t=e&&e.detail;if(TRKN[t]&&t!==TRK){TRK=t;if(NICK&&TOK)saveTrack(t)}trkBadge();paintLearn()});
 
   /* ====================== 跳著學：前置狀態、現在可以做、篩選器 ====================== */
@@ -1938,7 +2018,36 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     $('ta-fclear').hidden=!flActive();
     document.addEventListener('click',function(e){var st=e.target.closest&&e.target.closest('li.stp.ta-dim > .st');if(st)st.parentElement.classList.toggle('ta-peek')});
   }
-  function paintLearn(){try{buildFilter();paintPre();paintCan();paintFilter();var c=$('ta-fclear');if(c)c.hidden=!flActive()}catch(e){}}
+  /* 跨線建議：提問提到別條線的主題時，答案後面附一張小卡（每人每個單元每步最多 1 次；可「不要再建議」） */
+  var KW={research:['文獻','論文','DOI','投稿','引用','期刊','研究問題','研究方法'],teaching:['教案','備課','教學','學習單','評量','規準','課綱','學生','教材','上課','老師'],work:['會議','SOP','流程','信件','主管','作業說明','逐字稿','客戶','同事','紀錄','工作']},SUGK='dt-ws-sug';
+  function sugState(){try{return JSON.parse(store.get(SUGK)||'{}')||{}}catch(e){return {}}}
+  function peekModal(id,t){
+    var el=stpEl(id);if(!el)return;var pk=$('ta-peekm');
+    if(!pk){pk=document.createElement('div');pk.className='ta-modal';pk.id='ta-peekm';pk.hidden=true;pk.setAttribute('role','dialog');pk.setAttribute('aria-modal','true');pk.innerHTML='<div class="box"><h2></h2><p class="m1"></p><div class="peekbody"></div><div class="acts"><button type="button" class="no">關閉</button></div></div>';document.body.appendChild(pk);
+      pk.querySelector('.no').addEventListener('click',function(){pk.hidden=true});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!pk.hidden)pk.hidden=true})}
+    pk.className='ta-modal ta-tk-'+t;pk.querySelector('h2').textContent=TRKN[t]+'：'+lblN(id);pk.querySelector('.m1').textContent='唯讀預覽：你的進度仍然記在目前的學習線，這裡不能勾選。';
+    var c=el.cloneNode(true);c.removeAttribute('id');c.removeAttribute('data-track');c.classList.remove('ta-dim');[].slice.call(c.querySelectorAll('[id]')).forEach(function(x){x.removeAttribute('id')});[].slice.call(c.querySelectorAll('input,button')).forEach(function(x){x.disabled=true});[].slice.call(c.querySelectorAll('.ta-pre,.ta-tk')).forEach(function(x){x.remove()});
+    var b=pk.querySelector('.peekbody');b.textContent='';b.appendChild(c);pk.hidden=false;pk.querySelector('.no').focus();
+  }
+  function crossSuggest(q){
+    var st=sugState();if(st.off)return;var cur=window.dtTrack||'research',best=null,hits=0,kwh='',ql=String(q).toLowerCase();
+    ['research','teaching','work'].forEach(function(t){if(t===cur)return;var n=0,h='';KW[t].forEach(function(k){if(ql.indexOf(k.toLowerCase())>=0){n++;h=h||k}});if(n>hits){hits=n;best=t;kwh=h}});
+    if(!best)return;
+    var ex=Object.keys(STEPS).filter(function(id){var m=STEPS[id];return m.p&&m.p.length===1&&m.p[0]===best&&!doneS(id)});if(!ex.length)return;
+    var pick=ex.filter(function(id){var m=STEPS[id];return ((m.t||[]).join(' ')+(m.n||'')).indexOf(kwh)>=0})[0]||ex[0];
+    var unit=(ctx&&ctx.u)||'top',key=unit+'|'+pick;st.shown=st.shown||{};if(st.shown[key])return;st.shown[key]=1;store.set(SUGK,JSON.stringify(st));
+    var d=document.createElement('div');d.className='msg sug ta-tk-'+best;
+    var t1=document.createElement('div');t1.textContent='跨線建議：你剛剛提到「'+kwh+'」，'+TRKN[best]+'的「'+lblN(pick)+'」可能對你有幫助（你現在在'+TRKN[cur]+'）。';d.appendChild(t1);
+    var bx=document.createElement('div');bx.className='sb';
+    function mk(txt,cls,fn){var b=document.createElement('button');b.type='button';b.textContent=txt;if(cls)b.className=cls;b.addEventListener('click',fn);bx.appendChild(b)}
+    mk('切到'+TRKN[best]+'看這一步','go',function(){switchTrack(best,'suggest',function(){try{emit({type:'sugadopt',from:cur,to:best,key:pick})}catch(e){}goTo(pick)})});
+    mk('只看這一步，不切線','',function(){try{emit({type:'sugpeek',from:cur,to:best,key:pick})}catch(e){}peekModal(pick,best)});
+    mk('不要再建議','off',function(){var s2=sugState();s2.off=1;store.set(SUGK,JSON.stringify(s2));try{emit({type:'sugdismiss',from:cur,to:best,key:pick})}catch(e){}d.remove()});
+    d.appendChild(bx);$('ta-body').appendChild(d);$('ta-body').scrollTop=1e9;
+    try{emit({type:'sugshow',from:cur,to:best,key:pick})}catch(e){}
+  }
+  window.__taSuggest=crossSuggest;
+  function paintLearn(){try{labelTracks();renderTrkMenu();buildFilter();paintPre();paintCan();paintFilter();var c=$('ta-fclear');if(c)c.hidden=!flActive()}catch(e){}}
   document.addEventListener('change',function(e){var t=e.target;if(t&&t.matches&&t.matches('input.stepchk'))tick();setTimeout(paintLearn,0)});
   window.__taLearn={paint:paintLearn,suggest:suggest,progStr:progStr,localNext:localNext,FL:function(){return FL}};
   setTimeout(paintLearn,300);setTimeout(paintLearn,1500);
