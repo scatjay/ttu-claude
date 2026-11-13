@@ -92,11 +92,13 @@ table.rt td.full{color:var(--good);font-weight:700}
 @media(max-width:480px){.nrow{grid-template-columns:70px 56px minmax(0,1fr)}}
 @media(max-width:480px){.row{grid-template-columns:70px minmax(0,1fr) auto}}
 .tdcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:10px 0 16px}
-.tdc{border:2px solid var(--tkc);border-radius:12px;padding:10px 14px;background:color-mix(in srgb,var(--tkc) 8%,var(--surface))}
+.tdc{border:2px solid var(--tkc);border-left-width:8px;border-radius:12px;padding:10px 14px;background:var(--tks,var(--surface))}
 .tdc b{display:block;font-size:16px;color:var(--ink)}.tdc .big{font-family:var(--mono);font-size:26px;font-weight:700;color:var(--tkc);line-height:1.3}.tdc small{display:block;color:var(--muted);font-size:12.5px;line-height:1.6}
-.k-research{--tkc:#2f6fb0}.k-teaching{--tkc:#3f8f80}.k-work{--tkc:#c2703d}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .k-research{--tkc:#7fb0e6}:root:not([data-theme="light"]) .k-teaching{--tkc:#7fcabc}:root:not([data-theme="light"]) .k-work{--tkc:#e0a37f}}
-:root[data-theme="dark"] .k-research{--tkc:#7fb0e6}:root[data-theme="dark"] .k-teaching{--tkc:#7fcabc}:root[data-theme="dark"] .k-work{--tkc:#e0a37f}
+/* ---- 三線配色 token（全站共用；亮色白字／暗色深字都過 WCAG AA 4.5:1，見 tests/contrast_check.py）---- */
+:root{--tr-research:#3B4BD8;--tr-teaching:#0B7D3E;--tr-work:#A65A00;--tr-research-soft:#E8EBFF;--tr-teaching-soft:#E3F5EA;--tr-work-soft:#FFF3DC;--tr-on:#fff}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--tr-research:#9DB0FF;--tr-teaching:#7BE495;--tr-work:#FFB830;--tr-research-soft:#232C57;--tr-teaching-soft:#163A24;--tr-work-soft:#43301A;--tr-on:#16130f}}
+:root[data-theme="dark"]{--tr-research:#9DB0FF;--tr-teaching:#7BE495;--tr-work:#FFB830;--tr-research-soft:#232C57;--tr-teaching-soft:#163A24;--tr-work-soft:#43301A;--tr-on:#16130f}
+.k-research{--tkc:var(--tr-research);--tks:var(--tr-research-soft)}.k-teaching{--tkc:var(--tr-teaching);--tks:var(--tr-teaching-soft)}.k-work{--tkc:var(--tr-work);--tks:var(--tr-work-soft)}
 .tdh{font-size:14px;margin:14px 0 6px}.tdcols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .tdlist{font-size:13.5px;line-height:1.7;max-height:260px;overflow:auto}.tdlist .row{display:flex;gap:8px;border-bottom:1px solid color-mix(in srgb,var(--hair) 60%,transparent);padding:3px 0}.tdlist .row .tm{font-family:var(--mono);color:var(--muted);min-width:4.4em}
 #tdHeat td.hc{text-align:center;font-family:var(--mono);min-width:4.2em;border-radius:6px}
@@ -231,7 +233,7 @@ table.rt td.full{color:var(--good);font-weight:700}
       var d=document.createElement('div');d.className='tdc k-'+t;d.innerHTML='<b></b><span class="big"></span><small></small>';d.firstChild.textContent=NM[t];d.querySelector('.big').textContent=stu[t].length+' 人';d.querySelector('small').textContent='在線 '+on+' 人・平均進度 '+Math.round(avg*100)+'%';C.appendChild(d)});
     if(none){var d0=document.createElement('div');d0.className='tdc';d0.style.setProperty('--tkc','var(--muted)');d0.innerHTML='<b>未選學習線</b><span class="big"></span><small>已登入填暱稱、還沒選線</small>';d0.querySelector('.big').textContent=none+' 人';C.appendChild(d0)}
     var H=$('tdHeat');H.textContent='';var hr=document.createElement('tr');['學習線'].concat(UNITS6.map(function(u){return UN[u]||u}),['整體']).forEach(function(h){var th=document.createElement('th');th.textContent=h;hr.appendChild(th)});var hd=document.createElement('thead');hd.appendChild(hr);H.appendChild(hd);var hb=document.createElement('tbody');
-    TK.forEach(function(t){var tr=document.createElement('tr'),tn=document.createElement('td');tn.textContent=NM[t]+'（'+stu[t].length+' 人）';tn.className='nm';tr.appendChild(tn);
+    TK.forEach(function(t){var tr=document.createElement('tr'),tn=document.createElement('td');tn.textContent=NM[t]+'（'+stu[t].length+' 人）';tn.className='nm k-'+t;tn.style.cssText='border-left:6px solid var(--tkc);padding-left:8px';tr.appendChild(tn);
       UNITS6.concat(['']).forEach(function(u){var td=document.createElement('td');td.className='hc';var has=Object.keys(MS).some(function(id){return (MS[id].p||[]).indexOf(t)>=0&&(!u||'u'+MS[id].u===u)});
         if(!has||!stu[t].length){td.textContent=has?'—':'無此步驟';td.style.color='var(--muted)'}else{var v=stu[t].reduce(function(a,sid){return a+frac(sid,t,u)},0)/stu[t].length;td.textContent=Math.round(v*100)+'%';td.style.background='color-mix(in srgb,var(--accent) '+Math.round(8+v*72)+'%,var(--surface))';if(v>0.55)td.style.color='var(--surface)'}tr.appendChild(td)});hb.appendChild(tr)});H.appendChild(hb);
     var SL=$('tdSw');SL.textContent='';var swl=SW.slice().sort(function(a,b){return (b.t||0)-(a.t||0)});
