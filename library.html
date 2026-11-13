@@ -131,6 +131,55 @@ nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:
 #fs .cnt{margin-left:auto;font-family:var(--mono);font-size:12.5px;opacity:.85}
 #fs .stage{position:relative;flex:1;min-height:0;display:flex;align-items:stretch;justify-content:center;overflow:auto}#fs .stage iframe{width:100%;height:100%;border:0;background:#111}
 #fs .stage img{max-width:100%;max-height:100%;object-fit:contain;margin:auto;display:block;cursor:zoom-in}#fs .stage.big{display:block}#fs .stage.big img{max-width:none;max-height:none;width:220%;cursor:zoom-out;margin:0}
+#ta-panel.locked #ta-q{opacity:.55}
+#ta-fab:focus-visible,#ta-panel button:focus-visible,#ta-panel textarea:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+#ta-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:60;font:inherit;font-weight:700;font-size:14px;color:var(--onbrand);background:var(--accent);border:0;border-radius:99px;padding:11px 18px;box-shadow:var(--shadow);cursor:pointer}
+#ta-panel{position:fixed;right:16px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:61;width:min(400px,calc(100vw - 32px));max-height:min(78vh,640px);display:none;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);font-family:var(--sans)}
+#ta-panel.open{display:flex}
+#ta-mode{display:flex;gap:6px;align-items:center;flex-wrap:wrap;padding:8px 14px 0}
+#ta-mode button{font:inherit;font-size:12.5px;font-weight:600;color:var(--muted);background:var(--surface2);border:1px solid var(--hair);border-radius:99px;padding:3px 12px;cursor:pointer}
+#ta-mode button[aria-pressed=true]{background:var(--uc,var(--accent));color:var(--onbrand,#fff);border-color:var(--uc,var(--accent))}
+#ta-mode select{font:inherit;font-size:12.5px;color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:3px 8px;max-width:100%;min-width:0}
+#ta-mode select[hidden]{display:none}
+#ta-quick{display:flex;gap:6px;flex-wrap:wrap;padding:6px 14px 0}
+#ta-quick button{font:inherit;font-size:12.5px;color:var(--ink);background:var(--surface2);border:1px solid var(--hair);border-radius:99px;padding:3px 11px;cursor:pointer;text-align:left}
+#ta-quick button:hover{border-color:var(--accent2,var(--accent))}
+#ta-panel header{display:flex;align-items:center;gap:8px;padding:11px 14px;border-bottom:1px solid var(--hair)}
+#ta-panel header b{font-size:15px}
+#ta-panel header .ctx{font-size:12px;color:var(--muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#ta-x{font:inherit;background:none;border:0;color:var(--muted);font-size:20px;line-height:1;cursor:pointer;padding:2px 6px}
+#ta-body{padding:12px 14px;overflow:auto;flex:1;min-height:90px;font-size:14px;line-height:1.65}
+#ta-body .rule{font-size:12.5px;color:var(--muted);margin:0 0 8px}
+#ta-body .msg{margin:0 0 10px;padding:9px 11px;border-radius:10px;white-space:pre-wrap;overflow-wrap:anywhere}
+#ta-body .me{background:var(--surface2)}
+#ta-body .ai{background:var(--accent-soft);border-left:4px solid var(--accent)}
+#ta-body .ai .vf{display:block;margin-top:7px;font-size:12.5px;font-weight:700;color:var(--warn)}
+#ta-body .err{background:color-mix(in srgb,var(--warn) 12%,var(--surface));border-left:4px solid var(--warn)}
+#ta-form{padding:10px 14px 12px;border-top:1px solid var(--hair)}
+#ta-q{width:100%;min-height:60px;max-height:140px;resize:vertical;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--hair);border-radius:8px;padding:8px 10px}
+#ta-form .row{display:flex;align-items:center;gap:8px;margin-top:8px}
+#ta-form .cnt{font-size:12px;color:var(--muted);flex:1}
+#ta-send{font:inherit;font-weight:700;font-size:13.5px;color:var(--onbrand);background:var(--accent);border:0;border-radius:8px;padding:7px 16px;cursor:pointer}
+#ta-send[disabled]{opacity:.5;cursor:default}
+@media(max-width:480px){#ta-panel{right:8px;left:8px;width:auto;bottom:calc(64px + env(safe-area-inset-bottom,0px))}}
+#ta-q{display:block;width:100%;box-sizing:border-box;font:inherit;font-size:16px;line-height:1.55;color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:10px;padding:11px 13px;resize:vertical;transition:border-color .15s,box-shadow .15s}
+#ta-q::placeholder{color:var(--muted);opacity:.65}
+#ta-q:focus{outline:none;border-color:var(--uc,var(--accent));box-shadow:0 0 0 3px color-mix(in srgb,var(--uc,var(--accent)) 20%,transparent)}
+#ta-send{font:inherit;font-weight:700;font-size:14.5px;color:var(--onbrand,#fff);background:var(--uc,var(--accent));border:0;border-radius:10px;padding:9px 20px;min-height:40px;cursor:pointer;transition:filter .15s,transform .05s}
+#ta-send:hover{filter:brightness(1.07)}
+#ta-send:active{transform:translateY(1px)}
+#ta-send[disabled]{opacity:.45;cursor:default;filter:none}
+#ta-send:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+#ta-panel{--uc:var(--accent)}
+#ta-panel textarea:focus-visible{outline:none}
+#ta-body .me{margin-left:auto;max-width:88%;background:color-mix(in srgb,var(--uc) 11%,var(--surface));border:1px solid color-mix(in srgb,var(--uc) 22%,transparent);border-radius:14px 14px 4px 14px}
+#ta-body .ai{margin-right:auto;max-width:94%;background:var(--surface2);border:1px solid var(--hair);border-left:4px solid var(--uc);border-radius:14px 14px 14px 4px}
+#ta-form .row{margin-top:8px}
+a.tolink{display:inline-block;margin:1px 2px;padding:1px 10px;border-radius:99px;font-weight:700;font-size:.95em;text-decoration:none;color:var(--onbrand,#fff);background:var(--uc,var(--accent));line-height:1.6;cursor:pointer}
+a.tolink:hover{filter:brightness(1.08)}
+a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media(max-width:600px){#ta-fab{right:12px;width:60px;height:60px;padding:0;border-radius:50%;font-size:12px;line-height:1.1;white-space:nowrap;display:flex;align-items:center;justify-content:center}
+#ta-panel{bottom:calc(84px + env(safe-area-inset-bottom,0px))}}
 /* 登入閘門 */
 #gate{max-width:420px;margin:12vh auto;text-align:center}
 #gate button{font:inherit;font-weight:800;font-size:17px;color:var(--onbrand);background:var(--accent);border:0;border-radius:10px;padding:13px 22px;width:100%;cursor:pointer}
@@ -144,6 +193,15 @@ nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:
 <div id="app" hidden>
 <div class="tabs" role="navigation" aria-label="頁首"><span class="brand">大同示範文獻庫</span><span class="tnav" id="tnav"></span><span class="userbar"><span id="who"></span><button type="button" id="out">登出</button></span></div>
 <div class="toc-wrap"><nav class="toc" id="toc" aria-label="本頁目錄"></nav><main id="view"></main></div>
+<button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel">問AI助教</button>
+<div id="ta-panel" role="dialog" aria-label="AI助教">
+<header><b>AI助教</b><span class="ctx" id="ta-ctx"></span><button id="ta-x" type="button" aria-label="關閉AI助教">×</button></header>
+<div id="ta-mode" role="group" aria-label="要問什麼"><button type="button" data-m="sheet" aria-pressed="true">問學習單</button><button type="button" data-m="lib" aria-pressed="false">問論文</button><select id="ta-scope" aria-label="論文範圍" hidden><option value="all">全部論文</option></select></div>
+<div id="ta-quick" aria-label="快捷提問"></div>
+<div id="ta-body"><p class="rule">只回答這份學習單和 Claude 桌面版的操作。不會幫你寫報告，也不會給 DOI。每個答案都要你自己對照畫面或原文驗證。</p></div>
+<form id="ta-form"><textarea id="ta-q" maxlength="300" placeholder="卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）"></textarea>
+<div class="row"><span class="cnt" id="ta-cnt">0 / 300　今天剩 <span id="ta-left">15</span> 次</span><button id="ta-send" type="submit">送出</button></div></form>
+</div>
 <div id="fs" hidden role="dialog" aria-label="全螢幕檢視"><div class="top"><button type="button" id="fsT1" aria-pressed="false">資訊圖</button><button type="button" id="fsT2" aria-pressed="true">簡報</button><button type="button" id="fsNat">瀏覽器全螢幕</button><span class="cnt" id="fsC"></span><button type="button" id="fsX">關閉</button></div><div class="stage" id="fsS"></div></div>
 </div>
 <script>
@@ -194,39 +252,6 @@ nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:
     }catch(e){showGate('登入功能載入失敗，請檢查網路後重新整理。',null,false)}
   }
 
-  /* ===== 問 AI 助教：問題寫進 lib_q，本機 worker 檢索全文後把答案寫回 lib_a（全文不在網站上）===== */
-  function askKey(){return '-L'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
-  function fmtAns(t){
-    var h=esc(t).replace(/\*\*/g,'').replace(/^\s*[\*\-]\s+/gm,'• ');
-    return h.replace(/\[\[p:([a-z0-9_]+)\|([^\]]*)\]\]/g,function(_,id,l){return BYID[id]?'<a href="#/p/'+id+'">'+l+'</a>':l});
-  }
-  var BYID={};ITEMS.forEach(function(x){BYID[x.id]=x});
-  function askPanel(host,fixed){
-    var cur=fixed?BYID[fixed]:null,eg=fixed?['這篇的研究限制是什麼？','這篇用了什麼研究方法？','這篇的主要發現是什麼？']:['朱老師的論文常用什麼研究方法？','哪一篇談到設計教育？','哪一篇談到空間能力？'];
-    host.innerHTML='<div class="ask"><div class="row"><input type="text" id="aq" maxlength="200" placeholder="'+(fixed?'問這一篇的內容，例如：研究限制是什麼？':'用一句話問這幾篇論文，例如：哪一篇談到設計教育？')+'" aria-label="問 AI 助教"><button type="button" class="btn primary" id="ago">問</button></div>'+
-      (fixed?'':'<div class="row"><label for="asc" class="note">範圍</label><select id="asc"><option value="all">全部 '+ITEMS.length+' 篇</option>'+ITEMS.map(function(x){return '<option value="'+esc(x.id)+'">只問：'+esc(x.zh.slice(0,28))+'</option>'}).join('')+'</select></div>')+
-      '<div class="eg">'+eg.map(function(x){return '<button type="button">'+esc(x)+'</button>'}).join('')+'</div><div class="ans" id="aa" aria-live="polite" hidden></div>'+
-      '<p class="note">AI 只根據這幾篇論文的全文與書目回答，每個重點附出處（哪一篇、第幾段）；找不到依據會直接說「沒有提到」。這是閱讀輔助，請對照原文再引用。每人每天最多問 20 次。</p></div>';
-    var busy=false;
-    host.querySelector('.eg').addEventListener('click',function(e){var b=e.target.closest('button');if(b){host.querySelector('#aq').value=b.textContent;host.querySelector('#aq').focus()}});
-    async function go(){
-      var inp=host.querySelector('#aq'),box=host.querySelector('#aa'),qq=inp.value.trim();if(busy||!qq)return;
-      var sc=fixed||(host.querySelector('#asc')||{}).value||'all';busy=true;host.querySelector('#ago').disabled=true;box.hidden=false;box.className='ans';box.textContent='AI 助教正在翻這幾篇論文的全文…';
-      try{
-        var u=AUTH.currentUser,uid=u.uid,key=askKey();TOK=await u.getIdToken();
-        var r=await fetch(CFG.db+'/dt1116/'+CFG.sess+'/lib_q/'+uid+'/'+key+'.json?auth='+encodeURIComponent(TOK),{method:'PUT',body:JSON.stringify({t:Date.now(),q:qq,scope:sc})});
-        if(!r.ok)throw new Error('send '+r.status);
-        var t0=Date.now(),a=null;
-        while(Date.now()-t0<75000){await new Promise(function(ok){setTimeout(ok,1500)});
-          var g=await fetch(CFG.db+'/dt1116/'+CFG.sess+'/lib_a/'+uid+'/'+key+'.json?auth='+encodeURIComponent(TOK));if(g.ok){a=await g.json();if(a)break}}
-        if(!a){box.className='ans err';box.textContent='助教現在沒有回應（可能還沒開機），請稍後再試，或舉手問講師。'}
-        else if(a.ok){box.className='ans';box.innerHTML=fmtAns(a.text||'')}
-        else{box.className='ans err';box.textContent=a.text||'暫時不能用。'}
-      }catch(e){box.className='ans err';box.textContent='送出失敗，請檢查網路後再試。'}
-      busy=false;host.querySelector('#ago').disabled=false;
-    }
-    host.querySelector('#ago').addEventListener('click',go);host.querySelector('#aq').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.isComposing)go()});
-  }
   /* ===== 頁首導覽＋本頁目錄：點了只捲動，不改網址 hash ===== */
   function setNav(items,back){
     var t=$('#tnav'),toc=$('#toc');
@@ -254,18 +279,18 @@ nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:
   var cat='全部',typ='全部',q='';
   function uniq(a){return Array.from(new Set(a))}
   function hub(){
+    if(window.__taPaper)window.__taPaper(null);
     var cats=['全部'].concat(uniq(ITEMS.map(function(x){return x.cat}))),types=['全部'].concat(uniq(ITEMS.map(function(x){return x.type})));
     function pills(list,get,cnt){return list.map(function(c){return '<button type="button" data-k="'+esc(c)+'" aria-pressed="'+(get()===c)+'"'+(COL[c]?' style="--uc:var('+COL[c]+')"':'')+'>'+esc(c)+'<span class="n">'+cnt(c)+'</span></button>'}).join('')}
     $('#view').innerHTML='<div class="eyebrow">NBLM 三套件 · 語音／簡報／資訊圖</div><h1>大同示範文獻庫</h1><p class="lede">朱老師團隊論文與指導學位論文的 NotebookLM 成品集中在這裡閱讀。點卡片進入單篇頁：資訊圖、簡報、語音摘要，可全螢幕；每篇另附「這篇可以怎麼用在你的研究」三點建議。</p>'+
       '<div class="warn" role="note"><span class="wt">NBLM 生成，請與原文核對</span>資訊圖、簡報與語音均為 NotebookLM 自動生成，內容未經逐句查證；引用請回到原文。</div>'+
-      '<section><h2 id="ask" data-n="01">問 AI 助教</h2><div id="askhub"></div></section>'+
-      '<section><h2 id="find" data-n="02">找文獻</h2><input id="q" type="search" placeholder="搜尋標題、作者、標籤" aria-label="搜尋" value="'+esc(q)+'"><div class="group">主題分類</div><div class="chips" id="cats">'+pills(cats,function(){return cat},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.cat===c}).length})+'</div><div class="group">類型</div><div class="chips" id="types">'+pills(types,function(){return typ},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.type===c}).length})+'</div></section>'+
-      '<section><h2 id="list" data-n="03">文獻 <span class="cnt" id="cnt"></span></h2><div class="grid" id="grid"></div></section>'+
-      (PEND.length?'<section><h2 id="soon" data-n="04">陸續加入</h2><div class="tipbox">'+PEND.map(function(x){return '<span class="plabel">'+esc(x.t)+'</span>'+esc(x.why)}).join('<br>')+'</div></section>':'')+
-      '<section><h2 id="note" data-n="05">使用須知</h2><div class="card bar" style="font-size:14px"><p style="margin:0 0 8px">本頁成品為個人學術研究與課堂示範用之 AI 生成輔助材料，不取代閱讀原文。訂閱制論文僅供個人學術研究；學位論文書目連到國家圖書館臺灣博碩士論文網，僅供個人學術研究之檢索與閱讀，本庫不放全文。請勿公開分享。</p><p style="margin:0">分類依書目資料與題名判斷，中文題名為編譯者翻譯，非官方譯名。</p></div></section>'+
+      '<section><h2 id="find" data-n="01">找文獻</h2><input id="q" type="search" placeholder="搜尋標題、作者、標籤" aria-label="搜尋" value="'+esc(q)+'"><div class="group">主題分類</div><div class="chips" id="cats">'+pills(cats,function(){return cat},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.cat===c}).length})+'</div><div class="group">類型</div><div class="chips" id="types">'+pills(types,function(){return typ},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.type===c}).length})+'</div></section>'+
+      '<section><h2 id="list" data-n="02">文獻 <span class="cnt" id="cnt"></span></h2><div class="grid" id="grid"></div></section>'+
+      (PEND.length?'<section><h2 id="soon" data-n="03">陸續加入</h2><div class="tipbox">'+PEND.map(function(x){return '<span class="plabel">'+esc(x.t)+'</span>'+esc(x.why)}).join('<br>')+'</div></section>':'')+
+      '<section><h2 id="note" data-n="04">使用須知</h2><div class="card bar" style="font-size:14px"><p style="margin:0 0 8px">本頁成品為個人學術研究與課堂示範用之 AI 生成輔助材料，不取代閱讀原文。訂閱制論文僅供個人學術研究；學位論文書目連到國家圖書館臺灣博碩士論文網，僅供個人學術研究之檢索與閱讀，本庫不放全文。請勿公開分享。</p><p style="margin:0">分類依書目資料與題名判斷，中文題名為編譯者翻譯，非官方譯名。</p></div></section>'+
       '<div class="foot"><p>分類依書目資料與題名判斷。成品由 NotebookLM 自動生成，內容未經逐句查證，引用請回到原文。</p></div>';
     function bind(id,set){$(id).addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;set(b.getAttribute('data-k'));[].slice.call($(id).querySelectorAll('button')).forEach(function(x){x.setAttribute('aria-pressed',x===b)});grid()})}
-    askPanel($('#askhub'));setNav([['ask','問 AI 助教'],['find','找文獻'],['list','文獻'],['soon','陸續加入'],['note','使用須知']],false);window.scrollTo(0,0);bind('#cats',function(v){cat=v});bind('#types',function(v){typ=v});$('#q').addEventListener('input',function(){q=this.value;grid()});grid();
+    setNav([['find','找文獻'],['list','文獻'],['soon','陸續加入'],['note','使用須知']],false);window.scrollTo(0,0);bind('#cats',function(v){cat=v});bind('#types',function(v){typ=v});$('#q').addEventListener('input',function(){q=this.value;grid()});grid();
   }
   function grid(){
     var g=$('#grid');g.innerHTML='';var n=0,ql=q.trim().toLowerCase();
@@ -291,9 +316,8 @@ nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:
         '<div id="pn1" class="info"><div id="m-info"></div><p class="sub" style="margin-top:8px">資訊圖本身就是整篇的摘要圖；點圖進入全螢幕。 <button type="button" id="fsOpenI" class="btn">全螢幕</button></p></div>'+
         '<div id="pn2" hidden><div id="m-slides"></div><div class="nav2"><button type="button" id="fsOpenS" class="btn primary">全螢幕</button><a class="btn" id="drv" target="_blank" rel="noopener" href="#">在雲端硬碟開啟</a></div><p class="sub">簡報是逐頁圖片，沒有文字層；在預覽器下方用箭頭翻頁。</p></div></div></section>'+
       '<section><h2 id="use" data-n="04">這篇可以怎麼用在你的研究</h2><div class="tipbox"><span class="plabel">建議用途，非原文結論</span>以下是依書目與本庫其他篇整理的「可以拿來做什麼」建議，不是原文的研究結果；是否適用，請回原文核對。<ol>'+(p.use||[]).map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ol></div></section>'+
-      '<section><h2 id="askone" data-n="05">問 AI 助教（這一篇）</h2><div id="askpaper"></div></section>'+
-      '<div class="foot"><p>本頁為個人學術研究與課堂示範用之 AI 生成輔助材料，不取代閱讀原文。請勿公開分享。</p><p>簡報為逐頁圖片，沒有文字層。中文題名為編譯者翻譯，非官方譯名。</p></div></div>';
-    askPanel($('#askpaper'),p.id);setNav([['audio','語音'],['visual','資訊圖與簡報'],['use','研究用途'],['askone','問 AI 助教']],true);window.scrollTo(0,0);
+            '<div class="foot"><p>本頁為個人學術研究與課堂示範用之 AI 生成輔助材料，不取代閱讀原文。請勿公開分享。</p><p>簡報為逐頁圖片，沒有文字層。中文題名為編譯者翻譯，非官方譯名。</p></div></div>';
+    setNav([['audio','語音'],['visual','資訊圖與簡報'],['use','研究用途']],true);if(window.__taPaper)window.__taPaper(p);window.scrollTo(0,0);
     function dv(kind,id,label){return '<iframe class="dv '+kind+'" src="https://drive.google.com/file/d/'+esc(id)+'/preview" title="'+esc(label)+'" allow="autoplay" loading="lazy" referrerpolicy="no-referrer"></iframe>'}
     function box(host,label,m,render){var el=$(host);if(m.status==='ready'&&m.drive){render(el,m);return}if(m.status==='ready'){el.innerHTML='';return}el.innerHTML='<div class="mbox'+(m.status==='denied'?' denied':'')+'">'+esc(label)+(m.status==='denied'?'：這個帳號沒有權限。':'：媒體檔還沒接上，之後會在這裡直接播放／顯示。')+'</div>'}
     var u=AUTH&&AUTH.currentUser;
@@ -309,6 +333,59 @@ nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:
     $('#tb1').onclick=function(){tab(1)};$('#tb2').onclick=function(){tab(2)};
     $('#fsOpenI').onclick=function(){fsOpen('info')};$('#fsOpenS').onclick=function(){fsOpen('slides')};
   }
+  /* ===== AI 助教：和學習單同一個浮動按鈕與面板（CSS、標記都由學習單那份建置時取用）===== */
+  (function(){
+    var MODE='lib',SC='all',PAPER=null,busy=false,sid=null;
+    var QUICK={lib:['朱老師的論文常用什麼研究方法？','哪一篇談到設計教育？','哪一篇談到空間能力？'],sheet:['我卡在這一步了，怎麼辦？','這一步做完要看到什麼？','我現在該先做哪一步？']};
+    var RULES={lib:'只根據朱老師團隊的論文全文與書目回答，每個重點附出處（哪一篇、第幾段），找不到依據會說「沒有提到」。這是閱讀輔助，請對照原文再引用。',sheet:'只回答這份學習單和 Claude 桌面版的操作。不會幫你寫報告，也不會給 DOI。每個答案都要你自己對照畫面或原文驗證。'};
+    var LINK=/\[\[(?:p:([a-z0-9_]{3,60})|([A-Za-z0-9_-]{1,24}))\|([^\[\]|\n]{1,40})\]\]/g;
+    function open(on){$('#ta-panel').classList.toggle('open',on);$('#ta-fab').setAttribute('aria-expanded',on?'true':'false');if(on)$('#ta-q').focus()}
+    function cnt(){var n=$('#ta-q').value.length;$('#ta-cnt').firstChild.nodeValue=n+' / '+(MODE==='lib'?200:300)+(MODE==='lib'?'　每人每天 20':'　每人每天 15')}
+    function scopeOpts(){var sc=$('#ta-scope');sc.textContent='';var o=document.createElement('option');o.value='all';o.textContent='全部論文';sc.appendChild(o);if(PAPER){var e=document.createElement('option');e.value=PAPER.id;e.textContent='這一篇：'+PAPER.zh.slice(0,20);sc.appendChild(e);sc.value=SC==='all'?'all':PAPER.id}else SC='all';sc.hidden=MODE!=='lib'}
+    function setMode(m){
+      MODE=m;[].slice.call(document.querySelectorAll('#ta-mode button')).forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-m')===m?'true':'false')});
+      var r=$('#ta-body').querySelector('.rule');if(r)r.textContent=RULES[m];
+      $('#ta-q').placeholder=m==='lib'?'問論文：例如「哪一篇談到設計教育？」':'卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）';$('#ta-q').maxLength=m==='lib'?200:300;
+      var q=$('#ta-quick');q.textContent='';QUICK[m].forEach(function(t){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){$('#ta-q').value=t;cnt();$('#ta-q').focus()});q.appendChild(b)});
+      scopeOpts();cnt();
+    }
+    window.__taPaper=function(p){PAPER=p;SC='all';scopeOpts();$('#ta-ctx').textContent=p?p.zh:''};
+    function fill(d,text){
+      var last=0,m;LINK.lastIndex=0;
+      while((m=LINK.exec(text))){d.appendChild(document.createTextNode(text.slice(last,m.index)));
+        var a=document.createElement('a');a.className='tolink';a.textContent=m[3];
+        if(m[1]){a.href='#/p/'+m[1];a.addEventListener('click',function(){if(window.matchMedia('(max-width:700px)').matches)open(false)})}   // 同一分頁跳到該篇卡片
+        else a.href='sheet.html#'+m[2];                                                                                   // 學習單的步驟（同一分頁）
+        d.appendChild(a);last=m.index+m[0].length}
+      d.appendChild(document.createTextNode(text.slice(last).replace(/\[\[|\]\]/g,'')));
+    }
+    function add(cls,text){var d=document.createElement('div');d.className='msg '+cls;if(cls==='ai')fill(d,text);else d.textContent=text;$('#ta-body').appendChild(d);$('#ta-body').scrollTop=1e9;return d}
+    function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+    async function ask(q){
+      var u=AUTH&&AUTH.currentUser;if(!u)throw {shown:'請先登入。'};TOK=await u.getIdToken();sid=u.uid;
+      var key='-L'+Date.now().toString(36)+Math.random().toString(36).slice(2,8),base=CFG.db+'/dt1116/'+CFG.sess,au='?auth='+encodeURIComponent(TOK);
+      var qn=MODE==='lib'?'lib_q':'q',an=MODE==='lib'?'lib_a':'a',body=MODE==='lib'?{t:Date.now(),q:q,scope:$('#ta-scope').value||'all'}:{t:Date.now(),q:q};
+      var r=await fetch(base+'/'+qn+'/'+sid+'/'+key+'.json'+au,{method:'PUT',body:JSON.stringify(body)});
+      if(r.status===401||r.status===403)throw {shown:'你的 Gmail 不在名單內，或登入已過期。請重新登入，仍不行就舉手。'};
+      if(!r.ok)throw {shown:'送出失敗，請檢查網路後再試。'};
+      for(var i=0;i<50;i++){await sleep(1500);var g=await fetch(base+'/'+an+'/'+sid+'/'+key+'.json'+au);if(!g.ok)continue;var a=await g.json();if(a){if(a.ok)return String(a.text||'').replace(/\*\*|__|`{1,3}/g,'').replace(/^\s*[\*\-]\s+/gm,'• ').trim();throw {shown:a.text}}}
+      throw {shown:'助教現在沒有回應（可能還沒開機），請稍後再試，或舉手問講師。'};
+    }
+    $('#ta-fab').addEventListener('click',function(){open(!$('#ta-panel').classList.contains('open'))});
+    $('#ta-x').addEventListener('click',function(){open(false)});
+    document.addEventListener('keydown',function(e){if(e.key==='Escape')open(false)});
+    $('#ta-q').addEventListener('input',cnt);
+    $('#ta-q').addEventListener('keydown',function(e){if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();$('#ta-form').requestSubmit()}});
+    [].slice.call(document.querySelectorAll('#ta-mode button')).forEach(function(b){b.addEventListener('click',function(){setMode(b.getAttribute('data-m'))})});
+    $('#ta-form').addEventListener('submit',async function(ev){
+      ev.preventDefault();var q=$('#ta-q').value.trim();if(!q||busy)return;busy=true;$('#ta-send').disabled=true;add('me',q);$('#ta-q').value='';cnt();
+      var w=add('ai','AI助教想一下…');
+      try{var t=await ask(q);w.textContent='';fill(w,t)}catch(e){w.className='msg err';w.textContent=(e&&e.shown)||'AI助教暫時不能用，請舉手問講師。'}
+      busy=false;$('#ta-send').disabled=false;
+    });
+    window.__taLib={setMode:setMode,open:open};
+    setMode('lib');
+  })();
   function route(){var m=/^#\/p\/([A-Za-z0-9_-]+)/.exec(location.hash);if(m)paper(m[1]);else hub()}
   window.addEventListener('hashchange',function(){if(!$('#app').hidden)route()});
   window.__lib={items:ITEMS,route:route};
