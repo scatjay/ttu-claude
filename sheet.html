@@ -1546,7 +1546,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   }
   [].slice.call(document.querySelectorAll('li.stp .nxt')).forEach(function(n){
     var b=document.createElement('button');b.type='button';b.className='askbtn';b.textContent='問AI助教';
-    b.addEventListener('click',function(){setCtx(b);open(true);emit({type:'open',unit:unitOf(b),key:b.closest('li.stp').id});$('ta-q').focus()});
+    b.addEventListener('click',function(){setCtx(b);ctx.pin=true;open(true);refreshQuick();emit({type:'open',unit:unitOf(b),key:b.closest('li.stp').id});$('ta-q').focus()});
     n.appendChild(b);
   });
   /* ---- 助教心跳：worker 每輪寫 hb.t；超過 60 秒沒更新＝暫停（hb.t 在兩次查詢間有變也算活著，避開手機時鐘誤差）---- */
@@ -1560,7 +1560,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   }
   function hbLoop(on){clearInterval(HB.tm);if(on&&RT){checkHb();HB.tm=setInterval(checkHb,20000)}}
   function open(on){$('ta-panel').classList.toggle('open',on);$('ta-fab').setAttribute('aria-expanded',on?'true':'false');if(on)$('ta-left').textContent=left();hbLoop(on)}
-  $('ta-fab').addEventListener('click',function(){var on=!$('ta-panel').classList.contains('open');if(on){var cur=document.querySelector('.tabs a.on');var t=cur?document.getElementById(cur.getAttribute('href').slice(1)):null;if(t&&!ctx.step)setCtx(t.querySelector('li.stp')||t)}open(on)});
+  $('ta-fab').addEventListener('click',function(){var on=!$('ta-panel').classList.contains('open');if(on){var cur=document.querySelector('.tabs a.on');var t=cur?document.getElementById(cur.getAttribute('href').slice(1)):null;if(t&&!ctx.step)setCtx(t.querySelector('li.stp')||t);if(!ctx.pin){var c0=ctxInfo();if(c0._li||c0._sec)setCtx(c0._li||c0._sec.querySelector('h2')||c0._sec)}}else ctx.pin=false;open(on);if(on)refreshQuick()});
   $('ta-x').addEventListener('click',function(){open(false)});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')open(false)});
   $('ta-q').addEventListener('input',function(){cntText()});
@@ -1592,6 +1592,53 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   function add(cls,text,vf){var d=document.createElement('div');d.className='msg '+cls;if(cls==='ai')fillText(d,text);else d.textContent=text;if(vf){var s=document.createElement('span');s.className='vf';s.textContent=VF;d.appendChild(s)}$('ta-body').appendChild(d);$('ta-body').scrollTop=1e9;return d}
   /* ---- 兩種問法共用同一個面板：問學習單（q／a）、問文獻庫（lib_q／lib_a，全文只在講師電腦）----
      論文答案裡的 [[p:論文id|文字]] 會連到 library.html#/p/論文id（同一分頁）。 */
+/* 情境式建議提問：純規則、不呼叫 LLM（成本 0、沒有延遲）。學習單與文獻庫共用，建置時嵌入標記處。
+   taCtxQ('sheet', {page, step:{id,n,t,l}, unit:'單元 2 …', track}) 或 taCtxQ('lib', {kind:'hub'|'paper'|'case', title, track}) → 最多 4 題。
+   不含任何姓名、座號；只用步驟名稱、標籤、單元名稱、論文／案例標題。 */
+function taCtxQ(mode, c) {
+  c = c || {}; var out = [];
+  function add(q) { q = String(q || '').trim(); if (q && out.indexOf(q) < 0 && out.length < 4) out.push(q) }
+  function cut(s, n) { s = String(s || '').replace(/\s+/g, ' ').trim(); return s.length > n ? s.slice(0, n) + '…' : s }
+  var tr = c.track;
+  if (mode === 'lib') {
+    var t = cut(c.title, 18);
+    if (c.kind === 'paper') {
+      add('這篇的研究方法是什麼？'); add('這篇的主要發現和限制是什麼？');
+      add(tr === 'teaching' ? '這篇可以怎麼用在教學線？' : tr === 'work' ? '這篇可以怎麼用在我的工作？' : '這篇可以怎麼放進我的文獻回顧？');
+      add('有沒有跟這篇主題接近的其他論文？'); return out;
+    }
+    if (c.kind === 'case') {
+      add('這個案例的提示詞，可以怎麼改成我的情境？'); add('用這個案例要特別小心什麼？');
+      add('學習單哪一步會練到這個案例？'); add('有沒有類似的案例可以比較？'); return out;
+    }
+    add('朱老師的論文常用什麼研究方法？');
+    add(tr === 'work' ? '有沒有整理會議紀錄的案例？' : '有沒有教學備課的案例？');
+    add(tr === 'teaching' ? '有沒有設計教學評量的案例？' : '有沒有整理會議紀錄的案例？');
+    add('哪一篇談到設計教育？'); return out;
+  }
+  /* 學習單 */
+  var NEXTQ = '我下一步該做什麼？', s = c.step, pg = c.page || '';
+  if (s && s.id) {
+    var nm = cut(s.n || s.title || '這一步', 14), tg = (s.t || []).join(' '), tq = [];
+    var MAP = [[/授權|權限|信任/, '授權框要按允許還是拒絕？'], [/資料夾/, '資料夾要放在哪裡才對？放錯了怎麼辦？'], [/讀檔|讀取/, '它讀不到我的檔案，要怎麼檢查？'],
+      [/DOI/, 'DOI 查不到或對不上，怎麼辦？'], [/規則檔/, '規則檔寫好了，它卻沒照做，怎麼辦？'], [/任務檔|進度檔/, '任務檔要寫到多細才夠？'],
+      [/安裝|下載/, '裝好了卻打不開，怎麼辦？'], [/登入|帳號/, '登入失敗或要付費方案，怎麼辦？'], [/隱私/, '哪些檔案絕對不能放進去？'],
+      [/出處|查證/, '它給的出處，我要怎麼查證？'], [/技能|Skill|skill/, 'Skill 叫不出來，怎麼辦？'], [/模式/, '現在這一步適合用哪一種模式？'],
+      [/工作階段/, '什麼時候要開新的工作階段？'], [/影片/, '這一步的影片要看哪一段？'], [/報告|寫作|成品/, '成品要怎麼驗收才算過關？']];
+    MAP.forEach(function (m) { if (tq.length < 2 && m[0].test(tg + ' ' + (s.n || ''))) tq.push(m[1]) });
+    if (tq[0]) add(tq[0]);
+    add('「' + nm + '」做完要看到什麼，才算完成？');
+    add(tr === 'teaching' ? '「' + nm + '」用在我的教學素材，要怎麼改？' : tr === 'work' ? '「' + nm + '」用在我的工作素材，要怎麼改？' : (tq[1] || ''));
+    add('我卡在「' + nm + '」，可以一步一步帶我嗎？'); add(NEXTQ); return out;
+  }
+  var U = cut(c.unit, 16);
+  if (pg === 'pre') { add('開始前要準備哪六件事？'); add('我沒有付費方案，可以做嗎？'); add('我沒有素材，要怎麼辦？'); add(NEXTQ); return out }
+  if (pg === 'after') { add('課後怎麼繼續練習？'); add('怎麼把今天學的用在我自己的' + (tr === 'teaching' ? '教學' : tr === 'work' ? '工作' : '研究') + '？'); add('有哪些資源可以自學？'); add(NEXTQ); return out }
+  if (pg === 'sched') { add('今天的流程和休息時間是什麼？'); add('我落後了，要先做哪些步驟？'); add(NEXTQ); return out }
+  if (/^u[1-6]$/.test(pg)) { add((U ? U + ' ' : '這個單元') + '的目標是什麼？先做哪一步？'); add('這個單元最容易卡在哪裡？'); add('做完這個單元要交出什麼？'); add(NEXTQ); return out }
+  add(NEXTQ); add('我卡在這一步了，怎麼辦？'); add('這一步做完要看到什麼？'); return out;
+}
+
   var NEXTQ='我下一步該做什麼？';var MODE='sheet',RULE_SHEET=($('ta-body').querySelector('.rule')||{}).textContent||'';
   var QUICK={sheet:[NEXTQ,'我卡在這一步了，怎麼辦？','這一步做完要看到什麼？'],lib:['朱老師的論文常用什麼研究方法？','有沒有教學備課的案例？','有沒有整理會議紀錄的案例？']};
   function cntText(){var n=$('ta-q').value.length;$('ta-cnt').firstChild.nodeValue=n+' / '+(MODE==='lib'?200:TA.maxQ)+(MODE==='lib'?'　每人每天 20':'　今天剩 ');var l=$('ta-left');if(l)l.style.display=MODE==='lib'?'none':''}
@@ -1601,9 +1648,39 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     var r=$('ta-body').querySelector('.rule');if(r)r.textContent=m==='lib'?'只根據朱老師團隊的論文（全文與書目）和三條線的應用案例回答，每個重點附出處（論文第幾段或哪一則案例），找不到依據會說「沒有提到」。這是閱讀輔助，請對照原文再引用。':RULE_SHEET;
     $('ta-q').placeholder=m==='lib'?'問文獻庫：例如「哪一篇談到設計教育？」':'卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）';
     $('ta-q').maxLength=m==='lib'?200:TA.maxQ;
-    var q=$('ta-quick');q.textContent='';QUICK[m].forEach(function(t){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){$('ta-q').value=t;cntText();if(t===NEXTQ&&m==='sheet')$('ta-form').requestSubmit();else $('ta-q').focus()});q.appendChild(b)});
+    refreshQuick();
     cntText();
   }
+
+  /* ---- 目前位置（頁籤＋捲到哪個步驟）→ 情境式建議提問 ---- */
+  function curPos(){
+    var secs=[].slice.call(document.querySelectorAll('section[data-page]')),sec=null;
+    for(var i=0;i<secs.length;i++){if(secs[i].getClientRects().length){sec=secs[i];break}}
+    if(!sec)return {page:'top'};
+    var page=sec.getAttribute('data-page')||sec.id,li=null,best=1e9,y=innerHeight*0.4;
+    [].slice.call(sec.querySelectorAll('li.stp[id]')).forEach(function(x){
+      if(window.dtVis&&!window.dtVis(x))return;var r=x.getBoundingClientRect();if(!r.height)return;
+      var d=(r.top<=y&&r.bottom>=y)?0:Math.min(Math.abs(r.top-y),Math.abs(r.bottom-y));if(d<best){best=d;li=x}});
+    if(best>innerHeight*0.6)li=null;
+    return {page:page,sec:sec,li:li}}
+  function ctxInfo(){
+    var p=curPos(),M=window.TA_META||{},st=(p.li&&M.steps&&M.steps[p.li.id])||null,un=null;
+    (M.units||[]).forEach(function(u){if(u.id===p.page)un=u});
+    return {page:p.page,step:st?{id:p.li.id,n:st.n,t:st.t,l:st.l}:null,unit:(un&&/^u[1-6]$/.test(p.page))?('單元 '+p.page.slice(1)):'',track:window.dtTrack||'',_li:p.li,_sec:p.sec}}
+  function quickList(m){
+    if(m==='lib')return QUICK.lib;
+    var c=ctxInfo();return taCtxQ('sheet',c)}
+  function sendQuick(t){
+    $('ta-q').value=t;cntText();try{emit({type:'qclick',src:'ctx',unit:String(ctxInfo().page).slice(0,8)})}catch(e){}
+    $('ta-form').requestSubmit()}
+  function refreshQuick(){
+    var q=$('ta-quick');if(!q)return;q.textContent='';
+    var L=quickList(MODE);L.forEach(function(t){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){sendQuick(t)});q.appendChild(b)})}
+  var _qt=0;function qSoon(){clearTimeout(_qt);_qt=setTimeout(function(){if($('ta-panel').classList.contains('open')&&MODE==='sheet'&&!ctx.pin)followPos()},350)}
+  function followPos(){var c=ctxInfo();if(c._li||c._sec){setCtx(c._li||c._sec.querySelector('h2')||c._sec)}refreshQuick()}
+  window.addEventListener('scroll',qSoon,{passive:true});window.addEventListener('hashchange',qSoon);
+  try{[].slice.call(document.querySelectorAll('nav.tabs a')).forEach(function(a){a.addEventListener('click',function(){setTimeout(qSoon,200)})})}catch(e){}
+  window.__refreshQuick=refreshQuick;
   [].slice.call(document.querySelectorAll('#ta-mode button')).forEach(function(b){b.addEventListener('click',function(){setMode(b.getAttribute('data-m'))})});
   window.__taSetMode=setMode;window.__taSetLibScope=function(opts){var sc=$('ta-scope');sc.textContent='';opts.forEach(function(o){var e=document.createElement('option');e.value=o[0];e.textContent=o[1];sc.appendChild(e)});sc.hidden=!(MODE==='lib'&&opts.length>1)};
   async function askLib(q){
@@ -1765,7 +1842,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   var VCFG=null;
   try{if(location.protocol!=='file:')fetch('videos.json',{cache:'no-cache'}).then(function(r){return r.ok?r.json():null}).then(function(j){VCFG=j;markVids()}).catch(function(){})}catch(e){}
   /* 三線影片：同一步驟若有 V70-T（教學線）或 V70-W（工作線）且有來源，該線學員看專屬版；沒有就退回通用（研究線）原片 */
-  if(window.dtSetTrack&&!window.dtSetTrack._mv){var _ost=window.dtSetTrack;window.dtSetTrack=function(t){var r=_ost.apply(this,arguments);try{markVids()}catch(e){}return r};window.dtSetTrack._mv=1}
+  if(window.dtSetTrack&&!window.dtSetTrack._mv){var _ost=window.dtSetTrack;window.dtSetTrack=function(t){var r=_ost.apply(this,arguments);try{markVids()}catch(e){}try{if(window.__refreshQuick)window.__refreshQuick()}catch(e){}return r};window.dtSetTrack._mv=1}
   function vres(v){var t=window.dtTrack||'',suf=t==='teaching'?'-T':t==='work'?'-W':'';if(suf){var c=VCFG&&VCFG[v+suf];if(c&&(c.yt||c.src))return v+suf}return v}
   function markVids(){[].slice.call(document.querySelectorAll('a.vid[data-video]')).forEach(function(x){var v0=x.getAttribute('data-video'),v=vres(v0),c=VCFG&&VCFG[v],t=window.dtTrack||'';var nx=x.nextElementSibling;if(nx&&nx.classList&&nx.classList.contains('vnote'))nx.remove();if(c&&(c.yt||c.src)){x.setAttribute('href','#v-'+v0);x.classList.remove('todo','wait');x.removeAttribute('title');if(x._lab)x.textContent=x._lab;if(v===v0&&(t==='teaching'||t==='work')){var n=document.createElement('span');n.className='vnote';n.textContent='本步驟沿用研究線示範畫面';x.parentNode.insertBefore(n,x.nextSibling)}}else if(!x.classList.contains('todo')){if(!x._lab)x._lab=x.textContent;x.classList.add('wait');x.removeAttribute('title');x.setAttribute('href','#v-'+v0);x.textContent='影片待上傳'}})}
   function vidT(v,step){var c=(VCFG&&VCFG[v]&&VCFG[v].chapters)||[];for(var i=0;i<c.length;i++){if(c[i].step===step)return +c[i].t||0}return 0}
