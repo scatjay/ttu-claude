@@ -1292,7 +1292,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
     var wait=add('ai','AI助教想一下…');
     var res=null,ok=false,src='none',lastErr=null;
     try{res=await ask(q);ok=true;src=res.src}catch(e){ok=false;lastErr=e}
-    if(ok){var txt=clean(res.text);wait.textContent=txt;var s=document.createElement('span');s.className='vf';s.textContent=VF;wait.appendChild(s);store.set(dk,String(used()+1))}
+    if(ok){var txt=clean(res.text);wait.textContent='';fillText(wait,txt);var s=document.createElement('span');s.className='vf';s.textContent=VF;wait.appendChild(s);store.set(dk,String(used()+1))}
     else{wait.className='msg err';wait.textContent=(lastErr&&lastErr.shown)||'AI助教暫時不能用，請舉手問講師，或先看「卡住了？備案分流」。'}
     $('ta-left').textContent=left();$('ta-send').disabled=false;
     emit({type:'ask',unit:ctx.u||'top',key:ctx.id||'',qchars:q.length,achars:ok?clean(res.text).length:0,ok:ok?1:0,src:src,err:ok?'':String((lastErr&&lastErr.code)||'')});
