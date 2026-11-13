@@ -1109,9 +1109,7 @@ window.addEventListener('hashchange',reveal);reveal();
 #ta-panel{position:fixed;right:16px;bottom:calc(68px + env(safe-area-inset-bottom,0px));z-index:61;width:min(400px,calc(100vw - 32px));max-height:min(78vh,640px);display:none;flex-direction:column;background:var(--surface);color:var(--ink);border:1px solid var(--hair);border-radius:14px;box-shadow:var(--shadow);font-family:var(--sans)}
 #ta-panel.open{display:flex}
 /* ---- 學習線：醒目標籤、選單切換區、切換提醒、小標、跨線建議卡 ---- */
-/* ---- 三線配色 token（全站共用；亮色白字／暗色深字都過 WCAG AA 4.5:1，見 tests/contrast_check.py）---- */
-:root{--tr-research:#3B4BD8;--tr-teaching:#0B7D3E;--tr-work:#A65A00;--tr-research-soft:#E8EBFF;--tr-teaching-soft:#E3F5EA;--tr-work-soft:#FFF3DC;--tr-on:#fff}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--tr-research:#9DB0FF;--tr-teaching:#7BE495;--tr-work:#FFB830;--tr-research-soft:#232C57;--tr-teaching-soft:#163A24;--tr-work-soft:#43301A;--tr-on:#16130f}}
+:root:not([data-theme="dark"]){--tr-research:#3B4BD8;--tr-teaching:#0B7D3E;--tr-work:#A65A00;--tr-research-soft:#E8EBFF;--tr-teaching-soft:#E3F5EA;--tr-work-soft:#FFF3DC;--tr-on:#fff}
 :root[data-theme="dark"]{--tr-research:#9DB0FF;--tr-teaching:#7BE495;--tr-work:#FFB830;--tr-research-soft:#232C57;--tr-teaching-soft:#163A24;--tr-work-soft:#43301A;--tr-on:#16130f}
 .ta-tk-research{--tkc:var(--tr-research);--tks:var(--tr-research-soft)}.ta-tk-teaching{--tkc:var(--tr-teaching);--tks:var(--tr-teaching-soft)}.ta-tk-work{--tkc:var(--tr-work);--tks:var(--tr-work-soft)}
 #ta-trkflag{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:max(10px,env(safe-area-inset-left,0px));z-index:75;font-size:13px;font-weight:800;line-height:1.5;color:var(--tr-on,#fff);background:var(--tkc,var(--accent));border-radius:99px;padding:2px 13px;box-shadow:var(--shadow);letter-spacing:.02em;pointer-events:none}
