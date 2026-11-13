@@ -102,6 +102,17 @@ audio{width:100%;display:block}
 .hint{font-size:13px;color:var(--muted);margin:0 0 10px}
 .info img,.sl img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--hair)}
 .sl .nav{display:flex;gap:8px;align-items:center;justify-content:space-between;margin:10px 0}
+/* 問 AI 助教 */
+.ask{border:1px solid var(--hair);border-left:4px solid var(--uc,var(--accent));border-radius:12px;background:var(--surface);padding:14px 16px;display:grid;gap:10px}
+.ask .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ask input[type=text]{flex:1 1 220px;min-width:0;border:1px solid var(--hair);background:var(--surface2);color:var(--ink);border-radius:10px;padding:9px 12px;font:inherit}
+.ask select{border:1px solid var(--hair);background:var(--surface2);color:var(--ink);border-radius:8px;padding:8px 10px;font:inherit;max-width:100%}
+.ask .eg{display:flex;gap:6px;flex-wrap:wrap}.ask .eg button{font:inherit;font-size:12.5px;color:var(--muted);background:var(--surface2);border:1px solid var(--hair);border-radius:99px;padding:3px 11px;cursor:pointer}
+.ask .ans{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.75;font-size:15px;border-top:1px dashed var(--hair);padding-top:10px}
+.ask .ans a{color:var(--accent);font-family:var(--mono);font-size:12.5px;text-decoration:none;border:1px solid var(--hair);border-radius:6px;padding:0 6px;margin:0 2px;white-space:nowrap;display:inline-block}
+.ask .ans a:hover{border-color:var(--accent2)}
+.ask .ans.err{color:var(--warn)}
+.ask .note{font-size:12.5px;color:var(--muted);margin:0}
 /* 登入閘門 */
 #gate{max-width:420px;margin:12vh auto;text-align:center}
 #gate button{font:inherit;font-weight:800;font-size:17px;color:var(--onbrand);background:var(--accent);border:0;border-radius:10px;padding:13px 22px;width:100%;cursor:pointer}
@@ -164,6 +175,39 @@ audio{width:100%;display:block}
     }catch(e){showGate('登入功能載入失敗，請檢查網路後重新整理。',null,false)}
   }
 
+  /* ===== 問 AI 助教：問題寫進 lib_q，本機 worker 檢索全文後把答案寫回 lib_a（全文不在網站上）===== */
+  function askKey(){return '-L'+Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+  function fmtAns(t){
+    var h=esc(t).replace(/\*\*/g,'').replace(/^\s*[\*\-]\s+/gm,'• ');
+    return h.replace(/\[\[p:([a-z0-9_]+)\|([^\]]*)\]\]/g,function(_,id,l){return BYID[id]?'<a href="#/p/'+id+'">'+l+'</a>':l});
+  }
+  var BYID={};ITEMS.forEach(function(x){BYID[x.id]=x});
+  function askPanel(host,fixed){
+    var cur=fixed?BYID[fixed]:null,eg=fixed?['這篇的研究限制是什麼？','這篇用了什麼研究方法？','這篇的主要發現是什麼？']:['朱老師的論文常用什麼研究方法？','哪一篇談到設計教育？','哪一篇談到空間能力？'];
+    host.innerHTML='<div class="ask"><div class="row"><input type="text" id="aq" maxlength="200" placeholder="'+(fixed?'問這一篇的內容，例如：研究限制是什麼？':'用一句話問這幾篇論文，例如：哪一篇談到設計教育？')+'" aria-label="問 AI 助教"><button type="button" class="btn primary" id="ago">問</button></div>'+
+      (fixed?'':'<div class="row"><label for="asc" class="note">範圍</label><select id="asc"><option value="all">全部 '+ITEMS.length+' 篇</option>'+ITEMS.map(function(x){return '<option value="'+esc(x.id)+'">只問：'+esc(x.zh.slice(0,28))+'</option>'}).join('')+'</select></div>')+
+      '<div class="eg">'+eg.map(function(x){return '<button type="button">'+esc(x)+'</button>'}).join('')+'</div><div class="ans" id="aa" aria-live="polite" hidden></div>'+
+      '<p class="note">AI 只根據這幾篇論文的全文與書目回答，每個重點附出處（哪一篇、第幾段）；找不到依據會直接說「沒有提到」。這是閱讀輔助，請對照原文再引用。每人每天最多問 20 次。</p></div>';
+    var busy=false;
+    host.querySelector('.eg').addEventListener('click',function(e){var b=e.target.closest('button');if(b){host.querySelector('#aq').value=b.textContent;host.querySelector('#aq').focus()}});
+    async function go(){
+      var inp=host.querySelector('#aq'),box=host.querySelector('#aa'),qq=inp.value.trim();if(busy||!qq)return;
+      var sc=fixed||(host.querySelector('#asc')||{}).value||'all';busy=true;host.querySelector('#ago').disabled=true;box.hidden=false;box.className='ans';box.textContent='AI 助教正在翻這幾篇論文的全文…';
+      try{
+        var u=AUTH.currentUser,uid=u.uid,key=askKey();TOK=await u.getIdToken();
+        var r=await fetch(CFG.db+'/dt1116/'+CFG.sess+'/lib_q/'+uid+'/'+key+'.json?auth='+encodeURIComponent(TOK),{method:'PUT',body:JSON.stringify({t:Date.now(),q:qq,scope:sc})});
+        if(!r.ok)throw new Error('send '+r.status);
+        var t0=Date.now(),a=null;
+        while(Date.now()-t0<75000){await new Promise(function(ok){setTimeout(ok,1500)});
+          var g=await fetch(CFG.db+'/dt1116/'+CFG.sess+'/lib_a/'+uid+'/'+key+'.json?auth='+encodeURIComponent(TOK));if(g.ok){a=await g.json();if(a)break}}
+        if(!a){box.className='ans err';box.textContent='助教現在沒有回應（可能還沒開機），請稍後再試，或舉手問講師。'}
+        else if(a.ok){box.className='ans';box.innerHTML=fmtAns(a.text||'')}
+        else{box.className='ans err';box.textContent=a.text||'暫時不能用。'}
+      }catch(e){box.className='ans err';box.textContent='送出失敗，請檢查網路後再試。'}
+      busy=false;host.querySelector('#ago').disabled=false;
+    }
+    host.querySelector('#ago').addEventListener('click',go);host.querySelector('#aq').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.isComposing)go()});
+  }
   /* ===== 目錄頁 ===== */
   var cat='全部',typ='全部',q='';
   function uniq(a){return Array.from(new Set(a))}
@@ -172,12 +216,13 @@ audio{width:100%;display:block}
     function pills(list,get,cnt){return list.map(function(c){return '<button type="button" data-k="'+esc(c)+'" aria-pressed="'+(get()===c)+'"'+(COL[c]?' style="--uc:var('+COL[c]+')"':'')+'>'+esc(c)+'<span class="n">'+cnt(c)+'</span></button>'}).join('')}
     $('#view').innerHTML='<div class="eyebrow">NBLM 三套件 · 語音／簡報／資訊圖</div><h1>朱老師團隊論文與指導學位論文</h1><p class="lede">NotebookLM 成品集中在這裡閱讀。點卡片進入單篇頁：資訊圖、簡報、語音摘要，每篇另附「這篇可以怎麼用在你的研究」三點建議。</p>'+
       '<div class="warn" role="note"><span class="wt">NBLM 生成，請與原文核對</span>資訊圖、簡報與語音均為 NotebookLM 自動生成，內容未經逐句查證；引用請回到原文。</div>'+
-      '<section><h2 data-n="01">找文獻</h2><input id="q" type="search" placeholder="搜尋標題、作者、標籤" aria-label="搜尋" value="'+esc(q)+'"><div class="group">主題分類</div><div class="chips" id="cats">'+pills(cats,function(){return cat},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.cat===c}).length})+'</div><div class="group">類型</div><div class="chips" id="types">'+pills(types,function(){return typ},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.type===c}).length})+'</div></section>'+
-      '<section><h2 data-n="02">文獻 <span class="cnt" id="cnt"></span></h2><div class="grid" id="grid"></div></section>'+
-      (PEND.length?'<section><h2 data-n="03">陸續加入</h2><div class="tipbox">'+PEND.map(function(x){return '<span class="plabel">'+esc(x.t)+'</span>'+esc(x.why)}).join('<br>')+'</div></section>':'')+
-      '<section><h2 data-n="04">使用須知</h2><div class="card bar" style="font-size:14px"><p style="margin:0 0 8px">本頁成品為個人學術研究與課堂示範用之 AI 生成輔助材料，不取代閱讀原文。訂閱制論文僅供個人學術研究；學位論文書目連到國家圖書館臺灣博碩士論文網，僅供個人學術研究之檢索與閱讀，本庫不放全文。請勿公開分享。</p><p style="margin:0">分類依書目資料與題名判斷，中文題名為編譯者翻譯，非官方譯名。</p></div></section>';
+      '<section><h2 data-n="01">問 AI 助教</h2><div id="askhub"></div></section>'+
+      '<section><h2 data-n="02">找文獻</h2><input id="q" type="search" placeholder="搜尋標題、作者、標籤" aria-label="搜尋" value="'+esc(q)+'"><div class="group">主題分類</div><div class="chips" id="cats">'+pills(cats,function(){return cat},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.cat===c}).length})+'</div><div class="group">類型</div><div class="chips" id="types">'+pills(types,function(){return typ},function(c){return c==='全部'?ITEMS.length:ITEMS.filter(function(x){return x.type===c}).length})+'</div></section>'+
+      '<section><h2 data-n="03">文獻 <span class="cnt" id="cnt"></span></h2><div class="grid" id="grid"></div></section>'+
+      (PEND.length?'<section><h2 data-n="04">陸續加入</h2><div class="tipbox">'+PEND.map(function(x){return '<span class="plabel">'+esc(x.t)+'</span>'+esc(x.why)}).join('<br>')+'</div></section>':'')+
+      '<section><h2 data-n="05">使用須知</h2><div class="card bar" style="font-size:14px"><p style="margin:0 0 8px">本頁成品為個人學術研究與課堂示範用之 AI 生成輔助材料，不取代閱讀原文。訂閱制論文僅供個人學術研究；學位論文書目連到國家圖書館臺灣博碩士論文網，僅供個人學術研究之檢索與閱讀，本庫不放全文。請勿公開分享。</p><p style="margin:0">分類依書目資料與題名判斷，中文題名為編譯者翻譯，非官方譯名。</p></div></section>';
     function bind(id,set){$(id).addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;set(b.getAttribute('data-k'));[].slice.call($(id).querySelectorAll('button')).forEach(function(x){x.setAttribute('aria-pressed',x===b)});grid()})}
-    bind('#cats',function(v){cat=v});bind('#types',function(v){typ=v});$('#q').addEventListener('input',function(){q=this.value;grid()});grid();
+    askPanel($('#askhub'));bind('#cats',function(v){cat=v});bind('#types',function(v){typ=v});$('#q').addEventListener('input',function(){q=this.value;grid()});grid();
   }
   function grid(){
     var g=$('#grid');g.innerHTML='';var n=0,ql=q.trim().toLowerCase();
@@ -199,8 +244,8 @@ audio{width:100%;display:block}
       '<section><h2 data-n="01">書目與來源</h2><div class="card bar"><dl class="facts"><dt>作者</dt><dd>'+esc(p.au)+'</dd><dt>出處</dt><dd>'+esc(p.venue)+'</dd><dt>年份</dt><dd>'+esc(p.yr)+'</dd><dt>分類</dt><dd>'+esc(p.cat)+'・'+esc(p.type)+'</dd></dl></div></section>'+
       '<section><h2 id="audio" data-n="02">語音摘要 <span class="cnt">'+esc(p.dur||'')+'</span></h2><p class="hint">影音檔放在私人雲端硬碟，只有登記的帳號打得開：請用你登記的 Google 帳號登入瀏覽器。如果看到「需要存取權」，先不要按「要求存取權」：請在 Chrome 右上角切換到你登記的帳號，或開無痕視窗、只登入那一個帳號。仍不行就舉手，報出你登入的帳號。</p><div class="media" id="m-audio"></div></section>'+
       '<section><h2 id="visual" data-n="03">資訊圖與簡報</h2><div class="media" id="m-info"></div><div class="media" id="m-slides" style="margin-top:14px"></div></section>'+
-      '<section><h2 id="use" data-n="04">編者建議（不是作者結論，引用請看原文）</h2><div class="tipbox"><ol>'+(p.use||[]).map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ol></div></section></div>';
-    window.scrollTo(0,0);
+      '<section><h2 id="use" data-n="04">編者建議（不是作者結論，引用請看原文）</h2><div class="tipbox"><ol>'+(p.use||[]).map(function(x){return '<li>'+esc(x)+'</li>'}).join('')+'</ol></div></section><section><h2 data-n="05">問 AI 助教（這一篇）</h2><div id="askone"></div></section></div>';
+    askPanel($('#askone'),p.id);window.scrollTo(0,0);
     function dv(kind,id,label){return '<iframe class="dv '+kind+'" src="https://drive.google.com/file/d/'+esc(id)+'/preview" title="'+esc(label)+'" allow="autoplay" loading="lazy" referrerpolicy="no-referrer"></iframe>'}
     function box(host,label,m,render){var el=$(host);if(m.status==='ready'&&m.drive){el.innerHTML=dv(host==='#m-audio'?'a':host==='#m-info'?'i':'s',m.drive,label);return}if(m.status==='ready')render(el,m);else el.innerHTML='<div class="mbox'+(m.status==='denied'?' denied':'')+'">'+esc(label)+(m.status==='denied'?'：這個帳號沒有權限。':'：媒體檔還沒接上，之後會在這裡直接播放／顯示。')+'</div>'}
     var u=AUTH&&AUTH.currentUser;
