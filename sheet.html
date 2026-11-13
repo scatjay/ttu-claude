@@ -308,7 +308,37 @@ section.tx6 li.stp::after{background-image:repeating-linear-gradient(45deg,rgba(
 <style>.vid:not([href]){display:none!important}.mgcard:not([data-src]){display:none!important}</style>
 <style>.tabs,.pfoot .tabs{flex-wrap:wrap;overflow:visible;gap:4px 4px}.tabs a{white-space:nowrap}.tabs .pg{margin-left:auto}@media(max-width:899px){.tabs{position:static}}</style>
 <style>ul.bl,ol.bl{margin:4px 0;padding-left:20px}.bl li{margin:2px 0}details.more{margin:6px 0}details.more>summary{cursor:pointer;color:var(--uc,var(--accent));font-size:13px;font-weight:700}details.warnsec .body ul.bl{margin-top:8px}.qa span ul.bl{margin:2px 0}</style>
-<style>.vid[data-pending]:not([href]){display:inline-block!important}</style></head><body><div id="ta-wait" style="display:none;padding:48px 16px;text-align:center;font:16px system-ui,sans-serif;color:#6f685d">確認登入狀態…</div><div class="wrap">
+<style>.vid[data-pending]:not([href]){display:inline-block!important}</style><style id="terms-css">
+details#terms .tm{border-top:1px dashed var(--hair);padding:10px 0 8px;font-size:13.5px;line-height:1.7}
+details#terms .tm:first-of-type{border-top:0}
+details#terms .tm .tn{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:15px;font-weight:800;color:var(--ink)}
+details#terms .tm .tn em{font-style:normal;font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--muted)}
+details#terms .tm .what{display:block;color:var(--ink);margin:2px 0}
+details#terms .tm .ex{display:block;color:var(--muted);margin:2px 0}
+details#terms .tm .where{display:block;font-size:12.5px;color:var(--muted);margin-top:4px}
+details#terms .tm .where a{color:var(--accent);font-weight:700;text-decoration:none;border-bottom:1px solid var(--accent-soft)}
+details#terms .tm .where b{color:var(--ink)}
+details#terms .tmfig{display:block;width:100%;max-width:440px;height:auto;margin:6px 0;color:var(--ink)}
+details#terms .tmcap{font-size:12px;color:var(--muted);margin:0 0 4px}
+details#terms table.cmp{border-collapse:collapse;width:100%;font-size:12.5px;margin:6px 0;table-layout:fixed}
+details#terms table.cmp th,details#terms table.cmp td{border:1px solid var(--hair);padding:6px 8px;vertical-align:top;text-align:left;overflow-wrap:anywhere}
+details#terms table.cmp th{background:var(--surface2);font-weight:700}
+details#terms table.cmp td.on{background:var(--accent-soft)}
+details#terms .mock{border:1px solid var(--hair);border-radius:10px;background:var(--surface2);padding:10px 12px;max-width:340px;margin:6px 0}
+details#terms .mock .mt{font-weight:700;font-size:13px}
+details#terms .mock .mf{font-family:var(--mono);font-size:12px;margin:4px 0 8px;color:var(--muted)}
+details#terms .mock .mb{display:flex;gap:8px;flex-wrap:wrap}
+details#terms .mock .mb span{border:1px solid var(--accent);border-radius:8px;padding:3px 12px;font-size:12.5px;font-weight:700;color:var(--accent)}
+details#terms .mock .mb span.pri{background:var(--accent);color:var(--onbrand)}
+details#terms .chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0}
+details#terms .chips span{border:1px solid var(--hair);border-radius:999px;padding:3px 10px;font-size:12.5px;background:var(--surface2)}
+details#terms .chips span b{color:var(--accent)}
+details#terms .flow{display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;margin:6px 0}
+details#terms .flow>span{border:1px solid var(--hair);border-radius:8px;padding:5px 8px;font-size:12.5px;background:var(--surface2);flex:1 1 90px;min-width:90px}
+details#terms .flow>i{font-style:normal;align-self:center;color:var(--accent);font-weight:900}
+@media(max-width:520px){details#terms .flow>i{display:none}}
+</style>
+</head><body><div id="ta-wait" style="display:none;padding:48px 16px;text-align:center;font:16px system-ui,sans-serif;color:#6f685d">確認登入狀態…</div><div class="wrap">
 <div id="ta-toplogin" hidden><span id="ta-top-who"></span><span id="ta-nickedit" hidden><input id="ta-nick-in" type="text" maxlength="20" aria-label="姓名或暱稱" placeholder="姓名或暱稱"> <button type="button" id="ta-nick-save">儲存</button> <span id="ta-nick-msg"></span></span><div id="ta-onwrap" class="ta-menuwrap" hidden style="margin-left:0"><button type="button" id="ta-on" class="userpill" aria-expanded="false" aria-controls="ta-onlist"><span aria-hidden="true">👥</span><b id="ta-on-n">在線 0</b></button><div id="ta-onlist" role="region" aria-label="目前在線的同學" hidden></div></div><div id="ta-nickwrap" class="ta-menuwrap" hidden><button type="button" id="ta-user" class="userpill" aria-haspopup="menu" aria-expanded="false" aria-controls="ta-menu"><span aria-hidden="true">👤</span><b id="ta-nick"></b><span aria-hidden="true">▾</span></button><div id="ta-menu" role="menu" hidden><button type="button" role="menuitem" id="ta-nick-edit">修改暱稱</button><a role="menuitem" id="ta-lib" href="library.html">示範文獻庫</a><button type="button" role="menuitem" id="theme">切換亮／暗</button><button type="button" role="menuitem" id="reset">清除勾選</button><button type="button" role="menuitem" id="ta-top-signin">登出</button></div></div></div><header data-page="top" id="top"><p class="eyebrow">設計學特論 · 2026-11-16 · 學習單</p><h1>從零開始的 Claude Code：六小時完成一篇 AI 協作報告</h1><p class="lede">從安裝開始。今天結束前，你要交出<b>一篇投稿格式的 AI 協作報告</b>：Claude 負責起草，<b>你負責驗收、改寫與署名</b>：每一句都要你對照原文確認過，才算你的報告。報告分六個單元，一節一節長出來。<b>今天的報告是練習稿，用來學流程；真的要投稿，文獻量、方法與查證都要另外補足。</b></p><div class="meta"><span>10:00 – 16:30</span><span>淨授課 <b>300 分</b></span><span>六單元 × 50 分</span><span>工具：Claude 桌面版（裝在你電腦上的 App）</span><span>今天用左上的「程式碼」分頁（另一個是「對話」分頁）</span><span>授課：楊智傑 老師</span></div><details class="card pcard" id="pcard" style="margin-top:16px"><summary><div class="psum-h"><div class="pnum">已勾選 <b id="pn">0</b> / <span id="pt">0</span> 個步驟與開始前項目</div><span class="chev"></span></div><div class="pbar"><i id="pf"></i></div></summary><div class="pbody"><div class="uphead"><span>分段</span><span></span><span>本段</span><span>累計</span></div><div class="uprog" id="uprog"></div><p class="note" style="margin-top:10px">你的勾選會存在這台電腦；登入後也會送給老師，老師看得到你的進度（含你填的暱稱），其他同學看不到你的進度；頁首的「在線」名單會讓同學看到你的暱稱（只有暱稱）。各單元完成人數只顯示人數，不顯示是誰。</p></div></details><div class="warnbar" id="nostore">這個瀏覽器不讓本頁儲存勾選（可能是無痕或封鎖），頁面仍可使用，但重新整理後勾選會清空。</div>
 <h3 style="margin-top:20px">各單元進度（點一下切到該單元）</h3><div class="upchips"><a class="upchip" data-u="1" href="#u1" style="--cu:var(--u1)"><b>單元 1</b>安裝與第一次對話<br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="2" href="#u2" style="--cu:var(--u2)"><b>單元 2</b>讓 Claude 讀你的資料夾<br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="3" href="#u3" style="--cu:var(--u3)"><b>單元 3</b>規則檔、任務檔、進度檔<br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="4" href="#u4" style="--cu:var(--u4)"><b>單元 4</b>讀文獻：讀取程度與出處<br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="5" href="#u5" style="--cu:var(--u5)"><b>單元 5</b>DOI 查證、取全文、文獻 dashboard<br/><small>步驟 0/0・檢查點 0/0</small></a><a class="upchip" data-u="6" href="#u6" style="--cu:var(--u6)"><b>單元 6</b>研究問題、討論、聲明與定稿<br/><small>步驟 0/0・檢查點 0/0</small></a></div><h3 style="margin-top:20px">你的報告，怎麼一單元長一節</h3><p class="sub" style="margin:0">每單元最後勾「本單元寫進報告」，下面對應的節就亮起來。目前完成 <b id="secn">0</b> / 10 節。</p><div class="map">
 <div class="cell" data-u="1" style="--cu:var(--u1)">題目<small>單元 1 <b>★入門</b></small></div>
@@ -323,20 +353,83 @@ section.tx6 li.stp::after{background-image:repeating-linear-gradient(45deg,rgba(
 <div class="cell" data-u="5" style="--cu:var(--u5)">參考文獻（DOI 查證）<small>單元 5 <b>★入門</b></small></div>
 </div>
 <div class="tipbox" style="margin-top:16px"><b>今天的走法：自己的速度，三條線。</b><div class="lanes3"><div><b>★必做線</b>最低完成版。報告裡<b>題目、關鍵詞、2 方法、3 AI 協作過程與紀錄、參考文獻（含 DOI 查證）</b>五節有內容就達標（報告地圖上標「★入門」）。每步標「★必做」。</div><div><b>標準線</b>做完每個單元的全部步驟（標「標準」的步驟）與過關檢核，交出十節報告。</div><div><b>加速線</b>速度快的人接著做的進階任務，每個單元結尾有。選做，不影響最低完成版。</div></div><b>卡住時：①看這一步旁邊的影片 ②看「卡住了」的常見問題 ③還是卡，舉手，說出「單元幾、步驟幾」。</b>講師在現場專心幫卡關的人，你不用等全班；每單元做到「檢查點」（過關檢核全勾），舉手讓講師在巡場表打勾，再往下。交出報告時要附 AI 使用聲明，而且<b>只寫你真的做到的</b>。</div><div class="tipbox" style="margin-top:16px"><b>全頁最重要的一件事：</b>輸入框下方有一個「模式」選項，決定 Claude 做事前要不要先問你。「自動」＝它直接動手，不先問；「手動」＝它每做一件事都先問你，你按了「允許」才會做。每次按「新增」開新的工作階段，模式不一定一樣（有時是「自動」，有時沿用上一次的「手動」），所以<b>每次開新工作階段，先看輸入框下方那一排的模式，不是「手動」就先切成「手動」</b>。</div>
-<details class="dd" style="--uc:var(--accent)"><summary>需要時再看：今天會遇到的詞（白話版，不用背）</summary><div class="body">
-<div class="qa"><b>Claude Code</b><span>Claude 的一種用法。除了聊天，它能直接讀你電腦某個資料夾裡的檔案，也能替你寫檔。今天用左上的「程式碼」分頁；另一個「對話」分頁比較像一般聊天。</span></div>
-<div class="qa"><b>工作階段</b><span>一次獨立的對話。按「新增」就開一個新的；新的對話不記得上一個聊過什麼，所以要靠規則檔和進度檔交代。</span></div>
-<div class="qa"><b>資料夾與「信任」</b><span>你指定一個資料夾，Claude 只讀這個資料夾裡的東西。第一次選資料夾時，會問你信不信任它，按了才能讀。</span></div>
-<div class="qa"><b>模式（自動／手動）</b><span>決定 Claude 做事前要不要先問你。今天用「手動」：每一步先問你，你同意才做。每次開新工作階段都要重新看一眼。</span></div>
-<div class="qa"><b>授權框</b><span>Claude 要讀檔、存檔或做事之前，跳出來問「可以嗎」的框。照單元 2 的「授權五原則」處理。</span></div>
-<div class="qa"><b>提示句</b><span>你打給 Claude 的一段話。本頁灰底、右上有「複製」的框，都是可以直接貼給 Claude 的提示句。</span></div>
-<div class="qa"><b>規則檔、任務檔、進度檔</b><span>三種放在資料夾裡的文字檔。規則檔（CLAUDE.md）＝你的做事規則；任務檔＝一件事的步驟與完成標準；進度檔＝做到哪裡、下次接著做什麼。</span></div>
-<div class="qa"><b>驗收句</b><span>一句話寫明「做到什麼樣子才算完成」。本頁每一步的「做完的樣子」就是驗收句。</span></div>
-<div class="qa"><b>讀取程度</b><span>Claude 對一份文獻實際讀到多少：全文、僅摘要、影像辨識（靠看圖認字，要抽查）、未讀。</span></div>
-<div class="qa"><b>DOI</b><span>每篇論文獨一無二的編號，可以用 doi.org 查到這篇論文是否真的存在。</span></div>
-<div class="qa"><b>dashboard</b><span>把重點排成一張表、放在同一個網頁上，一眼看完的畫面。</span></div>
-<div class="qa"><b>Deep Research</b><span>Claude 的一項功能，自己上網搜尋，整理出附來源的調查報告。它用來找方向，不取代你自己讀文獻。</span></div>
-<div class="qa"><b>連接器</b><span>讓 Claude 連到 Gmail、雲端硬碟等外部服務的功能。今天只在課後說明，不動手做。</span></div>
+<details class="dd" id="terms" style="--uc:var(--accent)"><summary>技術用語（遇到不懂的詞，點開看；不用背）</summary><div class="body">
+<div class="tipbox" style="margin:8px 0 4px">卡在某個詞時先來這裡。每個詞都是三件事：<b>它是什麼</b>（一句話）、<b>你今天在哪一步會碰到它</b>（點連結直接跳過去）、必要時加一張小圖。</div>
+
+<div class="tm" id="t-claudecode"><div class="tn">Claude Code <em>「程式碼」分頁</em></div>
+<span class="what">是 Claude 的「動手模式」：除了陪你聊天，它還能直接讀你電腦某個資料夾裡的檔案，也能替你寫檔。</span>
+<span class="ex">左上有兩個分頁：「對話」像一般聊天；「程式碼」才有選資料夾、讀檔、存檔這些功能。今天主要用「程式碼」。</span>
+<span class="where">你會在這裡碰到：<a href="#u1-s6">單元 1 步驟 6</a>（先在「對話」說第一句話）、<a href="#u1-s7">步驟 7</a>（切到「程式碼」分頁）</span></div>
+
+<div class="tm" id="t-session"><div class="tn">工作階段 <em>session</em></div>
+<span class="what">就是「一次獨立的對話」。按「新增」就開一個新的。</span>
+<span class="ex">關鍵是：<b>新的工作階段不記得上一個聊過什麼</b>。像換了一個新視窗，前一個視窗的內容它看不到；但資料夾裡的檔案都還在，所以我們才要把規則和進度寫成檔案，讓新對話讀了就接得上。</span>
+<svg class="tmfig" viewBox="0 0 440 178" role="img" aria-label="資料夾裡的檔案一直都在，每個新的工作階段都是一次新的對話，會去讀同一個資料夾"><rect x="4" y="6" width="170" height="164" rx="12" fill="var(--surface2)" stroke="currentColor" stroke-width="1.5"/><text x="89" y="28" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">資料夾「大同練習」</text><text x="89" y="44" text-anchor="middle" font-size="11" fill="var(--muted)">檔案一直都在</text><rect x="20" y="56" width="138" height="30" rx="6" fill="var(--surface)" stroke="currentColor" stroke-width="1"/><text x="89" y="76" text-anchor="middle" font-size="12" fill="currentColor">CLAUDE.md（規則檔）</text><rect x="20" y="94" width="138" height="30" rx="6" fill="var(--surface)" stroke="currentColor" stroke-width="1"/><text x="89" y="114" text-anchor="middle" font-size="12" fill="currentColor">進度.md（進度檔）</text><rect x="20" y="132" width="138" height="30" rx="6" fill="var(--surface)" stroke="currentColor" stroke-width="1"/><text x="89" y="152" text-anchor="middle" font-size="12" fill="currentColor">報告.md</text><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-dasharray="5 4"><path d="M284 38 H190"/><path d="M284 92 H190"/><path d="M284 146 H190"/></g><g fill="currentColor"><path d="M190 38 l8 -5 v10z"/><path d="M190 92 l8 -5 v10z"/><path d="M190 146 l8 -5 v10z"/></g><rect x="288" y="14" width="146" height="48" rx="12" fill="var(--surface)" stroke="var(--u1)" stroke-width="1.8"/><text x="361" y="34" text-anchor="middle" font-size="12.5" font-weight="700" fill="currentColor">工作階段 1</text><text x="361" y="50" text-anchor="middle" font-size="11" fill="var(--muted)">聊完就結束</text><rect x="288" y="68" width="146" height="48" rx="12" fill="var(--surface)" stroke="var(--u1)" stroke-width="1.8"/><text x="361" y="88" text-anchor="middle" font-size="12.5" font-weight="700" fill="currentColor">工作階段 2（新增）</text><text x="361" y="104" text-anchor="middle" font-size="11" fill="var(--muted)">不記得 1 聊過什麼</text><rect x="288" y="122" width="146" height="48" rx="12" fill="var(--surface)" stroke="var(--u1)" stroke-width="1.8"/><text x="361" y="142" text-anchor="middle" font-size="12.5" font-weight="700" fill="currentColor">工作階段 3（新增）</text><text x="361" y="158" text-anchor="middle" font-size="11" fill="var(--muted)">先讀檔案才接得上</text></svg>
+<p class="tmcap">示意圖：對話會換，資料夾裡的檔案留著。</p>
+<span class="where">你會在這裡碰到：<a href="#u1-s7">單元 1 步驟 7</a>（按「新增」）、<a href="#u3-s4">單元 3 步驟 4</a>（開新的，驗證它還守你的規則）、<a href="#u3-s7">步驟 7</a>（把進度寫下來再接續）</span></div>
+
+<div class="tm" id="t-folder"><div class="tn">資料夾與「信任」</div>
+<span class="what">你指定一個資料夾，Claude 讀、改的範圍就是這個資料夾，不會跑到別處。</span>
+<span class="ex">第一次選資料夾時，它會問你「信任這個工作區嗎？」。<b>先看清楚框裡的路徑是不是你的「大同練習」</b>，確定了才按信任；不確定就按取消。</span>
+<span class="where">你會在這裡碰到：<a href="#u1-s9">單元 1 步驟 9</a>（選「大同練習」並處理信任框）；之後每次「新增」都會再選一次資料夾</span></div>
+
+<div class="tm" id="t-mode"><div class="tn">模式（自動／手動）</div>
+<span class="what">決定 Claude 動手之前，要不要先問你。今天一律用「手動」。</span>
+<table class="cmp"><thead><tr><th></th><th>自動</th><th>手動（今天用這個）</th></tr></thead><tbody>
+<tr><th>Claude 做事前</th><td>直接動手，不先問</td><td class="on">每一件都先問，你按「允許」才做</td></tr>
+<tr><th>你的角色</th><td>事後才發現它做了什麼</td><td class="on">每一步都看得到、可以擋</td></tr></tbody></table>
+<span class="ex">模式在輸入框下方那一排。<b>每次按「新增」都先看一眼</b>（新的工作階段不一定沿用上次的設定）；不是「手動」就先切過去。選單裡不要選「略過權限確認」。</span>
+<span class="where">你會在這裡碰到：<a href="#u1-s8">單元 1 步驟 8</a>（切成「手動」）；之後每次開新工作階段都要看</span></div>
+
+<div class="tm" id="t-perm"><div class="tn">授權框 <em>權限框</em></div>
+<span class="what">Claude 要讀檔、存檔或做事之前，跳出來問你「可以嗎？」的小視窗。</span>
+<div class="mock" aria-label="授權框示意圖"><div class="mt">Claude 想要：建立檔案</div><div class="mf">報告.md（在「大同練習」裡）</div><div class="mb"><span class="pri">允許一次</span><span>拒絕</span></div></div>
+<p class="tmcap">示意圖，文字與位置以你螢幕上的為準。</p>
+<span class="ex">看清楚它要動<b>哪個檔案、在哪個資料夾</b>，再決定。怎麼判斷、什麼時候按哪個，照單元 2 的「授權五原則」。點了沒反應可以按 Ctrl+Enter。</span>
+<span class="where">你會在這裡碰到：<a href="#u1-s10">單元 1 步驟 10</a>（存檔時選「允許一次」）、<a href="#u2-s4">單元 2 步驟 4</a>（讀檔時第一次大量遇到）</span></div>
+
+<div class="tm" id="t-prompt"><div class="tn">提示句 <em>prompt</em></div>
+<span class="what">你打給 Claude 的一段話，就是你交代它做事的指令。</span>
+<span class="ex">這份學習單裡，灰底、右上角有「複製」鈕的框就是提示句，可以直接貼給 Claude；〈 〉括號裡的字換成你自己的內容。</span>
+<span class="where">你會在這裡碰到：<a href="#u1-s6">單元 1 步驟 6</a>（貼上第一個提示句），之後幾乎每一步都有</span></div>
+
+<div class="tm" id="t-files3"><div class="tn">規則檔、任務檔、進度檔</div>
+<span class="what">三種放在資料夾裡的文字檔，各管一件事，讓新的對話也接得上。</span>
+<table class="cmp"><thead><tr><th></th><th>規則檔</th><th>任務檔</th><th>進度檔</th></tr></thead><tbody>
+<tr><th>一句話</th><td>你的做事規則</td><td>一件事的步驟與完成標準</td><td>做到哪裡、下次接著做什麼</td></tr>
+<tr><th>像是</th><td>給新同事的工作守則</td><td>一張工作單</td><td>交班紀錄</td></tr>
+<tr><th>檔名</th><td>CLAUDE.md</td><td>任務-文獻.md</td><td>進度.md</td></tr></tbody></table>
+<p class="tmcap">比喻只是幫你記：檔案本身是 Claude 讀得到的文字，今天會自己動手驗證。</p>
+<span class="where">你會在這裡碰到：<a href="#u3-s2">單元 3 步驟 2</a>（規則檔）、<a href="#u3-s5">步驟 5</a>（任務檔）、<a href="#u3-s7">步驟 7</a>（進度檔）</span></div>
+
+<div class="tm" id="t-ok"><div class="tn">驗收句</div>
+<span class="what">一句話寫明「做到什麼樣子，才算完成」。</span>
+<span class="ex">你不用相信 Claude 說「做好了」，而是對照這句話自己確認。本頁每一步的「做完的樣子」就是驗收句；在單元 3 你要學著替自己的任務寫一句。</span>
+<span class="where">你會在這裡碰到：<a href="#u1-s1">單元 1 步驟 1</a> 起的每一步；<a href="#u3-s5">單元 3 步驟 5</a>（自己寫任務檔的驗收句）</span></div>
+
+<div class="tm" id="t-level"><div class="tn">讀取程度</div>
+<span class="what">Claude 對一份文獻<b>實際讀到多少</b>。它說「讀完了」不一定是真的，所以要請它標出來。</span>
+<div class="chips"><span><b>全文</b> 整份都讀了</span><span><b>僅摘要</b> 只讀到摘要或書目</span><span><b>影像辨識</b> 檔案是掃描圖片，靠看圖認字，會有錯字、截斷，要抽查</span><span><b>未讀</b> 沒讀到</span></div>
+<span class="where">你會在這裡碰到：<a href="#u2-s5">單元 2 步驟 5</a>、<a href="#u4-s3">單元 4 步驟 3</a>（逐篇做讀取紀錄表）</span></div>
+
+<div class="tm" id="t-doi"><div class="tn">DOI</div>
+<span class="what">每篇論文獨一無二的編號，像文獻的身分證號。把它貼在 doi.org 後面，就能查這篇論文是不是真的存在。</span>
+<div class="flow"><span><b>DOI</b><br/>10.xxxx/…</span><i>→</i><span><b>doi.org/</b><br/>貼在後面</span><i>→</i><span><b>出版商頁面</b><br/>看題名</span><i>→</i><span><b>題名對得上？</b><br/>對＝已查證<br/>不對／查不到＝待查</span></div>
+<p class="tmcap">AI 寫的參考文獻最容易出錯，所以要自己查一次。</p>
+<span class="where">你會在這裡碰到：<a href="#u5-s1">單元 5 步驟 1</a>、<a href="#u5-s2">步驟 2</a>（練習：哪個查得到）、<a href="#u5-s3">步驟 3</a>（逐個貼在 doi.org 後面）</span></div>
+
+<div class="tm" id="t-dashboard"><div class="tn">dashboard <em>儀表板</em></div>
+<span class="what">把重點排成一張表、放在同一個網頁上，一眼就看完的畫面。</span>
+<span class="where">你會在這裡碰到：<a href="#u5-s5">單元 5 步驟 5</a>（請 Claude 做文獻 dashboard 網頁，看影片即可）</span></div>
+
+<div class="tm" id="t-dr"><div class="tn">Deep Research</div>
+<span class="what">Claude 的一項功能：自己上網搜尋，整理成附來源的調查報告。</span>
+<span class="ex">它適合用來「找方向」，不取代你自己讀文獻；它找到的候選文獻，你還是要自己取得、自己查證。</span>
+<span class="where">你會在這裡碰到：今天不動手；<a href="#u4-s3">單元 4 步驟 3</a>的「剛剛發生了什麼」有說它和 Claude Code 的分工</span></div>
+
+<div class="tm" id="t-connector"><div class="tn">連接器</div>
+<span class="what">讓 Claude 連到 Gmail、雲端硬碟等外部服務的功能。</span>
+<span class="where">你會在這裡碰到：今天不動手，只在<a href="#after-4">課後第 4 項</a>說明</span></div>
 </div></details>
 <p class="sub" style="margin:10px 0 0">卡住時，每一步旁邊和畫面右下角都有「問AI助教」。AI助教只回答這份學習單和 Claude 桌面版的操作，不會幫你寫報告；它的答案要你自己驗證。</p></header>
 <nav class="tabs" id="tb"><a data-p="top" href="#top">總覽</a><a data-p="pre" href="#pre">開始前</a><a class="tx1" data-p="u1" href="#u1">單元 1</a><a class="tx2" data-p="u2" href="#u2">單元 2</a><a class="tx3" data-p="u3" href="#u3">單元 3</a><a class="tx4" data-p="u4" href="#u4">單元 4</a><a class="tx5" data-p="u5" href="#u5">單元 5</a><a class="tx6" data-p="u6" href="#u6">單元 6</a><a data-p="tpl" href="#tpl">報告模板與聲明</a><a data-p="fin" href="#fin">總檢核</a><a data-p="after" href="#after">課後</a><span class="pg" id="pgn"></span></nav>
@@ -794,7 +887,7 @@ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.write
 var ORDER=['top','pre','u1','u2','u3','u4','u5','u6','tpl','fin','after'];
 var NAME={top:'總覽',pre:'開始前',u1:'單元 1：安裝與第一次對話',u2:'單元 2：讓 Claude 讀你的資料夾',u3:'單元 3：規則檔、任務檔、進度檔',u4:'單元 4：讀文獻',u5:'單元 5：DOI 與全文',u6:'單元 6：研究問題與定稿',tpl:'報告模板與聲明',fin:'總檢核',after:'課後'};
 var LK='dt-ws-v86-page',cur='';
-function pageOf(id){if(!id)return null;if(id==='top'||id==='sched')return 'top';if(id==='pre'||id==='fin'||id==='after')return id;if(id==='tpl'||id==='decl')return 'tpl';var m=/^u(\d)/.exec(id);return m?'u'+m[1]:null}
+function pageOf(id){if(!id)return null;if(id==='top'||id==='sched')return 'top';if(id==='terms'||/^t-/.test(id)){var d=document.getElementById('terms');if(d)d.open=true;return 'top'}if(id==='pre'||id==='fin'||id==='after')return id;if(id==='tpl'||id==='decl')return 'tpl';var m=/^u(\d)/.exec(id);return m?'u'+m[1]:null}
 function show(p){cur=p;[].forEach.call(document.querySelectorAll('[data-page]'),function(e){e.classList.toggle('on',e.getAttribute('data-page')===p)});
 [].forEach.call(document.querySelectorAll('.tabs a[data-p]'),function(a){var on=a.getAttribute('data-p')===p;a.classList.toggle('on',on);if(on)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current')});
 var i=ORDER.indexOf(p),pv=document.getElementById('pprev'),nx=document.getElementById('pnext');
