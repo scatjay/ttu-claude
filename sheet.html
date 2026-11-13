@@ -1256,6 +1256,11 @@ li.stp.ta-dim.ta-peek{opacity:.8}
 #ta-mode button[aria-pressed=true]{background:var(--uc,var(--accent));color:var(--onbrand,#fff);border-color:var(--uc,var(--accent))}
 #ta-mode select{font:inherit;font-size:12.5px;color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:3px 8px;max-width:100%;min-width:0}
 #ta-mode select[hidden]{display:none}
+#ta-badge{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--warn,#d97706);color:#fff;font-size:12px;font-weight:700;line-height:20px;text-align:center;box-sizing:border-box}
+#ta-nudge{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:8px 14px 0;padding:8px 10px;border:1px solid var(--hair);border-left:4px solid var(--warn,#d97706);border-radius:10px;background:var(--surface2);font-size:13px;line-height:1.5}
+#ta-nudge[hidden]{display:none}#ta-nudge .nt{flex:1 1 12em;min-width:0}
+#ta-nudge button{font:inherit;font-size:12.5px;border-radius:99px;padding:3px 11px;border:1px solid var(--hair);background:var(--surface);color:var(--ink);cursor:pointer}
+#ta-nudge .na button{border-color:var(--accent);color:var(--accent);font-weight:700}
 #ta-quick{display:flex;gap:6px;flex-wrap:wrap;padding:6px 14px 0}
 #ta-quick button{font:inherit;font-size:12.5px;color:var(--ink);background:var(--surface2);border:1px solid var(--hair);border-radius:99px;padding:3px 11px;cursor:pointer;text-align:left}
 #ta-quick button:hover{border-color:var(--accent2,var(--accent))}
@@ -1461,10 +1466,11 @@ li.stp.done .st,.done .st{text-decoration:none!important}
 .libnote{margin:var(--s3) 0 0;font-size:14px}
 </style>
 <div id="ta-pill" hidden><span id="ta-pill-who"></span><button type="button" id="ta-pill-btn" class="loginbtn">用 Google 登入</button></div>
-<button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel" aria-label="問AI助教"><span class="fl">問AI助教</span><span class="fs">助教</span></button>
+<button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel" aria-label="問AI助教"><span class="fl">問AI助教</span><span class="fs">助教</span><span id="ta-badge" hidden aria-hidden="true">1</span></button>
 <div id="ta-panel" role="dialog" aria-label="AI助教">
 <header><b>AI助教</b><span class="ctx" id="ta-ctx"></span><button id="ta-x" type="button" aria-label="關閉AI助教">×</button></header>
 <div id="ta-mode" role="group" aria-label="要問什麼"><button type="button" data-m="sheet" aria-pressed="true">問學習單</button><button type="button" data-m="lib" aria-pressed="false">問文獻庫</button><select id="ta-scope" aria-label="文獻庫範圍" hidden><option value="all">全部文獻庫</option></select></div>
+<div id="ta-nudge" hidden role="status" aria-live="polite"><span class="nt"></span><span class="na"></span><button type="button" class="nx" aria-label="關閉這則提醒">關閉</button></div>
 <div id="ta-quick" aria-label="快捷提問"></div>
 <div id="ta-login" hidden><button type="button" id="ta-signin">用 Google 登入</button><span id="ta-who"></span></div>
 <p id="ta-lockmsg" hidden style="margin:0;padding:8px 14px;font-size:13px;background:var(--accent-soft);color:var(--ink)">尚未登入：AI助教已鎖住。請按左下角或這個面板上方的「用 Google 登入」。</p>
@@ -1560,7 +1566,7 @@ li.stp.done .st,.done .st{text-decoration:none!important}
   }
   function hbLoop(on){clearInterval(HB.tm);if(on&&RT){checkHb();HB.tm=setInterval(checkHb,20000)}}
   function open(on){$('ta-panel').classList.toggle('open',on);$('ta-fab').setAttribute('aria-expanded',on?'true':'false');if(on)$('ta-left').textContent=left();hbLoop(on)}
-  $('ta-fab').addEventListener('click',function(){var on=!$('ta-panel').classList.contains('open');if(on){var cur=document.querySelector('.tabs a.on');var t=cur?document.getElementById(cur.getAttribute('href').slice(1)):null;if(t&&!ctx.step)setCtx(t.querySelector('li.stp')||t);if(!ctx.pin){var c0=ctxInfo();if(c0._li||c0._sec)setCtx(c0._li||c0._sec.querySelector('h2')||c0._sec)}}else ctx.pin=false;open(on);if(on)refreshQuick()});
+  $('ta-fab').addEventListener('click',function(){var on=!$('ta-panel').classList.contains('open');if(on){var cur=document.querySelector('.tabs a.on');var t=cur?document.getElementById(cur.getAttribute('href').slice(1)):null;if(t&&!ctx.step)setCtx(t.querySelector('li.stp')||t);if(!ctx.pin){var c0=ctxInfo();if(c0._li||c0._sec)setCtx(c0._li||c0._sec.querySelector('h2')||c0._sec)}}else ctx.pin=false;open(on);if(on){refreshQuick();$('ta-badge').hidden=true}else if(NUDGE.cur)nudgeHide()});
   $('ta-x').addEventListener('click',function(){open(false)});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')open(false)});
   $('ta-q').addEventListener('input',function(){cntText()});
@@ -1676,11 +1682,51 @@ function taCtxQ(mode, c) {
   function refreshQuick(){
     var q=$('ta-quick');if(!q)return;q.textContent='';
     var L=quickList(MODE);L.forEach(function(t){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){sendQuick(t)});q.appendChild(b)})}
-  var _qt=0;function qSoon(){clearTimeout(_qt);_qt=setTimeout(function(){if($('ta-panel').classList.contains('open')&&MODE==='sheet'&&!ctx.pin)followPos()},350)}
+  var _qt=0;function qSoon(){clearTimeout(_qt);_qt=setTimeout(function(){if($('ta-panel').classList.contains('open')&&MODE==='sheet'&&!ctx.pin)followPos();try{nudgeTick()}catch(e){}},350)}
   function followPos(){var c=ctxInfo();if(c._li||c._sec){setCtx(c._li||c._sec.querySelector('h2')||c._sec)}refreshQuick()}
   window.addEventListener('scroll',qSoon,{passive:true});window.addEventListener('hashchange',qSoon);
   try{[].slice.call(document.querySelectorAll('nav.tabs a')).forEach(function(a){a.addEventListener('click',function(){setTimeout(qSoon,200)})})}catch(e){}
   window.__refreshQuick=refreshQuick;
+
+  /* ---- 即時進度提醒：依檢核點、停留時間、全班進度；每則只出現一次、可關閉、不彈窗、不擋內容（徽章＋面板頂端一行）----
+     純規則，不呼叫 LLM。事件：type=nudge，src＝提醒種類，on＝1 出現／2 按了動作／3 關掉。 */
+  var NUDGE={cfg:{dwellMs:600000,tick:20000,gapMs:180000,behindMin:5},seen:null,cur:null,dw:{id:'',acc:0,last:0},lastShow:0};
+  (function(){var c=window.__nudgeCfg;if(c)for(var k in c)NUDGE.cfg[k]=c[k]})();
+  function nSeen(){if(NUDGE.seen)return NUDGE.seen;try{NUDGE.seen=JSON.parse(store.get('dt-nudge-'+sid)||'{}')||{}}catch(e){NUDGE.seen={}}return NUDGE.seen}
+  function nMark(k){nSeen()[k]=1;try{store.set('dt-nudge-'+sid,JSON.stringify(NUDGE.seen))}catch(e){}}
+  function nEmit(src,on){try{emit({type:'nudge',src:String(src).slice(0,12),on:on})}catch(e){}}
+  function unitIdx(p){var i=UNITS.indexOf(p);return i}
+  function nudgeCandidates(){
+    var out=[],pos=curPos(),ki=unitIdx(pos.page),trk=window.dtTrack||'research';
+    if(ki>0){for(var i=0;i<ki;i++){var u=UNITS[i],sec=document.getElementById(u);if(!sec)continue;
+      var un=[].slice.call(sec.querySelectorAll('input.gatechk')).filter(function(x){return !window.dtVis||window.dtVis(x)}).filter(function(x){return !x.checked}).length;
+      if(un>0){out.push({key:'gate:'+u,src:'gate',text:'單元 '+u.slice(1)+' 還有 '+un+' 項過關檢核沒勾。',act:{label:'回到單元 '+u.slice(1),fn:function(){var a=document.querySelector('nav.tabs a[data-p="'+u+'"]');if(a)a.click()}}});break}}}
+    var li=pos.li;
+    if(li&&NUDGE.dw.id===li.id&&!doneS(li.id)&&NUDGE.dw.acc>=NUDGE.cfg.dwellMs){
+      var v=li.querySelector('a.vid[data-video]');
+      out.push({key:'dwell:'+li.id,src:'dwell',text:'卡在這步嗎？可以看影片，或點下面的問題。',act:v?{label:'看這步的影片',fn:function(){v.click()}}:null})}
+    var counts=Object.keys(DTU).map(function(k){return DTU[k]}).sort(function(a,b){return a-b});
+    if(counts.length>=NUDGE.cfg.behindMin){var med=counts[Math.floor((counts.length-1)/2)],mine=UNITS.filter(function(u){return DONE[u]}).length;
+      if(mine<=med-1)out.push({key:'behind:'+med,src:'behind',text:'全班完成單元數的中位數是 '+med+'，你目前比它慢一個單元以上。建議先只做 ★必做 步驟，其餘等有空再補。',act:{label:'只看 ★必做',fn:function(){var b=document.querySelector('#ta-fpanel button[data-k=star]');if(b&&b.getAttribute('aria-pressed')!=='true')b.click()}}})}
+    var ids=Object.keys(STEPS).filter(function(id){var m=STEPS[id];return m&&m.k&&(m.p||[]).indexOf(trk)>=0&&stpEl(id)});
+    if(ids.length>=5&&ids.every(doneS))out.push({key:'core:'+trk,src:'core',text:'你已完成「'+(TRKN[trk]||trk)+'」的必做步驟。可以做選修，或換另一條學習線加速。',act:{label:'開帳號選單換線',fn:function(){var u=$('ta-user');if(u)u.click()}}});
+    return out}
+  function nudgeShow(c){
+    NUDGE.cur=c;NUDGE.lastShow=Date.now();nMark(c.key);nEmit(c.src,1);
+    var n=$('ta-nudge');n.querySelector('.nt').textContent=c.text;var na=n.querySelector('.na');na.textContent='';
+    if(c.act){var b=document.createElement('button');b.type='button';b.textContent=c.act.label;b.addEventListener('click',function(){nEmit(c.src,2);try{c.act.fn()}catch(e){}nudgeHide()});na.appendChild(b)}
+    n.hidden=false;var open=$('ta-panel').classList.contains('open');$('ta-badge').hidden=open}
+  function nudgeHide(){NUDGE.cur=null;var n=$('ta-nudge');if(n)n.hidden=true;var b=$('ta-badge');if(b)b.hidden=true}
+  $('ta-nudge').querySelector('.nx').addEventListener('click',function(){if(NUDGE.cur)nEmit(NUDGE.cur.src,3);nudgeHide()});
+  function nudgeTick(){
+    if(!TOK||!sid)return;
+    var now=Date.now(),pos=curPos(),id=pos.li?pos.li.id:'';
+    if(id&&id===NUDGE.dw.id){if(document.visibilityState==='visible')NUDGE.dw.acc+=Math.min(now-NUDGE.dw.last,NUDGE.cfg.tick*2)}else{NUDGE.dw.id=id;NUDGE.dw.acc=0}
+    NUDGE.dw.last=now;
+    if(NUDGE.cur||(NUDGE.lastShow&&now-NUDGE.lastShow<NUDGE.cfg.gapMs))return;
+    var seen=nSeen(),c=nudgeCandidates().filter(function(x){return !seen[x.key]})[0];if(c)nudgeShow(c)}
+  window.__nudgeTick=nudgeTick;
+  setInterval(nudgeTick,NUDGE.cfg.tick);
   [].slice.call(document.querySelectorAll('#ta-mode button')).forEach(function(b){b.addEventListener('click',function(){setMode(b.getAttribute('data-m'))})});
   window.__taSetMode=setMode;window.__taSetLibScope=function(opts){var sc=$('ta-scope');sc.textContent='';opts.forEach(function(o){var e=document.createElement('option');e.value=o[0];e.textContent=o[1];sc.appendChild(e)});sc.hidden=!(MODE==='lib'&&opts.length>1)};
   async function askLib(q){
@@ -1801,13 +1847,13 @@ function taCtxQ(mode, c) {
   }
   function setN(u,v,fromSse){if(UNITS.indexOf(u)<0||typeof v!=='number')return;var ch=(NCNT[u]!==v);NCNT[u]=v;paintCounts(ch&&fromSse?u:null);if(ch&&fromSse)setTimeout(pollDt,500)}
   function stopStats(){try{if(sse)sse.close()}catch(e){}sse=null;clearTimeout(sseT)}
-  var DTK={};
+  var DTK={},DTU={};
   function paintTk(){
     UNITS.forEach(function(u){var p=document.querySelector('.ustat[data-u="'+u+'"]');if(!p)return;var c=DTK[u]||{},e=p.parentNode.querySelector('.ta-ut[data-u="'+u+'"]');
       if(!e){e=document.createElement('span');e.className='ta-ut';e.setAttribute('data-u',u);p.insertAdjacentElement('afterend',e)}
       e.textContent='依學習線：研究 '+(c.research||0)+'／教學 '+(c.teaching||0)+'／工作 '+(c.work||0)});
   }
-  async function pollDt(){try{var r=await fetch(RT+'/stats/dt.json'+qs());if(r.ok){var d=await r.json()||{};DTK={};Object.keys(d).forEach(function(u){var c={research:0,teaching:0,work:0};Object.keys(d[u]||{}).forEach(function(k){var t=d[u][k];if(c[t]!==undefined)c[t]++});DTK[u]=c});paintTk()}}catch(e){}}
+  async function pollDt(){try{var r=await fetch(RT+'/stats/dt.json'+qs());if(r.ok){var d=await r.json()||{};DTK={};DTU={};Object.keys(d).forEach(function(u){var c={research:0,teaching:0,work:0};Object.keys(d[u]||{}).forEach(function(k){var t=d[u][k];if(c[t]!==undefined)c[t]++;DTU[k]=(DTU[k]||0)+1});DTK[u]=c});paintTk();try{nudgeTick()}catch(e){}}}catch(e){}}
   async function pollStats(){pollDt();try{var r=await fetch(RT+'/stats/n.json'+qs());if(r.ok){var d=await r.json()||{};UNITS.forEach(function(u){setN(u,+d[u]||0,true)})}}catch(e){}}
   function startStats(){
     stopStats();if(!RT||!TOK)return;

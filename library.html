@@ -155,6 +155,12 @@ body:has(#ta-fab)::after{height:calc(84px + env(safe-area-inset-bottom,0px))}}
 #ta-mode button[aria-pressed=true]{background:var(--uc,var(--accent));color:var(--onbrand,#fff);border-color:var(--uc,var(--accent))}
 #ta-mode select{font:inherit;font-size:12.5px;color:var(--ink);background:var(--surface);border:1px solid var(--hair);border-radius:8px;padding:3px 8px;max-width:100%;min-width:0}
 #ta-mode select[hidden]{display:none}
+#ta-badge{position:absolute;top:-5px;right:-5px;min-width:20px;height:20px;padding:0 5px;border-radius:10px;background:var(--warn,#d97706);color:#fff;font-size:12px;font-weight:700;line-height:20px;text-align:center;box-sizing:border-box}
+#ta-nudge{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:8px 14px 0;padding:8px 10px;border:1px solid var(--hair);border-left:4px solid var(--warn,#d97706);border-radius:10px;background:var(--surface2);font-size:13px;line-height:1.5}
+#ta-nudge[hidden]{display:none}
+#ta-nudge .nt{flex:1 1 12em;min-width:0}
+#ta-nudge button{font:inherit;font-size:12.5px;border-radius:99px;padding:3px 11px;border:1px solid var(--hair);background:var(--surface);color:var(--ink);cursor:pointer}
+#ta-nudge .na button{border-color:var(--accent);color:var(--accent);font-weight:700}
 #ta-quick{display:flex;gap:6px;flex-wrap:wrap;padding:6px 14px 0}
 #ta-quick button{font:inherit;font-size:12.5px;color:var(--ink);background:var(--surface2);border:1px solid var(--hair);border-radius:99px;padding:3px 11px;cursor:pointer;text-align:left}
 #ta-quick button:hover{border-color:var(--accent2,var(--accent))}
@@ -207,10 +213,11 @@ a.tolink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 <div id="app" hidden>
 <div class="tabs" role="navigation" aria-label="頁首"><span class="brand">大同示範文獻庫</span><span class="tnav" id="tnav"></span><span class="userbar"><span id="who"></span><button type="button" id="out">登出</button></span></div>
 <div class="toc-wrap"><nav class="toc" id="toc" aria-label="本頁目錄"></nav><main id="view"></main></div>
-<button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel" aria-label="問AI助教"><span class="fl">問AI助教</span><span class="fs">助教</span></button>
+<button id="ta-fab" type="button" aria-expanded="false" aria-controls="ta-panel" aria-label="問AI助教"><span class="fl">問AI助教</span><span class="fs">助教</span><span id="ta-badge" hidden aria-hidden="true">1</span></button>
 <div id="ta-panel" role="dialog" aria-label="AI助教">
 <header><b>AI助教</b><span class="ctx" id="ta-ctx"></span><button id="ta-x" type="button" aria-label="關閉AI助教">×</button></header>
 <div id="ta-mode" role="group" aria-label="要問什麼"><button type="button" data-m="sheet" aria-pressed="true">問學習單</button><button type="button" data-m="lib" aria-pressed="false">問文獻庫</button><select id="ta-scope" aria-label="文獻庫範圍" hidden><option value="all">全部文獻庫</option></select></div>
+<div id="ta-nudge" hidden role="status" aria-live="polite"><span class="nt"></span><span class="na"></span><button type="button" class="nx" aria-label="關閉這則提醒">關閉</button></div>
 <div id="ta-quick" aria-label="快捷提問"></div>
 <div id="ta-body"><p class="rule">只回答這份學習單和 Claude 桌面版的操作。不會幫你寫報告，也不會給 DOI。每個答案都要你自己對照畫面或原文驗證。</p></div>
 <form id="ta-form"><textarea id="ta-q" maxlength="300" placeholder="卡在哪一步？看到什麼畫面？（不要貼帳號、密碼、個資）"></textarea>
@@ -411,9 +418,31 @@ function taCtxQ(mode, c) {
     var QUICK={lib:['朱老師的論文常用什麼研究方法？','有沒有教學備課的案例？','有沒有整理會議紀錄的案例？'],sheet:['我卡在這一步了，怎麼辦？','這一步做完要看到什麼？','我現在該先做哪一步？']};
     var RULES={lib:'只根據朱老師團隊的論文（全文與書目）和三條線的應用案例回答，每個重點附出處（論文第幾段或哪一則案例），找不到依據會說「沒有提到」。這是閱讀輔助，請對照原文再引用。',sheet:'只回答這份學習單和 Claude 桌面版的操作。不會幫你寫報告，也不會給 DOI。每個答案都要你自己對照畫面或原文驗證。'};
     var LINK=/\[\[(?:p:([a-z0-9_]{3,60})|c:([a-z0-9_-]{3,60})|([A-Za-z0-9_-]{1,24}))\|([^\[\]|\n]{1,40})\]\]/g;
-    function open(on){$('#ta-panel').classList.toggle('open',on);$('#ta-fab').setAttribute('aria-expanded',on?'true':'false');if(on)$('#ta-q').focus()}
+    function open(on){if(on){var bg=$('#ta-badge');if(bg)bg.hidden=true}else if(typeof curN!=='undefined'&&curN)libNudgeHide();$('#ta-panel').classList.toggle('open',on);$('#ta-fab').setAttribute('aria-expanded',on?'true':'false');if(on)$('#ta-q').focus()}
     function cnt(){var n=$('#ta-q').value.length;$('#ta-cnt').firstChild.nodeValue=n+' / '+(MODE==='lib'?200:300)+(MODE==='lib'?'　每人每天 20':'　每人每天 15');var l=$('#ta-left');if(l)l.style.display='none'}
     function scopeOpts(){var sc=$('#ta-scope');sc.textContent='';var o=document.createElement('option');o.value='all';o.textContent='全部文獻庫';sc.appendChild(o);if(PAPER){var e=document.createElement('option');e.value=PAPER.id;e.textContent='只問這一篇：'+PAPER.zh.slice(0,18);sc.appendChild(e);sc.value=SC==='all'?'all':PAPER.id}else SC='all';sc.hidden=MODE!=='lib'}
+
+    /* ---- 文獻庫的即時提醒：依看過哪些（只存在這台電腦）；每則只出現一次、可關閉、不彈窗；純規則，不呼叫 LLM ---- */
+    var LSEEN=[],LNSEEN={};
+    try{LSEEN=JSON.parse(localStorage.getItem('dt-lib-seen')||'[]')||[];LNSEEN=JSON.parse(localStorage.getItem('dt-lib-nudge')||'{}')||{}}catch(e){}
+    function libEmit(type,src,on,unit){try{var u=AUTH&&AUTH.currentUser;if(!u||!TOK)return;var ev={sid:u.uid,type:type,src:src,t:Date.now()};if(on)ev.on=on;if(unit)ev.unit=unit;
+      fetch(CFG.db+'/dt1116/'+CFG.sess+'/ev.json?auth='+encodeURIComponent(TOK),{method:'POST',body:JSON.stringify(ev)}).catch(function(){})}catch(e){}}
+    function grpOf(id){if((CASES||[]).some(function(x){return x.id===id}))return (CASES.filter(function(x){return x.id===id})[0].track)||'case';return 'research'}
+    var curN=null;
+    function libNudgeHide(){curN=null;var n=$('#ta-nudge'),b=$('#ta-badge');if(n)n.hidden=true;if(b)b.hidden=true}
+    function libNudgeShow(key,text,act){
+      LNSEEN[key]=1;try{localStorage.setItem('dt-lib-nudge',JSON.stringify(LNSEEN))}catch(e){}
+      curN={key:key};libEmit('nudge','lib',1);var n=$('#ta-nudge');n.querySelector('.nt').textContent=text;var na=n.querySelector('.na');na.textContent='';
+      if(act){var b=document.createElement('button');b.type='button';b.textContent=act.label;b.addEventListener('click',function(){libEmit('nudge','lib',2);act.fn();libNudgeHide()});na.appendChild(b)}
+      n.hidden=false;$('#ta-badge').hidden=$('#ta-panel').classList.contains('open')}
+    function libNudge(){
+      if(curN||LSEEN.length<3)return;var last=LSEEN.slice(-3),gs={};last.forEach(function(id){gs[grpOf(id)]=1});var ks=Object.keys(gs);if(ks.length!==1)return;
+      var g=ks[0],key='same:'+g;if(LNSEEN[key])return;var tr='';try{tr=localStorage.getItem('dt-ws-track')||''}catch(e){}
+      if(g==='research'){var cid=tr==='work'?'work-01':'teaching-01';libNudgeShow(key,'你看了 3 篇，都是研究線的論文。教學線與工作線的應用案例在這裡。',{label:tr==='work'?'看工作線案例':'看教學線案例',fn:function(){location.hash='#/c/'+cid}})}
+      else libNudgeShow(key,'你看了 3 則，都是'+(g==='teaching'?'教學線':g==='work'?'工作線':'同一類')+'的案例。想看論文原文，可以回目錄從論文開始。',{label:'回目錄看論文',fn:function(){location.hash='#/'}})}
+    var nx=$('#ta-nudge');if(nx)nx.querySelector('.nx').addEventListener('click',function(){if(curN)libEmit('nudge','lib',3);libNudgeHide()});
+    function libSeen(id){if(!id)return;if(LSEEN.indexOf(id)<0){LSEEN.push(id);try{localStorage.setItem('dt-lib-seen',JSON.stringify(LSEEN.slice(-30)))}catch(e){}}setTimeout(libNudge,600)}
+    window.__libNudgeTest=function(){return {seen:LSEEN.slice(),n:LNSEEN}};
     function libCtx(){
       var tr='';try{tr=localStorage.getItem('dt-ws-track')||''}catch(e){}
       if(!PAPER)return {kind:'hub',track:tr};
@@ -424,7 +453,7 @@ function taCtxQ(mode, c) {
       var L=MODE==='lib'?taCtxQ('lib',libCtx()):QUICK.sheet;
       L.forEach(function(t){var b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',function(){
         if(MODE==='lib'&&PAPER&&/^(這篇|這個案例|用這個案例|有沒有跟這篇|學習單哪一步)/.test(t)){var sc=$('#ta-scope');sc.value=PAPER.id;SC=PAPER.id}
-        $('#ta-q').value=t;cnt();$('#ta-form').requestSubmit()});q.appendChild(b)})}
+        libEmit('qclick','ctx',0,'lib');$('#ta-q').value=t;cnt();$('#ta-form').requestSubmit()});q.appendChild(b)})}
     function setMode(m){
       MODE=m;[].slice.call(document.querySelectorAll('#ta-mode button')).forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-m')===m?'true':'false')});
       var r=$('#ta-body').querySelector('.rule');if(r)r.textContent=RULES[m];
@@ -432,7 +461,7 @@ function taCtxQ(mode, c) {
       quickBtns();
       scopeOpts();cnt();
     }
-    window.__taPaper=function(p){PAPER=p?{id:p.id,zh:p.zh||p['標題']}:null;SC='all';scopeOpts();$('#ta-ctx').textContent=p?p.zh:'';quickBtns()};
+    window.__taPaper=function(p){PAPER=p?{id:p.id,zh:p.zh||p['標題']}:null;SC='all';scopeOpts();$('#ta-ctx').textContent=p?p.zh:'';quickBtns();if(p)libSeen(p.id)};
     function fill(d,text){
       var last=0,m;LINK.lastIndex=0;
       while((m=LINK.exec(text))){d.appendChild(document.createTextNode(text.slice(last,m.index)));

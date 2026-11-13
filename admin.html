@@ -269,11 +269,11 @@ table.rt td.full{color:var(--good);font-weight:700}
       var tx=document.createElement('span');var cause={init:'首次選擇',self:'自己切換',suggest:'採用助教跨線建議'}[e.cause]||e.cause||'';tx.textContent=((p&&p.nick)||'（未填暱稱）')+'：'+(e.from?NM[e.from]+' 改為 ':'')+(NM[e.to]||e.to)+'（'+cause+'）';r.appendChild(tm);r.appendChild(tx);SL.appendChild(r)});
     var A=$('tdAi');A.textContent='';
     var followed=0;NX.forEach(function(e){var id=String(e.key||'').replace(/-/g,'');if(!id)return;if(evs.some(function(x){return x.sid===e.sid&&x.type==='step'&&+x.on===1&&String(x.key||'').replace(/-/g,'')===id&&(x.t||0)>(e.t||0)}))followed++});
-    [['跨線建議：出現','sugshow',SG.show],['跨線建議：採用（切線）',null,SG.adopt],['跨線建議：只看一步（不切線）',null,SG.peek],['跨線建議：按「不要再建議」',null,SG.off],['「我下一步該做什麼？」按了',null,NX.length],['其中建議的步驟後來真的有做',null,followed]].forEach(function(x){var r=document.createElement('div');r.className='row';var a=document.createElement('span');a.className='tm';a.style.minWidth='3em';a.textContent=x[2];var b=document.createElement('span');b.textContent=x[0];r.appendChild(a);r.appendChild(b);A.appendChild(r)});
+    [['跨線建議：出現','sugshow',SG.show],['跨線建議：採用（切線）',null,SG.adopt],['跨線建議：只看一步（不切線）',null,SG.peek],['跨線建議：按「不要再建議」',null,SG.off],['「我下一步該做什麼？」按了',null,NX.length],['其中建議的步驟後來真的有做',null,followed],['建議提問：被點了（點了就送出）',null,QC.n+(QC.n?'（'+Object.keys(QC).filter(function(k){return k!=='n'}).map(function(k){return k+' '+QC[k]}).join('、')+'）':'')]].concat(Object.keys(NG).map(function(k){var o=NG[k],nm={gate:'過關檢核',dwell:'停太久',behind:'落後全班',core:'必做完成',lib:'文獻庫'}[k]||k;return ['即時提醒「'+nm+'」：出現／按動作／關掉',null,o[1]+'／'+o[2]+'／'+o[3]]})).forEach(function(x){var r=document.createElement('div');r.className='row';var a=document.createElement('span');a.className='tm';a.style.minWidth='3em';a.textContent=x[2];var b=document.createElement('span');b.textContent=x[0];r.appendChild(a);r.appendChild(b);A.appendChild(r)});
     var sw_n=SW.filter(function(e){return e.cause!=='init'}).length;var r2=document.createElement('div');r2.className='row';var a2=document.createElement('span');a2.className='tm';a2.style.minWidth='3em';a2.textContent=sw_n;var b2=document.createElement('span');b2.textContent='換線總次數（不含首次選擇）';r2.appendChild(a2);r2.appendChild(b2);A.appendChild(r2);
   }
   function ago(t){if(!t)return '—';var m=(Date.now()-t)/60000;return m<1?'剛剛':m<60?Math.round(m)+' 分鐘前':m<1440?Math.round(m/60)+' 小時前':Math.round(m/1440)+' 天前'}
-  var ONK={},ROSTER={},UEMAIL={};
+  var ONK={},ROSTER={},UEMAIL={},QC={n:0},NG={};
   function regOf(uid){var k=UEMAIL[uid];return k&&ROSTER[k]?ROSTER[k]:null}
   function renderRoster(){
     var panel=$('rosterPanel'),T=$('rosterT');if(!panel||!T)return;
@@ -282,11 +282,13 @@ table.rt td.full{color:var(--good);font-weight:700}
     evs.forEach(function(e){if(!e.sid)return;last[e.sid]=Math.max(last[e.sid]||0,e.t||0);
       if(e.type==='ask')asks[e.sid]=(asks[e.sid]||0)+1;
       if(e.type==='step'||e.type==='gate'){var k=e.sid+'|'+e.type+'|'+(e.key||'');(e.type==='step'?st:gt)[k]={s:e.sid,u:e.unit||'',on:+e.on||0}}});
-    var SW=[],SG={show:0,adopt:0,off:0,peek:0},NX=[],SWN={};
+    var SW=[],SG={show:0,adopt:0,off:0,peek:0},NX=[],SWN={};QC={n:0};NG={};
     evs.forEach(function(e){if(!e.sid)return;
       if(e.type==='trkswitch'){SW.push(e);SWN[e.sid]=(SWN[e.sid]||0)+(e.cause==='init'?0:1)}
       else if(e.type==='sugshow')SG.show++;else if(e.type==='sugadopt')SG.adopt++;else if(e.type==='sugdismiss')SG.off++;else if(e.type==='sugpeek')SG.peek++;
-      else if(e.type==='nextbtn')NX.push(e)});
+      else if(e.type==='nextbtn')NX.push(e);
+      else if(e.type==='qclick'){QC.n++;QC[e.unit||'?']=(QC[e.unit||'?']||0)+1}
+      else if(e.type==='nudge'){var o=NG[e.src||'?']=NG[e.src||'?']||{1:0,2:0,3:0};if(o[+e.on]!==undefined)o[+e.on]++}});
     var DONE={};Object.keys(st).forEach(function(k){var x=st[k];if(!x.on)return;var kk=k.split('|')[2]||'',m=/^(u\d)([stw])(\d+)$/.exec(kk);if(m)(DONE[x.s]=DONE[x.s]||{})[m[1]+'-'+m[2]+m[3]]=1});
     var TRKN={research:'研究線',teaching:'教學線',work:'工作線'},MS=(window.TA_META&&window.TA_META.steps)||{},MIDX={};Object.keys(MS).forEach(function(id,i){MIDX[id]=i});
     function nextFor(track,dn){   // 與學員端助教同一套規則：前置都完成的未做步驟，★必做優先
