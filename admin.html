@@ -117,10 +117,10 @@ table.rt td.full{color:var(--good);font-weight:700}
 <div id="empty" class="empty" hidden>還沒有彙整快照。學員開始使用 v9 學員版後，請在對話裡叫 Claude「更新大同後台」，它會讀學員版資料庫、彙整後寫進這一頁。</div>
 <div id="themeview" hidden>
   <section class="panel"><h2>研究主軸（學員在 AI 助教區提交）</h2>
-  <p class="note">請學員在 AI 助教區送出一句話，開頭寫「主軸：」，例如「主軸：用 AI 協助大學生設計思考教學」。這裡每 10 秒自動更新，每位學員只顯示最新一則。</p>
+  <p class="note">學員在 AI 助教區送出的話，會在這裡每 10 秒自動更新，新的在最上面；內容不限格式，不用特別寫「主軸」。若想只看開頭寫「主軸」的，勾選下面的選項。</p>
   <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0">
     <button type="button" id="thAnon" class="tabbtn on" aria-pressed="true">去識別化：開</button>
-    <label style="font-size:14px"><input type="checkbox" id="thOnly" checked> 只看開頭是「主軸」的</label>
+    <label style="font-size:14px"><input type="checkbox" id="thOnly"> 只看開頭是「主軸」的</label>
     <span id="thStamp" class="note" style="margin:0">讀取中…</span>
   </div>
   <div id="thList"></div>
@@ -371,19 +371,21 @@ table.rt td.full{color:var(--good);font-weight:700}
     try{
       var q=await get('q'),pf={};try{pf=(await get('profile'))||{}}catch(e){}
       var d0=new Date();d0.setHours(0,0,0,0);var only=$('thOnly').checked,rows=[];
-      Object.keys(q||{}).forEach(function(sid){var best=null;var m=q[sid]||{};
+      var first={};Object.keys(q||{}).forEach(function(sid){var m=q[sid]||{};
         Object.keys(m).forEach(function(k){var x=m[k];if(!x||typeof x.q!=='string'||!(x.t>=d0.getTime()))return;
-          if(only&&!/^\s*[【\[(（]?\s*(研究)?主軸/.test(x.q))return;if(!best||x.t>best.t)best=x});
-        if(best)rows.push({sid:sid,t:best.t,q:best.q.replace(/^\s*[【\[(（]?\s*(研究)?主軸\s*[】\])）]?\s*[：:]?\s*/,'')})});
+          if(only&&!/^\s*[【\[(（]?\s*(研究)?主軸/.test(x.q))return;
+          if(first[sid]==null||x.t<first[sid])first[sid]=x.t;
+          rows.push({sid:sid,t:x.t,q:only?x.q.replace(/^\s*[【\[(（]?\s*(研究)?主軸\s*[】\]）)]?\s*[：:]?\s*/,''):x.q})})});
+      var ord=Object.keys(first).sort(function(a,b){return first[a]-first[b]}),num={};ord.forEach(function(s,i){num[s]=i+1});
       rows.sort(function(a,b){return a.t-b.t});box.textContent='';
-      if(!rows.length){var e0=document.createElement('p');e0.className='note';e0.textContent='還沒有人送出。請學員在 AI 助教區送一句「主軸：…」。';box.appendChild(e0)}
+      if(!rows.length){var e0=document.createElement('p');e0.className='note';e0.textContent='還沒有人送出。請學員在 AI 助教區送出想法。';box.appendChild(e0)}
       rows.slice().reverse().forEach(function(r,i){
-        var n=rows.length-i,c=document.createElement('div');c.style.cssText='border:1px solid var(--hair);border-radius:10px;padding:10px 14px;margin:0 0 8px;background:var(--surface)';
+        var n=num[r.sid],c=document.createElement('div');c.style.cssText='border:1px solid var(--hair);border-radius:10px;padding:10px 14px;margin:0 0 8px;background:var(--surface)';
         var who=document.createElement('div');who.className='note';who.style.margin='0 0 4px';
         var p=pf[r.sid];who.textContent=TH_ANON?('學員 '+n):(((p&&p.nick)||('代號 '+String(r.sid).slice(0,6)))+'　'+new Date(r.t).toLocaleTimeString('zh-TW',{hour12:false}));
         var tx=document.createElement('div');tx.style.cssText='font-size:17px;line-height:1.6';tx.textContent=TH_ANON?thMask(r.q):r.q;
         c.appendChild(who);c.appendChild(tx);box.appendChild(c)});
-      st.textContent='共 '+rows.length+' 則｜更新於 '+new Date().toLocaleTimeString('zh-TW',{hour12:false});
+      st.textContent='共 '+rows.length+' 則、'+ord.length+' 位學員｜更新於 '+new Date().toLocaleTimeString('zh-TW',{hour12:false});
     }catch(e){
       st.textContent=(e&&e.code==='denied')?'資料庫規則不允許後台讀取提問內容（需要調整規則）。':'讀取失敗，10 秒後重試。';
     }
