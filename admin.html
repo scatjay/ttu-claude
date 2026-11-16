@@ -112,9 +112,20 @@ table.rt td.full{color:var(--good);font-weight:700}
 <h1>大同學習單後台</h1>
 <p class="sub">給講師看：學員做到哪、卡在哪、助教用了多少。學員的作答事件與助教提問都以代號記錄，不含姓名與提問內容；下方「報名資料」面板例外：它是講師限定的報名表資料（含姓名、座號、是否訂閱、期望），預設收合，且預設開著「投影模式」遮蔽姓名與座號。</p>
 <p class="stamp" id="stamp">讀取中…</p>
-<nav class="tabs" id="tabs" hidden><button type="button" class="tabbtn on" data-v="prog">進度與助教</button><button type="button" class="tabbtn" data-v="self">自評</button><button type="button" class="tabbtn" data-v="allow">白名單</button></nav>
+<nav class="tabs" id="tabs" hidden><button type="button" class="tabbtn on" data-v="prog">進度與助教</button><button type="button" class="tabbtn" data-v="self">自評</button><button type="button" class="tabbtn" data-v="allow">白名單</button><button type="button" class="tabbtn" data-v="theme">研究主軸</button></nav>
 </header>
 <div id="empty" class="empty" hidden>還沒有彙整快照。學員開始使用 v9 學員版後，請在對話裡叫 Claude「更新大同後台」，它會讀學員版資料庫、彙整後寫進這一頁。</div>
+<div id="themeview" hidden>
+  <section class="panel"><h2>研究主軸（學員在 AI 助教區提交）</h2>
+  <p class="note">請學員在 AI 助教區送出一句話，開頭寫「主軸：」，例如「主軸：用 AI 協助大學生設計思考教學」。這裡每 10 秒自動更新，每位學員只顯示最新一則。</p>
+  <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0">
+    <button type="button" id="thAnon" class="tabbtn on" aria-pressed="true">去識別化：開</button>
+    <label style="font-size:14px"><input type="checkbox" id="thOnly" checked> 只看開頭是「主軸」的</label>
+    <span id="thStamp" class="note" style="margin:0">讀取中…</span>
+  </div>
+  <div id="thList"></div>
+  </section>
+</div>
 <div id="allowview" hidden>
   <section class="panel"><h2>白名單管理（哪些 Google 帳號可以用助教與學習單）</h2>
   <p class="note">貼上學員的 Gmail 清單（一行一個，或用逗號、空白隔開），再按「預覽」，確認無誤再按「加入」。預覽只是檢查，不會寫入。</p>
@@ -344,6 +355,43 @@ table.rt td.full{color:var(--good);font-weight:700}
     if(!notes.length)list.appendChild(el('p','note','還沒有人留下一句話。'));
     notes.forEach(function(r){var n=el('div','nrow');n.appendChild(el('div','cd',r.code));n.appendChild(el('div','',UN[r.u]||r.u));n.appendChild(el('div','tx',r.v.note));list.appendChild(n)});
   }
+
+  /* ---- 研究主軸：讀學員在助教區送出的一句話，動態顯示；去識別化預設開 ---- */
+  var TH_ANON=true;
+  function thMask(s){
+    s=String(s||'');
+    s=s.replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g,'（信箱）');
+    s=s.replace(/(?:\+?886[- ]?)?0?9\d{2}[- ]?\d{3}[- ]?\d{3}/g,'（電話）');
+    s=s.replace(/\b[A-Za-z]?\d{7,9}\b/g,'（學號）');
+    s=s.replace(/(我是|我叫|本人是|敝姓)[^，。,.\s、；;！!？?]{1,4}/g,'$1○○');
+    return s;
+  }
+  async function themeLoad(){
+    var box=$('thList'),st=$('thStamp');if(!box)return;
+    try{
+      var q=await get('q'),pf={};try{pf=(await get('profile'))||{}}catch(e){}
+      var d0=new Date();d0.setHours(0,0,0,0);var only=$('thOnly').checked,rows=[];
+      Object.keys(q||{}).forEach(function(sid){var best=null;var m=q[sid]||{};
+        Object.keys(m).forEach(function(k){var x=m[k];if(!x||typeof x.q!=='string'||!(x.t>=d0.getTime()))return;
+          if(only&&!/^\s*[【\[(（]?\s*(研究)?主軸/.test(x.q))return;if(!best||x.t>best.t)best=x});
+        if(best)rows.push({sid:sid,t:best.t,q:best.q.replace(/^\s*[【\[(（]?\s*(研究)?主軸\s*[】\])）]?\s*[：:]?\s*/,'')})});
+      rows.sort(function(a,b){return a.t-b.t});box.textContent='';
+      if(!rows.length){var e0=document.createElement('p');e0.className='note';e0.textContent='還沒有人送出。請學員在 AI 助教區送一句「主軸：…」。';box.appendChild(e0)}
+      rows.slice().reverse().forEach(function(r,i){
+        var n=rows.length-i,c=document.createElement('div');c.style.cssText='border:1px solid var(--hair);border-radius:10px;padding:10px 14px;margin:0 0 8px;background:var(--surface)';
+        var who=document.createElement('div');who.className='note';who.style.margin='0 0 4px';
+        var p=pf[r.sid];who.textContent=TH_ANON?('學員 '+n):(((p&&p.nick)||('代號 '+String(r.sid).slice(0,6)))+'　'+new Date(r.t).toLocaleTimeString('zh-TW',{hour12:false}));
+        var tx=document.createElement('div');tx.style.cssText='font-size:17px;line-height:1.6';tx.textContent=TH_ANON?thMask(r.q):r.q;
+        c.appendChild(who);c.appendChild(tx);box.appendChild(c)});
+      st.textContent='共 '+rows.length+' 則｜更新於 '+new Date().toLocaleTimeString('zh-TW',{hour12:false});
+    }catch(e){
+      st.textContent=(e&&e.code==='denied')?'資料庫規則不允許後台讀取提問內容（需要調整規則）。':'讀取失敗，10 秒後重試。';
+    }
+  }
+  (function(){var b=$('thAnon'),o=$('thOnly');if(!b)return;
+    b.addEventListener('click',function(){TH_ANON=!TH_ANON;b.textContent='去識別化：'+(TH_ANON?'開':'關');b.classList.toggle('on',TH_ANON);b.setAttribute('aria-pressed',TH_ANON?'true':'false');themeLoad()});
+    o.addEventListener('change',themeLoad);
+    setInterval(function(){var tv=$('themeview');if(tv&&!tv.hidden)themeLoad()},10000)})();
   var selfInit=false;
   function initTabs(){
     if(selfInit)return;selfInit=true;$('tabs').hidden=false;
@@ -351,7 +399,7 @@ table.rt td.full{color:var(--good);font-weight:700}
     sel.addEventListener('change',renderSelf);
     [].slice.call(document.querySelectorAll('.tabbtn')).forEach(function(bn){bn.addEventListener('click',function(){
       [].slice.call(document.querySelectorAll('.tabbtn')).forEach(function(x){x.classList.toggle('on',x===bn)});
-      var v=bn.getAttribute('data-v');$('app').hidden=(v!=='prog');$('selfview').hidden=(v!=='self');$('allowview').hidden=(v!=='allow')})});
+      var v=bn.getAttribute('data-v');$('app').hidden=(v!=='prog');$('selfview').hidden=(v!=='self');$('allowview').hidden=(v!=='allow');var tv=$('themeview');if(tv){tv.hidden=(v!=='theme');if(v==='theme')themeLoad()}})});
   }
 
   /* ---- 白名單管理：貼上清單、預覽、確認加入；可移除 ---- */
