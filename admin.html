@@ -369,7 +369,8 @@ table.rt td.full{color:var(--good);font-weight:700}
   async function themeLoad(){
     var box=$('thList'),st=$('thStamp');if(!box)return;
     try{
-      var q=await get('q'),pf={};try{pf=(await get('profile'))||{}}catch(e){}
+      var evr=await get('ev'),pf={};try{pf=(await get('profile'))||{}}catch(e){}
+      var q={};Object.keys(evr||{}).forEach(function(k){var x=evr[k];if(x&&x.type==='askq'&&typeof x.q==='string'&&x.sid){(q[x.sid]=q[x.sid]||{})[k]=x}});
       var d0=new Date();d0.setHours(0,0,0,0);var only=$('thOnly').checked,rows=[];
       var first={};Object.keys(q||{}).forEach(function(sid){var m=q[sid]||{};
         Object.keys(m).forEach(function(k){var x=m[k];if(!x||typeof x.q!=='string'||!(x.t>=d0.getTime()))return;
@@ -387,7 +388,7 @@ table.rt td.full{color:var(--good);font-weight:700}
         c.appendChild(who);c.appendChild(tx);box.appendChild(c)});
       st.textContent='共 '+rows.length+' 則、'+ord.length+' 位學員｜更新於 '+new Date().toLocaleTimeString('zh-TW',{hour12:false});
     }catch(e){
-      st.textContent=(e&&e.code==='denied')?'資料庫規則不允許後台讀取提問內容（需要調整規則）。':'讀取失敗，10 秒後重試。';
+      st.textContent=(e&&e.code==='denied')?'這個帳號沒有讀取權限，請用講師帳號登入。':'讀取失敗，10 秒後重試。';
     }
   }
   (function(){var b=$('thAnon'),o=$('thOnly');if(!b)return;
