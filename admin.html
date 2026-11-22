@@ -400,8 +400,8 @@ table.rt td.full{color:var(--good);font-weight:700}
     if(selfInit)return;selfInit=true;$('tabs').hidden=false;
     var sel=$('selfUnit');['u1','u2','u3','u4','u5','u6'].forEach(function(u){var o=document.createElement('option');o.value=u;o.textContent=UN[u];sel.appendChild(o)});
     sel.addEventListener('change',renderSelf);
-    [].slice.call(document.querySelectorAll('.tabbtn')).forEach(function(bn){bn.addEventListener('click',function(){
-      [].slice.call(document.querySelectorAll('.tabbtn')).forEach(function(x){x.classList.toggle('on',x===bn)});
+    [].slice.call(document.querySelectorAll('#tabs .tabbtn')).forEach(function(bn){bn.addEventListener('click',function(){
+      [].slice.call(document.querySelectorAll('#tabs .tabbtn')).forEach(function(x){x.classList.toggle('on',x===bn)});
       var v=bn.getAttribute('data-v');$('app').hidden=(v!=='prog');$('selfview').hidden=(v!=='self');$('allowview').hidden=(v!=='allow');var tv=$('themeview');if(tv){tv.hidden=(v!=='theme');if(v==='theme')themeLoad()}})});
   }
 
